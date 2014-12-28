@@ -32,7 +32,7 @@ the same ``<class>`` element, by combining the
 ``<subclass>`` and ``<join>``
 elements (see below).
 
-It is possible to define ``subclass``, ``union-subclass``,
+It is possible to define ``ubclass``, ``union-subclass``,
 and ``joined-subclass`` mappings in separate mapping documents, directly beneath
 ``hibernate-mapping``. This allows you to extend a class hierachy just by adding
 a new mapping file. You must specify an ``extends`` attribute in the subclass mapping,
@@ -40,11 +40,11 @@ naming a previously mapped superclass.
 
 .. code-block:: csharp
 
-    <hibernate-mapping>
-    <subclass name="DomesticCat" extends="Cat" discriminator-value="D">
-    <property name="name" type="string"/>
-    </subclass>
-    </hibernate-mapping>
+  <hibernate-mapping>
+       <subclass name="DomesticCat" extends="Cat" discriminator-value="D">
+            <property name="name" type="string"/>
+       </subclass>
+   </hibernate-mapping>
 
 Table per class hierarchy
 =========================
@@ -56,23 +56,23 @@ look like:
 
 .. code-block:: csharp
 
-    <class name="IPayment" table="PAYMENT">
-    <id name="Id" type="Int64" column="PAYMENT_ID">
-    <generator class="native"/>
-    </id>
-    <discriminator column="PAYMENT_TYPE" type="String"/>
-    <property name="Amount" column="AMOUNT"/>
-    ...
-    <subclass name="CreditCardPayment" discriminator-value="CREDIT">
-    ...
-    </subclass>
-    <subclass name="CashPayment" discriminator-value="CASH">
-    ...
-    </subclass>
-    <subclass name="ChequePayment" discriminator-value="CHEQUE">
-    ...
-    </subclass>
-    </class>
+  <class name="IPayment" table="PAYMENT">
+      <id name="Id" type="Int64" column="PAYMENT_ID">
+          <generator class="native"/>
+      </id>
+      <discriminator column="PAYMENT_TYPE" type="String"/>
+      <property name="Amount" column="AMOUNT"/>
+      ...
+      <subclass name="CreditCardPayment" discriminator-value="CREDIT">
+          ...
+      </subclass>
+      <subclass name="CashPayment" discriminator-value="CASH">
+          ...
+      </subclass>
+      <subclass name="ChequePayment" discriminator-value="CHEQUE">
+          ...
+      </subclass>
+  </class>
 
 Exactly one table is required. There is one big limitation of this
 mapping strategy: columns declared by the subclasses may not have
@@ -85,25 +85,25 @@ A table-per-subclass mapping would look like:
 
 .. code-block:: csharp
 
-    <class name="IPayment" table="PAYMENT">
-    <id name="Id" type="Int64" column="PAYMENT_ID">
-    <generator class="native"/>
-    </id>
-    <property name="Amount" column="AMOUNT"/>
-    ...
-    <joined-subclass name="CreditCardPayment" table="CREDIT_PAYMENT">
-    <key column="PAYMENT_ID"/>
-    ...
-    </joined-subclass>
-    <joined-subclass name="CashPayment" table="CASH_PAYMENT">
-    <key column="PAYMENT_ID"/>
-    ...
-    </joined-subclass>
-    <joined-subclass name="ChequePayment" table="CHEQUE_PAYMENT">
-    <key column="PAYMENT_ID"/>
-    ...
-    </joined-subclass>
-    </class>
+  <class name="IPayment" table="PAYMENT">
+      <id name="Id" type="Int64" column="PAYMENT_ID">
+          <generator class="native"/>
+      </id>
+      <property name="Amount" column="AMOUNT"/>
+      ...
+      <joined-subclass name="CreditCardPayment" table="CREDIT_PAYMENT">
+          <key column="PAYMENT_ID"/>
+          ...
+      </joined-subclass>
+      <joined-subclass name="CashPayment" table="CASH_PAYMENT">
+          <key column="PAYMENT_ID"/>
+          ...
+      </joined-subclass>
+      <joined-subclass name="ChequePayment" table="CHEQUE_PAYMENT">
+          <key column="PAYMENT_ID"/>
+          ...
+      </joined-subclass>
+  </class>
 
 Four tables are required. The three subclass tables have primary
 key associations to the superclass table (so the relational model
@@ -124,33 +124,33 @@ may combine the use of ``<subclass>`` and
 
 .. code-block:: csharp
 
-    <class name="Payment" table="PAYMENT">
-    <id name="Id" type="Int64" column="PAYMENT_ID">
-    <generator class="native"/>
-    </id>
-    <discriminator column="PAYMENT_TYPE" type="string"/>
-    <property name="Amount" column="AMOUNT"/>
-    ...
-    <subclass name="CreditCardPayment" discriminator-value="CREDIT">
-    <join table="CREDIT_PAYMENT">
-    <key column="PAYMENT_ID"/>
-    <property name="CreditCardType" column="CCTYPE"/>
-    ...
-    </join>
-    </subclass>
-    <subclass name="CashPayment" discriminator-value="CASH">
-    <join table="CASH_PAYMENT">
-    <key column="PAYMENT_ID"/>
-    ...
-    </join>
-    </subclass>
-    <subclass name="ChequePayment" discriminator-value="CHEQUE">
-    <join table="CHEQUE_PAYMENT" fetch="select">
-    <key column="PAYMENT_ID"/>
-    ...
-    </join>
-    </subclass>
-    </class>
+  <class name="Payment" table="PAYMENT">
+      <id name="Id" type="Int64" column="PAYMENT_ID">
+          <generator class="native"/>
+      </id>
+      <discriminator column="PAYMENT_TYPE" type="string"/>
+      <property name="Amount" column="AMOUNT"/>
+      ...
+      <subclass name="CreditCardPayment" discriminator-value="CREDIT">
+          <join table="CREDIT_PAYMENT">
+              <key column="PAYMENT_ID"/>
+              <property name="CreditCardType" column="CCTYPE"/>
+              ...
+          </join>
+      </subclass>
+      <subclass name="CashPayment" discriminator-value="CASH">
+          <join table="CASH_PAYMENT">
+              <key column="PAYMENT_ID"/>
+              ...
+          </join>
+      </subclass>
+      <subclass name="ChequePayment" discriminator-value="CHEQUE">
+          <join table="CHEQUE_PAYMENT" fetch="select">
+              <key column="PAYMENT_ID"/>
+              ...
+          </join>
+      </subclass>
+  </class>
 
 The optional ``fetch="select"`` declaration tells NHibernate
 not to fetch the ``ChequePayment`` subclass data using an
@@ -164,26 +164,26 @@ using this approach:
 
 .. code-block:: csharp
 
-    <class name="Payment" table="PAYMENT">
-    <id name="Id" type="Int64" column="PAYMENT_ID">
-    <generator class="native"/>
-    </id>
-    <discriminator column="PAYMENT_TYPE" type="string"/>
-    <property name="Amount" column="AMOUNT"/>
-    ...
-    <subclass name="CreditCardPayment" discriminator-value="CREDIT">
-    <join table="CREDIT_PAYMENT">
-    <property name="CreditCardType" column="CCTYPE"/>
-    ...
-    </join>
-    </subclass>
-    <subclass name="CashPayment" discriminator-value="CASH">
-    ...
-    </subclass>
-    <subclass name="ChequePayment" discriminator-value="CHEQUE">
-    ...
-    </subclass>
-    </class>
+  <class name="Payment" table="PAYMENT">
+      <id name="Id" type="Int64" column="PAYMENT_ID">
+          <generator class="native"/>
+      </id>
+      <discriminator column="PAYMENT_TYPE" type="string"/>
+      <property name="Amount" column="AMOUNT"/>
+      ...
+      <subclass name="CreditCardPayment" discriminator-value="CREDIT">
+          <join table="CREDIT_PAYMENT">
+              <property name="CreditCardType" column="CCTYPE"/>
+              ...
+          </join>
+      </subclass>
+      <subclass name="CashPayment" discriminator-value="CASH">
+          ...
+      </subclass>
+      <subclass name="ChequePayment" discriminator-value="CHEQUE">
+          ...
+      </subclass>
+  </class>
 
 For any of these mapping strategies, a polymorphic
 association to ``IPayment`` is mapped using
@@ -191,7 +191,7 @@ association to ``IPayment`` is mapped using
 
 .. code-block:: csharp
 
-    <many-to-one name="Payment" column="PAYMENT" class="IPayment"/>
+  <many-to-one name="Payment" column="PAYMENT" class="IPayment"/>
 
 Table per concrete class
 ========================
@@ -201,23 +201,23 @@ strategy. The first is to use ``<union-subclass>``.
 
 .. code-block:: csharp
 
-    <class name="Payment">
-    <id name="Id" type="Int64" column="PAYMENT_ID">
-    <generator class="sequence"/>
-    </id>
-    <property name="Amount" column="AMOUNT"/>
-    ...
-    <union-subclass name="CreditCardPayment" table="CREDIT_PAYMENT">
-    <property name="CreditCardType" column="CCTYPE"/>
-    ...
-    </union-subclass>
-    <union-subclass name="CashPayment" table="CASH_PAYMENT">
-    ...
-    </union-subclass>
-    <union-subclass name="ChequePayment" table="CHEQUE_PAYMENT">
-    ...
-    </union-subclass>
-    </class>
+  <class name="Payment">
+      <id name="Id" type="Int64" column="PAYMENT_ID">
+          <generator class="sequence"/>
+      </id>
+      <property name="Amount" column="AMOUNT"/>
+      ...
+      <union-subclass name="CreditCardPayment" table="CREDIT_PAYMENT">
+          <property name="CreditCardType" column="CCTYPE"/>
+          ...
+      </union-subclass>
+      <union-subclass name="CashPayment" table="CASH_PAYMENT">
+          ...
+      </union-subclass>
+      <union-subclass name="ChequePayment" table="CHEQUE_PAYMENT">
+          ...
+      </union-subclass>
+  </class>
 
 Three tables are involved for the subclasses. Each table defines columns for
 all properties of the class, including inherited properties.
@@ -241,27 +241,27 @@ An alternative approach is to make use of implicit polymorphism:
 
 .. code-block:: csharp
 
-    <class name="CreditCardPayment" table="CREDIT_PAYMENT">
-    <id name="Id" type="Int64" column="CREDIT_PAYMENT_ID">
-    <generator class="native"/>
-    </id>
-    <property name="Amount" column="CREDIT_AMOUNT"/>
-    ...
-    </class>
-    <class name="CashPayment" table="CASH_PAYMENT">
-    <id name="Id" type="Int64" column="CASH_PAYMENT_ID">
-    <generator class="native"/>
-    </id>
-    <property name="Amount" column="CASH_AMOUNT"/>
-    ...
-    </class>
-    <class name="ChequePayment" table="CHEQUE_PAYMENT">
-    <id name="Id" type="Int64" column="CHEQUE_PAYMENT_ID">
-    <generator class="native"/>
-    </id>
-    <property name="Amount" column="CHEQUE_AMOUNT"/>
-    ...
-    </class>
+  <class name="CreditCardPayment" table="CREDIT_PAYMENT">
+      <id name="Id" type="Int64" column="CREDIT_PAYMENT_ID">
+          <generator class="native"/>
+      </id>
+      <property name="Amount" column="CREDIT_AMOUNT"/>
+      ...
+  </class>
+  <class name="CashPayment" table="CASH_PAYMENT">
+      <id name="Id" type="Int64" column="CASH_PAYMENT_ID">
+          <generator class="native"/>
+      </id>
+      <property name="Amount" column="CASH_AMOUNT"/>
+      ...
+  </class>
+  <class name="ChequePayment" table="CHEQUE_PAYMENT">
+      <id name="Id" type="Int64" column="CHEQUE_PAYMENT_ID">
+          <generator class="native"/>
+      </id>
+      <property name="Amount" column="CHEQUE_AMOUNT"/>
+      ...
+  </class>
 
 Notice that nowhere do we mention the ``IPayment`` interface
 explicitly. Also notice that properties of ``IPayment`` are
@@ -272,20 +272,20 @@ in the ``DOCTYPE`` declartion and
 ``&allproperties;`` in the mapping).
 
 The disadvantage of this approach is that NHibernate does not generate SQL
-``UNION``s when performing polymorphic queries.
+``UNION`` when performing polymorphic queries.
 
 For this mapping strategy, a polymorphic association to ``IPayment``
 is usually mapped using ``<any>``.
 
 .. code-block:: csharp
 
-    <any name="Payment" meta-type="string" id-type="Int64">
-    <meta-value value="CREDIT" class="CreditCardPayment"/>
-    <meta-value value="CASH" class="CashPayment"/>
-    <meta-value value="CHEQUE" class="ChequePayment"/>
-    <column name="PAYMENT_CLASS"/>
-    <column name="PAYMENT_ID"/>
-    </any>
+  <any name="Payment" meta-type="string" id-type="Int64">
+      <meta-value value="CREDIT" class="CreditCardPayment"/>
+      <meta-value value="CASH" class="CashPayment"/>
+      <meta-value value="CHEQUE" class="ChequePayment"/>
+      <column name="PAYMENT_CLASS"/>
+      <column name="PAYMENT_ID"/>
+  </any>
 
 Mixing implicit polymorphism with other inheritance mappings
 ============================================================
@@ -301,32 +301,32 @@ still use polymorphic queries against the
 
 .. code-block:: csharp
 
-    <class name="CreditCardPayment" table="CREDIT_PAYMENT">
-    <id name="Id" type="Int64" column="CREDIT_PAYMENT_ID">
-    <generator class="native"/>
-    </id>
-    <discriminator column="CREDIT_CARD" type="String"/>
-    <property name="Amount" column="CREDIT_AMOUNT"/>
-    ...
-    <subclass name="MasterCardPayment" discriminator-value="MDC"/>
-    <subclass name="VisaPayment" discriminator-value="VISA"/>
-    </class>
-    <class name="NonelectronicTransaction" table="NONELECTRONIC_TXN">
-    <id name="Id" type="Int64" column="TXN_ID">
-    <generator class="native"/>
-    </id>
-    ...
-    <joined-subclass name="CashPayment" table="CASH_PAYMENT">
-    <key column="PAYMENT_ID"/>
-    <property name="Amount" column="CASH_AMOUNT"/>
-    ...
-    </joined-subclass>
-    <joined-subclass name="ChequePayment" table="CHEQUE_PAYMENT">
-    <key column="PAYMENT_ID"/>
-    <property name="Amount" column="CHEQUE_AMOUNT"/>
-    ...
-    </joined-subclass>
-    </class>
+  <class name="CreditCardPayment" table="CREDIT_PAYMENT">
+      <id name="Id" type="Int64" column="CREDIT_PAYMENT_ID">
+          <generator class="native"/>
+      </id>
+      <discriminator column="CREDIT_CARD" type="String"/>
+      <property name="Amount" column="CREDIT_AMOUNT"/>
+      ...
+      <subclass name="MasterCardPayment" discriminator-value="MDC"/>
+      <subclass name="VisaPayment" discriminator-value="VISA"/>
+  </class>
+  <class name="NonelectronicTransaction" table="NONELECTRONIC_TXN">
+      <id name="Id" type="Int64" column="TXN_ID">
+          <generator class="native"/>
+      </id>
+      ...
+      <joined-subclass name="CashPayment" table="CASH_PAYMENT">
+          <key column="PAYMENT_ID"/>
+          <property name="Amount" column="CASH_AMOUNT"/>
+          ...
+      </joined-subclass>
+      <joined-subclass name="ChequePayment" table="CHEQUE_PAYMENT">
+          <key column="PAYMENT_ID"/>
+          <property name="Amount" column="CHEQUE_AMOUNT"/>
+          ...
+      </joined-subclass>
+  </class>
 
 Once again, we don't mention ``IPayment`` explicitly. If we
 execute a query against the ``IPayment`` interface - for
@@ -352,10 +352,9 @@ Features of inheritance mappings
 ================================================ ======================= ====================== =============================================== ======================== =============================== =================== ================================= ===================
 Inheritance strategy                             Polymorphic many-to-one Polymorphic one-to-one Polymorphic one-to-many                         Polymorphic many-to-many Polymorphic ``load()/get()``    Polymorphic queries Polymorphic joins                 Outer join fetching
 ================================================ ======================= ====================== =============================================== ======================== =============================== =================== ================================= ===================
-table per class-hierarchy                        ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>``                               ``<many-to-many>``       ``s.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
-table per subclass                               ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>``                               ``<many-to-many>``       ``s.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
-table per concrete-class (union-subclass)        ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>`` (for ``inverse="true"`` only) ``<many-to-many>``       ``s.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
+table per class-hierarchy                        ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>``                               ``<many-to-many>``       ``.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
+table per subclass                               ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>``                               ``<many-to-many>``       ``.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
+table per concrete-class (union-subclass)        ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>`` (for ``inverse="true"`` only) ``<many-to-many>``       ``.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
 table per concrete class (implicit polymorphism) ``<any>``               *not supported*        *not supported*                                 ``<many-to-any>``        *use a query*                   ``from IPayment p`` *not supported*                   *not supported*
 ================================================ ======================= ====================== =============================================== ======================== =============================== =================== ================================= ===================
-
 

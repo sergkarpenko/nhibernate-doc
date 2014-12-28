@@ -4,6 +4,8 @@
 Improving performance
 =====================
 
+.. _performance-fetching:
+
 Fetching strategies
 ###################
 
@@ -72,14 +74,14 @@ in an exception. For example:
 
 .. code-block:: csharp
 
-    s = sessions.OpenSession();
-    Transaction tx = s.BeginTransaction();
-    User u = (User) s.CreateQuery("from User u where u.Name=:userName")
-    .SetString("userName", userName).UniqueResult();
-    IDictionary permissions = u.Permissions;
-    tx.Commit();
-    s.Close();
-    int accessLevel = (int) permissions["accounts"];  // Error!
+  s = sessions.OpenSession();
+  Transaction tx = s.BeginTransaction();
+  User u = (User) s.CreateQuery("from User u where u.Name=:userName")
+      .SetString("userName", userName).UniqueResult();
+  IDictionary permissions = u.Permissions;
+  tx.Commit();
+  s.Close();
+  int accessLevel = (int) permissions["accounts"];  // Error!
 
 Since the ``permissions`` collection was not initialized
 when the ``ISession`` was closed, the collection will not
@@ -109,15 +111,15 @@ so we might want to enable join fetching in the mapping document:
 
 .. code-block:: csharp
 
-    <set name="Permissions"
-    fetch="join">
-    <key column="userId"/>
-    <one-to-many class="Permission"/>
-    </set
+  <set name="Permissions"
+              fetch="join">
+      <key column="userId"/>
+      <one-to-many class="Permission"/>
+  </set
 
 .. code-block:: csharp
 
-    <many-to-one name="Mother" class="Cat" fetch="join"/>
+  <many-to-one name="Mother" class="Cat" fetch="join"/>
 
 The ``fetch`` strategy defined in the mapping document affects:
 
@@ -127,7 +129,7 @@ The ``fetch`` strategy defined in the mapping document affects:
 
 - ``ICriteria`` queries
 
-- HQL queries if ``subselect`` fetching is used
+- HQL queries if ``ubselect`` fetching is used
 
 No matter what fetching strategy you use, the defined non-lazy graph is guaranteed
 to be loaded into memory. Note that this might result in several immediate selects
@@ -146,10 +148,10 @@ If you ever feel like you wish you could change the fetching strategy used by
 
 .. code-block:: csharp
 
-    User user = (User) session.CreateCriteria(typeof(User))
-    .SetFetchMode("Permissions", FetchMode.Join)
-    .Add( Expression.Eq("Id", userId) )
-    .UniqueResult();
+  User user = (User) session.CreateCriteria(typeof(User))
+                  .SetFetchMode("Permissions", FetchMode.Join)
+                  .Add( Expression.Eq("Id", userId) )
+                  .UniqueResult();
 
 (This is NHibernate's equivalent of what some ORM solutions call a "fetch plan".)
 
@@ -179,12 +181,12 @@ classes, eg.
 
 .. code-block:: csharp
 
-    <class name="Cat" proxy="Cat">
-    ......
-    <subclass name="DomesticCat">
-    .....
-    </subclass>
-    </class>
+  <class name="Cat" proxy="Cat">
+      ......
+      <subclass name="DomesticCat">
+          .....
+      </subclass>
+  </class>
 
 Firstly, instances of ``Cat`` will never be castable to
 ``DomesticCat``, even if the underlying instance is an
@@ -192,30 +194,30 @@ instance of ``DomesticCat``:
 
 .. code-block:: csharp
 
-    Cat cat = (Cat) session.Load(typeof(Cat), id);  // instantiate a proxy (does not hit the db)
-    if ( cat.IsDomesticCat ) {                  // hit the db to initialize the proxy
-    DomesticCat dc = (DomesticCat) cat;       // Error!
-    ....
-    }
+  Cat cat = (Cat) session.Load(typeof(Cat), id);  // instantiate a proxy (does not hit the db)
+  if ( cat.IsDomesticCat ) {                  // hit the db to initialize the proxy
+      DomesticCat dc = (DomesticCat) cat;       // Error!
+      ....
+  }
 
 Secondly, it is possible to break proxy ``==``.
 
 .. code-block:: csharp
 
-    Cat cat = (Cat) session.Load(typeof(Cat), id);            // instantiate a Cat proxy
-    DomesticCat dc =
-    (DomesticCat) session.Load(typeof(DomesticCat), id);  // acquire new DomesticCat proxy!
-    System.out.println(cat==dc);                            // false
+  Cat cat = (Cat) session.Load(typeof(Cat), id);            // instantiate a Cat proxy
+  DomesticCat dc =
+          (DomesticCat) session.Load(typeof(DomesticCat), id);  // acquire new DomesticCat proxy!
+  System.out.println(cat==dc);                            // false
 
 However, the situation is not quite as bad as it looks. Even though we now have two references
 to different proxy objects, the underlying instance will still be the same object:
 
 .. code-block:: csharp
 
-    cat.Weight = 11.0;  // hit the db to initialize the proxy
-    Console.WriteLine( dc.Weight );  // 11.0
+  cat.Weight = 11.0;  // hit the db to initialize the proxy
+  Console.WriteLine( dc.Weight );  // 11.0
 
-Third, you may not use a proxy for a ``sealed`` class or a class
+Third, you may not use a proxy for a ``ealed`` class or a class
 with any non-overridable public members.
 
 Finally, if your persistent object acquires any resources upon instantiation (eg. in
@@ -228,12 +230,12 @@ that declares its business methods. You should specify these interfaces in the m
 
 .. code-block:: csharp
 
-    <class name="CatImpl" proxy="ICat">
-    ......
-    <subclass name="DomesticCatImpl" proxy="IDomesticCat">
-    .....
-    </subclass>
-    </class>
+  <class name="CatImpl" proxy="ICat">
+      ......
+      <subclass name="DomesticCatImpl" proxy="IDomesticCat">
+          .....
+      </subclass>
+  </class>
 
 where ``CatImpl`` implements the interface ``ICat`` and
 ``DomesticCatImpl`` implements the interface ``IDomesticCat``. Then
@@ -243,10 +245,10 @@ does not usually return proxies.)
 
 .. code-block:: csharp
 
-    ICat cat = (ICat) session.Load(typeof(CatImpl), catid);
-    IEnumerator iter = session.Enumerable("from CatImpl as cat where cat.Name='fritz'").GetEnumerator();
-    iter.MoveNext();
-    ICat fritz = (ICat) iter.Current;
+  ICat cat = (ICat) session.Load(typeof(CatImpl), catid);
+  IEnumerator iter = session.Enumerable("from CatImpl as cat where cat.Name='fritz'").GetEnumerator();
+  iter.MoveNext();
+  ICat fritz = (ICat) iter.Current;
 
 Relationships are also lazily initialized. This means you must declare any properties to be of
 type ``ICat``, not ``CatImpl``.
@@ -325,14 +327,14 @@ You can use a collection filter to get the size of a collection without initiali
 
 .. code-block:: csharp
 
-    (int) s.CreateFilter( collection, "select count(\*)" ).List()[0]
+  (int) s.CreateFilter( collection, "select count(*)" ).List()[0]
 
 The ``CreateFilter()`` method is also used to efficiently retrieve subsets
 of a collection without needing to initialize the whole collection:
 
 .. code-block:: csharp
 
-    s.CreateFilter( lazyCollection, "").SetFirstResult(0).SetMaxResults(10).List();
+  s.CreateFilter( lazyCollection, "").SetFirstResult(0).SetMaxResults(10).List();
 
 Using batch fetching
 ====================
@@ -351,27 +353,27 @@ behavior by specifying a ``batch-size`` in the mapping of ``Person``:
 
 .. code-block:: csharp
 
-    <class name="Person" batch-size="10">...</class>
+  <class name="Person" batch-size="10">...</class>
 
 NHibernate will now execute only three queries, the pattern is 10, 10, 5.
 
 You may also enable batch fetching of collections. For example, if each ``Person`` has
-a lazy collection of ``Cat``s, and 10 persons are currently loaded in the
-``ISesssion``, iterating through all persons will generate 10 ``SELECT``s,
+a lazy collection of ``Cat``, and 10 persons are currently loaded in the
+``ISesssion``, iterating through all persons will generate 10 ``SELECT``,
 one for every call to ``person.Cats``. If you enable batch fetching for the
 ``Cats`` collection in the mapping of ``Person``, NHibernate can pre-fetch
 collections:
 
 .. code-block:: csharp
 
-    <class name="Person">
-    <set name="Cats" batch-size="3">
-    ...
-    </set>
-    </class>
+  <class name="Person">
+      <set name="Cats" batch-size="3">
+          ...
+      </set>
+  </class>
 
 With a ``batch-size`` of 3, NHibernate will load 3, 3, 3, 1 collections in four
-``SELECT``s. Again, the value of the attribute depends on the expected number of
+``SELECT``. Again, the value of the attribute depends on the expected number of
 uninitialized collections in a particular ``Session``.
 
 Batch fetching of collections is particularly useful if you have a nested tree of items, ie.
@@ -418,10 +420,10 @@ following form:
 
 .. code-block:: csharp
 
-    <cache
-    usage="read-write|nonstrict-read-write|read-only"
-    region="RegionName"
-    />
+  <cache
+      usage="read-write|nonstrict-read-write|read-only"
+      region="RegionName"
+  />
 
 ``usage`` specifies the caching strategy:
 ``read-write``,
@@ -446,10 +448,10 @@ strategy. Its even perfectly safe for use in a cluster.
 
 .. code-block:: csharp
 
-    <class name="Eg.Immutable" mutable="false">
-    <cache usage="read-only"/>
-    ....
-    </class>
+  <class name="Eg.Immutable" mutable="false">
+      <cache usage="read-only"/>
+      ....
+  </class>
 
 Strategy: read/write
 ====================
@@ -463,14 +465,14 @@ providers do *not*.
 
 .. code-block:: csharp
 
-    <class name="eg.Cat" .... >
-    <cache usage="read-write"/>
-    ....
-    <set name="Kittens" ... >
-    <cache usage="read-write"/>
-    ....
-    </set>
-    </class>
+  <class name="eg.Cat" .... >
+      <cache usage="read-write"/>
+      ....
+      <set name="Kittens" ... >
+          <cache usage="read-write"/>
+          ....
+      </set>
+  </class>
 
 Strategy: nonstrict read/write
 ==============================
@@ -512,12 +514,12 @@ from the first-level cache.
 
 .. code-block:: csharp
 
-    IEnumerable cats = sess.Enumerable("from Eg.Cat as cat"); //a huge result set
-    foreach( Cat cat in cats )
-    {
-    DoSomethingWithACat(cat);
-    sess.Evict(cat);
-    }
+  IEnumerable cats = sess.Enumerable("from Eg.Cat as cat"); //a huge result set
+  foreach( Cat cat in cats )
+  {
+      DoSomethingWithACat(cat);
+      sess.Evict(cat);
+  }
 
 NHibernate will evict associated entities automatically if the association is mapped
 with ``cascade="all"`` or ``cascade="all-delete-orphan"``.
@@ -533,10 +535,10 @@ role.
 
 .. code-block:: csharp
 
-    sessionFactory.Evict(typeof(Cat), catId); //evict a particular Cat
-    sessionFactory.Evict(typeof(Cat));  //evict all Cats
-    sessionFactory.EvictCollection("Eg.Cat.Kittens", catId); //evict a particular collection of kittens
-    sessionFactory.EvictCollection("Eg.Cat.Kittens"); //evict all kitten collections
+  sessionFactory.Evict(typeof(Cat), catId); //evict a particular Cat
+  sessionFactory.Evict(typeof(Cat));  //evict all Cats
+  sessionFactory.EvictCollection("Eg.Cat.Kittens", catId); //evict a particular collection of kittens
+  sessionFactory.EvictCollection("Eg.Cat.Kittens"); //evict all kitten collections
 
 The Query Cache
 ###############
@@ -546,7 +548,7 @@ frequently with the same parameters. To use the query cache you must first enabl
 
 .. code-block:: csharp
 
-    <add key="hibernate.cache.use_query_cache" value="true" />
+  <add key="hibernate.cache.use_query_cache" value="true" />
 
 This setting causes the creation of two new cache regions - one holding cached query
 result sets (``NHibernate.Cache.StandardQueryCache``), the other
@@ -567,12 +569,12 @@ specify a named cache region for a particular query by calling
 
 .. code-block:: csharp
 
-    IList blogs = sess.CreateQuery("from Blog blog where blog.Blogger = :blogger")
-    .SetEntity("blogger", blogger)
-    .SetMaxResults(15)
-    .SetCacheable(true)
-    .SetCacheRegion("frontpages")
-    .List();
+  IList blogs = sess.CreateQuery("from Blog blog where blog.Blogger = :blogger")
+      .SetEntity("blogger", blogger)
+      .SetMaxResults(15)
+      .SetCacheable(true)
+      .SetCacheRegion("frontpages")
+      .List();
 
 If the query should force a refresh of its query cache region, you may call
 ``IQuery.SetForceCacheRefresh()`` to ``true``.
@@ -679,11 +681,11 @@ to a bag or list without needing to initialize (fetch) the bag elements! This is
 
 .. code-block:: csharp
 
-    Parent p = (Parent) sess.Load(typeof(Parent), id);
-    Child c = new Child();
-    c.Parent = p;
-    p.Children.Add(c);  //no need to fetch the collection!
-    sess.Flush();
+  Parent p = (Parent) sess.Load(typeof(Parent), id);
+      Child c = new Child();
+      c.Parent = p;
+      p.Children.Add(c);  //no need to fetch the collection!
+      sess.Flush();
 
 One shot delete
 ===============
@@ -744,14 +746,14 @@ example:
 
 .. code-block:: csharp
 
-    IMultiQuery multiQuery = s.CreateMultiQuery()
-    .Add(s.CreateQuery("from Item i where i.Id > ?")
-    .SetInt32(0, 50).SetFirstResult(10))
-    .Add(s.CreateQuery("select count(\*) from Item i where i.Id > ?")
-    .SetInt32(0, 50));
-    IList results = multiQuery.List();
-    IList items = (IList)results[0];
-    long count = (long)((IList)results[1])[0];
+  IMultiQuery multiQuery = s.CreateMultiQuery()
+      .Add(s.CreateQuery("from Item i where i.Id > ?")
+              .SetInt32(0, 50).SetFirstResult(10))
+      .Add(s.CreateQuery("select count(*) from Item i where i.Id > ?")
+              .SetInt32(0, 50));
+  IList results = multiQuery.List();
+  IList items = (IList)results[0];
+  long count = (long)((IList)results[1])[0];
 
 The result is a list of query results, ordered according to the order of queries
 added to the multi query. Named parameters can be set on the multi query, and are
@@ -759,14 +761,14 @@ shared among all the queries contained in the multi query, like this:
 
 .. code-block:: csharp
 
-    IList results = s.CreateMultiQuery()
-    .Add(s.CreateQuery("from Item i where i.Id > :id")
-    .SetFirstResult(10) )
-    .Add("select count(\*) from Item i where i.Id > :id")
-    .SetInt32("id", 50)
-    .List();
-    IList items = (IList)results[0];
-    long count = (long)((IList)results[1])[0];
+  IList results = s.CreateMultiQuery()
+      .Add(s.CreateQuery("from Item i where i.Id > :id")
+          .SetFirstResult(10) )
+      .Add("select count(*) from Item i where i.Id > :id")
+      .SetInt32("id", 50)
+      .List();
+  IList items = (IList)results[0];
+  long count = (long)((IList)results[1])[0];
 
 Positional parameters are not supported on the multi query, only on the individual
 queries.
@@ -786,24 +788,24 @@ throw an exception executing this query:
 
 .. code-block:: csharp
 
-    IList allEmployeesId  = ...; //1,500 items
-    IMultiQuery multiQuery = s.CreateMultiQuery()
-    .Add(s.CreateQuery("from Employee e where e.Id in :empIds")
-    .SetParameter("empIds", allEmployeesId).SetFirstResult(10))
-    .Add(s.CreateQuery("select count(\*) from Employee e where e.Id in :empIds")
-    .SetParameter("empIds", allEmployeesId));
-    IList results = multiQuery.List(); // will throw an exception from SQL Server
+  IList allEmployeesId  = ...; //1,500 items
+  IMultiQuery multiQuery = s.CreateMultiQuery()
+  	.Add(s.CreateQuery("from Employee e where e.Id in :empIds")
+  		.SetParameter("empIds", allEmployeesId).SetFirstResult(10))
+  	.Add(s.CreateQuery("select count(*) from Employee e where e.Id in :empIds")
+  		.SetParameter("empIds", allEmployeesId));
+  	IList results = multiQuery.List(); // will throw an exception from SQL Server
 
 An interesting usage of this feature is to load several collections of an object in one
 round-trip, without an expensive cartesian product (blog * users * posts).
 
 .. code-block:: csharp
 
-    Blog blog = s.CreateMultiQuery()
-    .Add("select b from Blog b left join fetch b.Users where b.Id = :id")
-    .Add("select b from Blog b left join fetch b.Posts where b.Id = :id")
-    .SetInt32("id", 123)
-    .UniqueResult<Blog>();
+  Blog blog = s.CreateMultiQuery()
+      .Add("select b from Blog b left join fetch b.Users where b.Id = :id")
+      .Add("select b from Blog b left join fetch b.Posts where b.Id = :id")
+      .SetInt32("id", 123)
+      .UniqueResult<Blog>();
 
 Multi Criteria
 ##############
@@ -815,16 +817,16 @@ example:
 
 .. code-block:: csharp
 
-    IMultiCriteria multiCrit = s.CreateMultiCriteria()
-    .Add(s.CreateCriteria(typeof(Item))
-    .Add(Expression.Gt("Id", 50))
-    .SetFirstResult(10))
-    .Add(s.CreateCriteria(typeof(Item))
-    .Add(Expression.Gt("Id", 50))
-    .SetProject(Projections.RowCount()));
-    IList results = multiCrit.List();
-    IList items = (IList)results[0];
-    long count = (long)((IList)results[1])[0];
+  IMultiCriteria multiCrit = s.CreateMultiCriteria()
+      .Add(s.CreateCriteria(typeof(Item))
+              .Add(Expression.Gt("Id", 50))
+              .SetFirstResult(10))
+      .Add(s.CreateCriteria(typeof(Item))
+              .Add(Expression.Gt("Id", 50))
+              .SetProject(Projections.RowCount()));
+  IList results = multiCrit.List();
+  IList items = (IList)results[0];
+  long count = (long)((IList)results[1])[0];
 
 The result is a list of query results, ordered according to the order of queries
 added to the multi criteria.
@@ -834,18 +836,17 @@ In fact, using DetachedCriteria in this fashion has some interesting implication
 
 .. code-block:: csharp
 
-    DetachedCriteria customersCriteria = AuthorizationService.GetAssociatedCustomersQuery();
-    IList results = session.CreateMultiCriteria()
-    .Add(customersCriteria)
-    .Add(DetachedCriteria.For<Policy>()
-    .Add( Subqueries.PropertyIn("id", CriteriaTransformer.Clone(customersCriteria)
-    .SetProjection(Projections.Id())
-    ) )
-    ).List();
-    ICollection<Customer> customers = CollectionHelper.ToArray<Customer>(results[0]);
-    ICollection<Policy> policies = CollectionHelper.ToArray<Policy>(results[1]);
+  DetachedCriteria customersCriteria = AuthorizationService.GetAssociatedCustomersQuery();
+  IList results = session.CreateMultiCriteria()
+  	.Add(customersCriteria)
+  	.Add(DetachedCriteria.For<Policy>()
+  		.Add( Subqueries.PropertyIn("id", CriteriaTransformer.Clone(customersCriteria)
+                                                      .SetProjection(Projections.Id())
+                        ) )
+  	).List();
+  ICollection<Customer> customers = CollectionHelper.ToArray<Customer>(results[0]);
+  ICollection<Policy> policies = CollectionHelper.ToArray<Policy>(results[1]);
 
 As you see, we get a query that represnt the customers we can access, and then we can utlize this query further in order to
 perform additional logic (getting the policies of the customers we are associated with), all in a single database roundtrip.
-
 

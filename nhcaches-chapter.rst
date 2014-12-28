@@ -68,13 +68,9 @@ Here are the steps to follow to enable the second-level cache in NHibernate:
   (can be :file:`YourAssembly.exe.config` or :file:`web.config` or a
   :file:`.cfg.xml` file, in the latter case the syntax will be different from what
   is shown below):
-
-.. code-block:: csharp
-
-  <add key="hibernate.cache.provider_class" value="XXX" />
-  <add key="expiration" value="120" />
-
-"``XXX``" is the assembly-qualified class name of a class
+  .. code-block:: csharp
+    <add key="hibernate.cache.provider_class" value="
+  "``XXX``" is the assembly-qualified class name of a class
   implementing ICacheProvider, eg.
   "NHibernate.Caches.SysCache.SysCacheProvider,
   NHibernate.Caches.SysCache".
@@ -118,16 +114,16 @@ different regions. Here's an example:
 
 .. code-block:: xml
 
-    <?xml version="1.0" encoding="utf-8" ?>
-    <configuration>
-    <configSections>
-    <section name="syscache" type="NHibernate.Caches.SysCache.SysCacheSectionHandler,NHibernate.Caches.SysCache" />
-    </configSections>
-    <syscache>
-    <cache region="foo" expiration="500" priority="4" />
-    <cache region="bar" expiration="300" priority="3" />
-    </syscache>
-    </configuration>
+  <?xml version="1.0" encoding="utf-8" ?>
+  <configuration>
+  	<configSections>
+  		<section name="syscache" type="NHibernate.Caches.SysCache.SysCacheSectionHandler,NHibernate.Caches.SysCache" />
+  	</configSections>
+  	<syscache>
+  		<cache region="foo" expiration="500" priority="4" />
+  		<cache region="bar" expiration="300" priority="3" />
+  	</syscache>
+  </configuration>
 
 SysCache2 Configuration
 #######################
@@ -137,14 +133,14 @@ table or query changes. Query dependencies are only available for SQL Server 200
 provider, the application must be setup and configured to support SQL notifications as described in the
 MSDN documentation.
 
-To configure cache regions with SqlCacheDependencies a ``syscache2`` config section must be
+To configure cache regions with SqlCacheDependencies a ``yscache2`` config section must be
 defined in the application's configuration file. See the sample below.
 
 .. code-block:: csharp
 
-    <configSections>
-    <section name="syscache2" type="NHibernate.Caches.SysCache2.SysCacheSection, NHibernate.Caches.SysCache2"/>
-    </configSections>
+  <configSections>
+  	<section name="syscache2" type="NHibernate.Caches.SysCache2.SysCacheSection, NHibernate.Caches.SysCache2"/>
+  </configSections>
 
 Table-based Dependency
 ======================
@@ -162,17 +158,17 @@ a cache region must be configured in the application's configuration file. See t
 
 .. code-block:: csharp
 
-    <syscache2>
-    <cacheRegion name="Product">
-    <dependencies>
-    <tables>
-    <add name="price"
-    databaseEntryName="Default"
-    tableName="VideoTitle" />
-    </tables>
-    </dependencies>
-    </cacheRegion>
-    </syscache2>
+  <syscache2>
+  	<cacheRegion name="Product">
+  		<dependencies>
+  			<tables>
+  				<add name="price"
+  					databaseEntryName="Default"
+  					tableName="VideoTitle" />
+  			</tables>
+  		</dependencies>
+  	</cacheRegion>
+  </syscache2>
 
 Table-based Dependency Configuration Properties
 ===============================================
@@ -186,7 +182,7 @@ Table-based Dependency Configuration Properties
 
 ``databaseEntryName``
     The name of a database defined in the ``databases`` element for
-    ``sqlCacheDependency`` for caching (ASP.NET Settings Schema) element of the
+    ``qlCacheDependency`` for caching (ASP.NET Settings Schema) element of the
     application's ``Web.config`` file.
 
 Command-Based Dependencies
@@ -212,31 +208,31 @@ Stored Procedure
 
 .. code-block:: csharp
 
-    <cacheRegion name="Product" priority="High" >
-    <dependencies>
-    <commands>
-    <add name="price"
-    command="ActiveProductsStoredProcedure"
-    isStoredProcedure="true"/>
-    </commands>
-    </dependencies>
-    </cacheRegion>
+  <cacheRegion name="Product" priority="High" >
+  	<dependencies>
+  		<commands>
+  			<add name="price"
+  				command="ActiveProductsStoredProcedure"
+  				isStoredProcedure="true"/>
+  		</commands>
+  	</dependencies>
+  </cacheRegion>
 
 SELECT Statement
 ----------------
 
 .. code-block:: csharp
 
-    <cacheRegion name="Product" priority="High">
-    <dependencies>
-    <commands>
-    <add name="price"
-    command="Select VideoTitleId from dbo.VideoTitle where Active = 1"
-    connectionName="default"
-    connectionStringProviderType="NHibernate.Caches.SysCache2.ConfigConnectionStringProvider, NHibernate.Caches.SysCache2"/>
-    </commands>
-    </dependencies>
-    </cacheRegion>
+  <cacheRegion name="Product" priority="High">
+  	<dependencies>
+  		<commands>
+  			<add name="price"
+  				command="Select VideoTitleId from dbo.VideoTitle where Active = 1"
+  				connectionName="default"
+  				connectionStringProviderType="NHibernate.Caches.SysCache2.ConfigConnectionStringProvider, NHibernate.Caches.SysCache2"/>
+  		</commands>
+  	</dependencies>
+  </cacheRegion>
 
 Command Configuration Properties
 --------------------------------
@@ -272,37 +268,37 @@ Multiple commands
 
 .. code-block:: csharp
 
-    <cacheRegion name="Product">
-    <dependencies>
-    <commands>
-    <add name="price"
-    command="ActiveProductsStoredProcedure"
-    isStoredProcedure="true"/>
-    <add name="quantity"
-    command="Select quantityAvailable from dbo.VideoAvailability"/>
-    </commands>
-    </dependencies>
-    </cacheRegion>
+  <cacheRegion name="Product">
+  	<dependencies>
+  		<commands>
+  			<add name="price"
+  				command="ActiveProductsStoredProcedure"
+  				isStoredProcedure="true"/>
+  			<add name="quantity"
+  				command="Select quantityAvailable from dbo.VideoAvailability"/>
+  		</commands>
+  	</dependencies>
+  </cacheRegion>
 
 Mixed
 -----
 
 .. code-block:: csharp
 
-    <cacheRegion name="Product">
-    <dependencies>
-    <commands>
-    <add name="price"
-    command="ActiveProductsStoredProcedure"
-    isStoredProcedure="true"/>
-    </commands>
-    <tables>
-    <add name="quantity"
-    databaseEntryName="Default"
-    tableName=" VideoAvailability" />
-    </tables>
-    </dependencies>
-    </cacheRegion>
+  <cacheRegion name="Product">
+  	<dependencies>
+  		<commands>
+  			<add name="price"
+  				command="ActiveProductsStoredProcedure"
+  				isStoredProcedure="true"/>
+  		</commands>
+  		<tables>
+  			<add name="quantity"
+  				databaseEntryName="Default"
+  				tableName=" VideoAvailability" />
+  		</tables>
+  	</dependencies>
+  </cacheRegion>
 
 Additional Settings
 ===================
@@ -317,14 +313,14 @@ Relative Expiration
 
 .. code-block:: csharp
 
-    <cacheRegion name="Product" relativeExpiration="300" priority="High" />
+  <cacheRegion name="Product" relativeExpiration="300" priority="High" />
 
 Time of Day Expiration
 ----------------------
 
 .. code-block:: csharp
 
-    <cacheRegion name="Product" timeOfDayExpiration="2:00:00" priority="High" />
+  <cacheRegion name="Product" timeOfDayExpiration="2:00:00" priority="High" />
 
 Additional Configuration Properties
 -----------------------------------
@@ -348,5 +344,4 @@ Patches
 There is a known issue where some SQL Server 2005 notifications might not be received when an
 application subscribes to query notifications by using ADO.NET 2.0. To fix this problem install
 `SQL hotfix for kb 913364 <http://support.microsoft.com/Default.aspx?kbid=913364>`_.
-
 

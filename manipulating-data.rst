@@ -14,21 +14,21 @@ The session offers services for saving (ie. persisting) transient instances:
 
 .. code-block:: csharp
 
-    DomesticCat fritz = new DomesticCat();
-    fritz.Color = Color.Ginger;
-    fritz.Sex = 'M';
-    fritz.Name = "Fritz";
-    long generatedId = (long) sess.Save(fritz);
+  DomesticCat fritz = new DomesticCat();
+  fritz.Color = Color.Ginger;
+  fritz.Sex = 'M';
+  fritz.Name = "Fritz";
+  long generatedId = (long) sess.Save(fritz);
 
 .. code-block:: csharp
 
-    DomesticCat pk = new DomesticCat();
-    pk.Color = Color.Tabby;
-    pk.Sex = 'F';
-    pk.Name = "PK";
-    pk.Kittens = new HashSet();
-    pk.AddKitten(fritz);
-    sess.Save( pk, 1234L );
+  DomesticCat pk = new DomesticCat();
+  pk.Color = Color.Tabby;
+  pk.Sex = 'F';
+  pk.Name = "PK";
+  pk.Kittens = new HashSet();
+  pk.AddKitten(fritz);
+  sess.Save( pk, 1234L );
 
 The single-argument ``Save()`` generates and assigns a unique
 identifier to ``fritz``. The two-argument form attempts to persist
@@ -53,19 +53,19 @@ circumstances (DIY instance pooling etc.)
 
 .. code-block:: csharp
 
-    Cat fritz = (Cat) sess.Load(typeof(Cat), generatedId);
+  Cat fritz = (Cat) sess.Load(typeof(Cat), generatedId);
 
 .. code-block:: csharp
 
-    long pkId = 1234;
-    DomesticCat pk = (DomesticCat) sess.Load( typeof(Cat), pkId );
+  long pkId = 1234;
+  DomesticCat pk = (DomesticCat) sess.Load( typeof(Cat), pkId );
 
 .. code-block:: csharp
 
-    Cat cat = new DomesticCat();
-    // load pk's state into cat
-    sess.Load( cat, pkId );
-    ISet kittens = cat.Kittens;
+  Cat cat = new DomesticCat();
+  // load pk's state into cat
+  sess.Load( cat, pkId );
+  ISet kittens = cat.Kittens;
 
 Note that ``Load()`` will throw an unrecoverable exception if there is no matching
 database row. If the class is mapped with a proxy, ``Load()`` returns an object
@@ -78,19 +78,19 @@ method, which hits the database immediately and returns null if there is no matc
 
 .. code-block:: csharp
 
-    Cat cat = (Cat) sess.Get(typeof(Cat), id);
-    if (cat==null) {
-    cat = new Cat();
-    sess.Save(cat, id);
-    }
-    return cat;
+  Cat cat = (Cat) sess.Get(typeof(Cat), id);
+  if (cat==null) {
+      cat = new Cat();
+      sess.Save(cat, id);
+  }
+  return cat;
 
 You may also load an objects using an SQL ``SELECT ... FOR UPDATE``. See the next
 section for a discussion of NHibernate ``LockMode``.
 
 .. code-block:: csharp
 
-    Cat cat = (Cat) sess.Get(typeof(Cat), id, LockMode.Upgrade);
+  Cat cat = (Cat) sess.Get(typeof(Cat), id, LockMode.Upgrade);
 
 Note that any associated instances or contained collections are *not* selected
 ``FOR UPDATE``.
@@ -101,9 +101,9 @@ initialize some of the properties of the object.
 
 .. code-block:: csharp
 
-    sess.Save(cat);
-    sess.Flush(); //force the SQL INSERT
-    sess.Refresh(cat); //re-read the state (after the trigger executes)
+  sess.Save(cat);
+  sess.Flush(); //force the SQL INSERT
+  sess.Refresh(cat); //re-read the state (after the trigger executes)
 
 An important question usually appears at this point: How much does NHibernate load
 from the database and how many SQL ``SELECT`` will it use? This
@@ -118,33 +118,33 @@ oriented query language.
 
 .. code-block:: csharp
 
-    IList cats = sess.Find(
-    "from Cat as cat where cat.Birthdate = ?",
-    date,
-    NHibernateUtil.Date
-    );
-    IList mates = sess.Find(
-    "select mate from Cat as cat join cat.Mate as mate " +
-    "where cat.name = ?",
-    name,
-    NHibernateUtil.String
-    );
-    IList cats = sess.Find( "from Cat as cat where cat.Mate.Birthdate is null" );
-    IList moreCats = sess.Find(
-    "from Cat as cat where " +
-    "cat.Name = 'Fritz' or cat.id = ? or cat.id = ?",
-    new object[] { id1, id2 },
-    new IType[] { NHibernateUtil.Int64, NHibernateUtil.Int64 }
-    );
-    IList mates = sess.Find(
-    "from Cat as cat where cat.Mate = ?",
-    izi,
-    NHibernateUtil.Entity(typeof(Cat))
-    );
-    IList problems = sess.Find(
-    "from GoldFish as fish " +
-    "where fish.Birthday > fish.Deceased or fish.Birthday is null"
-    );
+  IList cats = sess.Find(
+      "from Cat as cat where cat.Birthdate = ?",
+      date,
+      NHibernateUtil.Date
+  );
+  IList mates = sess.Find(
+      "select mate from Cat as cat join cat.Mate as mate " +
+      "where cat.name = ?",
+      name,
+      NHibernateUtil.String
+  );
+  IList cats = sess.Find( "from Cat as cat where cat.Mate.Birthdate is null" );
+  IList moreCats = sess.Find(
+      "from Cat as cat where " +
+      "cat.Name = 'Fritz' or cat.id = ? or cat.id = ?",
+      new object[] { id1, id2 },
+      new IType[] { NHibernateUtil.Int64, NHibernateUtil.Int64 }
+  );
+  IList mates = sess.Find(
+      "from Cat as cat where cat.Mate = ?",
+      izi,
+      NHibernateUtil.Entity(typeof(Cat))
+  );
+  IList problems = sess.Find(
+      "from GoldFish as fish " +
+      "where fish.Birthday > fish.Deceased or fish.Birthday is null"
+  );
 
 The second argument to ``Find()`` accepts an object
 or array of objects. The third argument accepts a NHibernate type or array of
@@ -167,16 +167,16 @@ total).
 
 .. code-block:: csharp
 
-    // fetch ids
-    IEnumerable en = sess.Enumerable("from eg.Qux q order by q.Likeliness");
-    foreach ( Qux qux in en )
-    {
-    // something we couldnt express in the query
-    if ( qux.CalculateComplicatedAlgorithm() ) {
-    // dont need to process the rest
-    break;
-    }
-    }
+  // fetch ids
+  IEnumerable en = sess.Enumerable("from eg.Qux q order by q.Likeliness");
+  foreach ( Qux qux in en )
+  {
+      // something we couldnt express in the query
+      if ( qux.CalculateComplicatedAlgorithm() ) {
+          // dont need to process the rest
+          break;
+      }
+  }
 
 The ``Enumerable()`` method also performs better if
 you expect that many of the objects are already loaded and cached by
@@ -187,13 +187,13 @@ called using ``Enumerable()``:
 
 .. code-block:: csharp
 
-    IEnumerable en = sess.Enumerable(
-    "select customer, product " +
-    "from Customer customer, " +
-    "Product product " +
-    "join customer.Purchases purchase " +
-    "where product = purchase.Product"
-    );
+  IEnumerable en = sess.Enumerable(
+      "select customer, product " +
+      "from Customer customer, " +
+      "Product product " +
+      "join customer.Purchases purchase " +
+      "where product = purchase.Product"
+  );
 
 Calling the previous query using ``Find()`` would return a very
 large ADO.NET result set containing the same data many times.
@@ -203,48 +203,48 @@ is returned as an array:
 
 .. code-block:: csharp
 
-    IEnumerable foosAndBars = sess.Enumerable(
-    "select foo, bar from Foo foo, Bar bar " +
-    "where bar.Date = foo.Date"
-    );
-    foreach (object[] tuple in foosAndBars)
-    {
-    Foo foo = tuple[0]; Bar bar = tuple[1];
-    ....
-    }
+  IEnumerable foosAndBars = sess.Enumerable(
+      "select foo, bar from Foo foo, Bar bar " +
+      "where bar.Date = foo.Date"
+  );
+  foreach (object[] tuple in foosAndBars)
+  {
+      Foo foo = tuple[0]; Bar bar = tuple[1];
+      ....
+  }
 
 Scalar queries
 ==============
 
-Queries may specify a property of a class in the ``select`` clause.
+Queries may specify a property of a class in the ``elect`` clause.
 They may even call SQL aggregate functions. Properties or aggregates are considered
 "scalar" results.
 
 .. code-block:: csharp
 
-    IEnumerable results = sess.Enumerable(
-    "select cat.Color, min(cat.Birthdate), count(cat) from Cat cat " +
-    "group by cat.Color"
-    );
-    foreach ( object[] row in results )
-    {
-    Color type = (Color) row[0];
-    DateTime oldest = (DateTime) row[1];
-    int count = (int) row[2];
-    .....
-    }
+  IEnumerable results = sess.Enumerable(
+          "select cat.Color, min(cat.Birthdate), count(cat) from Cat cat " +
+          "group by cat.Color"
+  );
+  foreach ( object[] row in results )
+  {
+      Color type = (Color) row[0];
+      DateTime oldest = (DateTime) row[1];
+      int count = (int) row[2];
+      .....
+  }
 
 .. code-block:: csharp
 
-    IEnumerable en = sess.Enumerable(
-    "select cat.Type, cat.Birthdate, cat.Name from DomesticCat cat"
-    );
+  IEnumerable en = sess.Enumerable(
+      "select cat.Type, cat.Birthdate, cat.Name from DomesticCat cat"
+  );
 
 .. code-block:: csharp
 
-    IList list = sess.Find(
-    "select cat, cat.Mate.Name from DomesticCat cat"
-    );
+  IList list = sess.Find(
+      "select cat, cat.Mate.Name from DomesticCat cat"
+  );
 
 The IQuery interface
 ====================
@@ -255,10 +255,10 @@ obtain an instance of ``NHibernate.IQuery``:
 
 .. code-block:: csharp
 
-    IQuery q = sess.CreateQuery("from DomesticCat cat");
-    q.SetFirstResult(20);
-    q.SetMaxResults(10);
-    IList cats = q.List();
+  IQuery q = sess.CreateQuery("from DomesticCat cat");
+  q.SetFirstResult(20);
+  q.SetMaxResults(10);
+  IList cats = q.List();
 
 You may even define a named query in the mapping document. (Remember to use a
 ``CDATA`` section if your query contains characters that could
@@ -266,18 +266,18 @@ be interpreted as markup.)
 
 .. code-block:: csharp
 
-    <query name="Eg.DomesticCat.by.name.and.minimum.weight"><![CDATA[
-    from Eg.DomesticCat as cat
-    where cat.Name = ?
-    and cat.Weight > ?
-    ] ]></query>
+  <query name="Eg.DomesticCat.by.name.and.minimum.weight"><![CDATA[
+      from Eg.DomesticCat as cat
+          where cat.Name = ?
+          and cat.Weight > ?
+  ] ]></query>
 
 .. code-block:: csharp
 
-    IQuery q = sess.GetNamedQuery("Eg.DomesticCat.by.name.and.minimum.weight");
-    q.SetString(0, name);
-    q.SetInt32(1, minWeight);
-    IList cats = q.List();
+  IQuery q = sess.GetNamedQuery("Eg.DomesticCat.by.name.and.minimum.weight");
+  q.SetString(0, name);
+  q.SetInt32(1, minWeight);
+  IList cats = q.List();
 
 The query interface supports the use of named parameters. Named parameters
 are identifiers of the form ``:name`` in the query string.
@@ -294,27 +294,27 @@ The advantages of named parameters are:
 
 .. code-block:: csharp
 
-    //named parameter (preferred)
-    IQuery q = sess.CreateQuery("from DomesticCat cat where cat.Name = :name");
-    q.SetString("name", "Fritz");
-    IEnumerable cats = q.Enumerable();
+  //named parameter (preferred)
+  IQuery q = sess.CreateQuery("from DomesticCat cat where cat.Name = :name");
+  q.SetString("name", "Fritz");
+  IEnumerable cats = q.Enumerable();
 
 .. code-block:: csharp
 
-    //positional parameter
-    IQuery q = sess.CreateQuery("from DomesticCat cat where cat.Name = ?");
-    q.SetString(0, "Izi");
-    IEnumerable cats = q.Enumerable();
+  //positional parameter
+  IQuery q = sess.CreateQuery("from DomesticCat cat where cat.Name = ?");
+  q.SetString(0, "Izi");
+  IEnumerable cats = q.Enumerable();
 
 .. code-block:: csharp
 
-    //named parameter list
-    IList names = new ArrayList();
-    names.Add("Izi");
-    names.Add("Fritz");
-    IQuery q = sess.CreateQuery("from DomesticCat cat where cat.Name in (:namesList)");
-    q.SetParameterList("namesList", names);
-    IList cats = q.List();
+  //named parameter list
+  IList names = new ArrayList();
+  names.Add("Izi");
+  names.Add("Fritz");
+  IQuery q = sess.CreateQuery("from DomesticCat cat where cat.Name in (:namesList)");
+  q.SetParameterList("namesList", names);
+  IList cats = q.List();
 
 Filtering collections
 =====================
@@ -325,9 +325,9 @@ meaning the current collection element.
 
 .. code-block:: csharp
 
-    ICollection blackKittens = session.Filter(
-    pk.Kittens, "where this.Color = ?", Color.Black, NHibernateUtil.Enum(typeof(Color))
-    );
+  ICollection blackKittens = session.Filter(
+      pk.Kittens, "where this.Color = ?", Color.Black, NHibernateUtil.Enum(typeof(Color))
+  );
 
 The returned collection is considered a bag.
 
@@ -336,9 +336,9 @@ one if required). Filters are not limited to returning the collection elements t
 
 .. code-block:: csharp
 
-    ICollection blackKittenMates = session.Filter(
-    pk.Kittens, "select this.Mate where this.Color = Eg.Color.Black"
-    );
+  ICollection blackKittenMates = session.Filter(
+      pk.Kittens, "select this.Mate where this.Color = Eg.Color.Black"
+  );
 
 Criteria queries
 ================
@@ -349,10 +349,10 @@ NHibernate provides an intuitive ``ICriteria`` query API.
 
 .. code-block:: csharp
 
-    ICriteria crit = session.CreateCriteria(typeof(Cat));
-    crit.Add( Expression.Eq("color", Eg.Color.Black) );
-    crit.SetMaxResults(10);
-    IList cats = crit.List();
+  ICriteria crit = session.CreateCriteria(typeof(Cat));
+  crit.Add( Expression.Eq("color", Eg.Color.Black) );
+  crit.SetMaxResults(10);
+  IList cats = crit.List();
 
 If you are uncomfortable with SQL-like syntax, this is perhaps the easiest way to get started
 with NHibernate. This API is also more extensible than HQL. Applications might provide their
@@ -366,21 +366,21 @@ SQL aliases in braces.
 
 .. code-block:: csharp
 
-    IList cats = session.CreateSQLQuery(
-    "SELECT {cat.*} FROM CAT {cat} WHERE ROWNUM<10",
-    "cat",
-    typeof(Cat)
-    ).List();
+  IList cats = session.CreateSQLQuery(
+      "SELECT {cat.*} FROM CAT {cat} WHERE ROWNUM<10",
+      "cat",
+      typeof(Cat)
+  ).List();
 
 .. code-block:: csharp
 
-    IList cats = session.CreateSQLQuery(
-    "SELECT {cat}.ID AS {cat.Id}, {cat}.SEX AS {cat.Sex}, " +
-    "{cat}.MATE AS {cat.Mate}, {cat}.SUBCLASS AS {cat.class}, ... " +
-    "FROM CAT {cat} WHERE ROWNUM<10",
-    "cat",
-    typeof(Cat)
-    ).List()
+  IList cats = session.CreateSQLQuery(
+      "SELECT {cat}.ID AS {cat.Id}, {cat}.SEX AS {cat.Sex}, " +
+             "{cat}.MATE AS {cat.Mate}, {cat}.SUBCLASS AS {cat.class}, ... " +
+      "FROM CAT {cat} WHERE ROWNUM<10",
+      "cat",
+      typeof(Cat)
+  ).List()
 
 SQL queries may contain named and positional parameters, just like NHibernate queries.
 
@@ -399,9 +399,9 @@ and then manipulate it directly, while the ``ISession`` is open:
 
 .. code-block:: csharp
 
-    DomesticCat cat = (DomesticCat) sess.Load( typeof(Cat), 69L );
-    cat.Name = "PK";
-    sess.Flush();  // changes to cat are automatically detected and persisted
+  DomesticCat cat = (DomesticCat) sess.Load( typeof(Cat), 69L );
+  cat.Name = "PK";
+  sess.Flush();  // changes to cat are automatically detected and persisted
 
 Sometimes this programming model is inefficient since it would require both an SQL
 ``SELECT`` (to load an object) and an SQL ``UPDATE``
@@ -421,18 +421,18 @@ method ``Session.Update()``.
 
 .. code-block:: csharp
 
-    // in the first session
-    Cat cat = (Cat) firstSession.Load(typeof(Cat), catId);
-    Cat potentialMate = new Cat();
-    firstSession.Save(potentialMate);
-    // in a higher tier of the application
-    cat.Mate = potentialMate;
-    // later, in a new session
-    secondSession.Update(cat);  // update cat
-    secondSession.Update(mate); // update mate
+  // in the first session
+  Cat cat = (Cat) firstSession.Load(typeof(Cat), catId);
+  Cat potentialMate = new Cat();
+  firstSession.Save(potentialMate);
+  // in a higher tier of the application
+  cat.Mate = potentialMate;
+  // later, in a new session
+  secondSession.Update(cat);  // update cat
+  secondSession.Update(mate); // update mate
 
 If the ``Cat`` with identifier ``catId`` had already
-been loaded  by ``secondSession`` when the application tried to
+been loaded  by ``econdSession`` when the application tried to
 update it, an exception would have been thrown.
 
 The application should individually ``Update()`` transient instances
@@ -453,9 +453,9 @@ be interpreted as representing a "new" instance.
 
 .. code-block:: csharp
 
-    <id name="Id" type="Int64" column="uid" unsaved-value="0">
-    <generator class="hilo"/>
-    </id>
+  <id name="Id" type="Int64" column="uid" unsaved-value="0">
+      <generator class="hilo"/>
+  </id>
 
 The allowed values of ``unsaved-value`` are:
 
@@ -476,14 +476,14 @@ constructor and reading the property value from the instance.
 
 .. code-block:: csharp
 
-    // in the first session
-    Cat cat = (Cat) firstSession.Load(typeof(Cat), catID);
-    // in a higher tier of the application
-    Cat mate = new Cat();
-    cat.Mate = mate;
-    // later, in a new session
-    secondSession.SaveOrUpdate(cat);   // update existing state (cat has a non-null id)
-    secondSession.SaveOrUpdate(mate);  // save the new instance (mate has a null id)
+  // in the first session
+  Cat cat = (Cat) firstSession.Load(typeof(Cat), catID);
+  // in a higher tier of the application
+  Cat mate = new Cat();
+  cat.Mate = mate;
+  // later, in a new session
+  secondSession.SaveOrUpdate(cat);   // update existing state (cat has a non-null id)
+  secondSession.SaveOrUpdate(mate);  // save the new instance (mate has a null id)
 
 The usage and semantics of ``SaveOrUpdate()`` seems to be confusing
 for new users. Firstly, so long as you are not trying to use instances from one session
@@ -539,12 +539,12 @@ an unmodified object with a new session.
 
 .. code-block:: csharp
 
-    //just reassociate:
-    sess.Lock(fritz, LockMode.None);
-    //do a version check, then reassociate:
-    sess.Lock(izi, LockMode.Read);
-    //do a version check, using SELECT ... FOR UPDATE, then reassociate:
-    sess.Lock(pk, LockMode.Upgrade);
+  //just reassociate:
+  sess.Lock(fritz, LockMode.None);
+  //do a version check, then reassociate:
+  sess.Lock(izi, LockMode.Read);
+  //do a version check, using SELECT ... FOR UPDATE, then reassociate:
+  sess.Lock(pk, LockMode.Upgrade);
 
 Deleting persistent objects
 ###########################
@@ -555,7 +555,7 @@ of ``Delete()`` as making a persistent instance transient.
 
 .. code-block:: csharp
 
-    sess.Delete(cat);
+  sess.Delete(cat);
 
 You may also delete many objects at once by passing a NHibernate query string to
 ``Delete()``.
@@ -615,16 +615,16 @@ running units of work, where an ISession is kept open and disconnected for a lon
 
 .. code-block:: csharp
 
-    sess = sf.OpenSession();
-    ITransaction tx = sess.BeginTransaction();
-    sess.FlushMode = FlushMode.Commit; //allow queries to return stale state
-    Cat izi = (Cat) sess.Load(typeof(Cat), id);
-    izi.Name = "iznizi";
-    // execute some queries....
-    sess.Find("from Cat as cat left outer join cat.Kittens kitten");
-    //change to izi is not flushed!
-    ...
-    tx.Commit(); //flush occurs
+  sess = sf.OpenSession();
+  ITransaction tx = sess.BeginTransaction();
+  sess.FlushMode = FlushMode.Commit; //allow queries to return stale state
+  Cat izi = (Cat) sess.Load(typeof(Cat), id);
+  izi.Name = "iznizi";
+  // execute some queries....
+  sess.Find("from Cat as cat left outer join cat.Kittens kitten");
+  //change to izi is not flushed!
+  ...
+  tx.Commit(); //flush occurs
 
 Ending a Session
 ################
@@ -655,27 +655,27 @@ If you are using the NHibernate ``ITransaction`` API, this looks like:
 
 .. code-block:: csharp
 
-    tx.Commit(); // flush the session and commit the transaction
+  tx.Commit(); // flush the session and commit the transaction
 
 If you are managing ADO.NET transactions yourself you should manually
 ``Commit()`` the ADO.NET transaction.
 
 .. code-block:: csharp
 
-    sess.Flush();
-    currentTransaction.Commit();
+  sess.Flush();
+  currentTransaction.Commit();
 
 If you decide *not* to commit your changes:
 
 .. code-block:: csharp
 
-    tx.Rollback();  // rollback the transaction
+  tx.Rollback();  // rollback the transaction
 
 or:
 
 .. code-block:: csharp
 
-    currentTransaction.Rollback();
+  currentTransaction.Rollback();
 
 If you rollback the transaction you should immediately close and discard the current
 session to ensure that NHibernate's internal state is consistent.
@@ -688,14 +688,14 @@ of ``Close()`` is that the ADO.NET connection will be relinquished by the sessio
 
 .. code-block:: csharp
 
-    tx.Commit();
-    sess.Close();
+  tx.Commit();
+  sess.Close();
 
 .. code-block:: csharp
 
-    sess.Flush();
-    currentTransaction.Commit();
-    sess.Close();
+  sess.Flush();
+  currentTransaction.Commit();
+  sess.Close();
 
 If you provided your own connection, ``Close()`` returns a reference
 to it, so you can manually close it or return it to the pool. Otherwise ``Close()`` returns it to the pool.
@@ -723,55 +723,35 @@ The following exception handling idiom shows the typical case in NHibernate appl
 
 .. code-block:: csharp
 
-    using (ISession sess = factory.OpenSession())
-    using (ITransaction tx = sess.BeginTransaction())
-    {
-    // do some work
-    ...
-    tx.Commit();
-    }
+  using (ISession sess = factory.OpenSession())
+  using (ITransaction tx = sess.BeginTransaction())
+  {
+      // do some work
+      ...
+      tx.Commit();
+  }
 
 Or, when manually managing ADO.NET transactions:
 
 .. code-block:: csharp
 
-    ISession sess = factory.openSession();
-    try
-    {
-    // do some work
-    ...
-    sess.Flush();
-    currentTransaction.Commit();
-    }
-    catch (Exception e)
-    {
-    currentTransaction.Rollback();
-    throw;
-    }
-    finally
-    {
-    sess.Close();
-    }
-
-.. COMMENT: <para>
-            Or, when using a distributed transaction:
-            </para>
-            <programlisting><![CDATA[ISession sess = factory.openSession();
-            try
-            {
-            // do some work
-            ...
-            sess.Flush();
-            }
-            catch (Exception e)
-            {
-            // ContextUtil.SetAbort();
-            throw;
-            }
-            finally
-            {
-            sess.Close();
-            }]]></programlisting>
+  ISession sess = factory.openSession();
+  try
+  {
+      // do some work
+      ...
+      sess.Flush();
+      currentTransaction.Commit();
+  }
+  catch (Exception e)
+  {
+      currentTransaction.Rollback();
+      throw;
+  }
+  finally
+  {
+      sess.Close();
+  }
 
 Lifecyles and object graphs
 ###########################
@@ -851,95 +831,95 @@ updated.
 
 .. code-block:: csharp
 
-    using System;
-    using NHibernate.Type;
-    namespace NHibernate.Test
-    {
-    \[Serializable]
-    public class AuditInterceptor : IInterceptor
-    {
-    private int updates;
-    private int creates;
-    public void OnDelete(object entity,
-    object id,
-    object[] state,
-    string[] propertyNames,
-    IType[] types)
-    {
-    // do nothing
-    }
-    public boolean OnFlushDirty(object entity,
-    object id,
-    object[] currentState,
-    object[] previousState,
-    string[] propertyNames,
-    IType[] types) {
-    if ( entity is IAuditable )
-    {
-    updates++;
-    for ( int i=0; i < propertyNames.Length; i++ )
-    {
-    if ( "LastUpdateTimestamp" == propertyNames[i] )
-    {
-    currentState[i] = DateTime.Now;
-    return true;
-    }
-    }
-    }
-    return false;
-    }
-    public boolean OnLoad(object entity,
-    object id,
-    object[] state,
-    string[] propertyNames,
-    IType[] types)
-    {
-    return false;
-    }
-    public boolean OnSave(object entity,
-    object id,
-    object[] state,
-    string[] propertyNames,
-    IType[] types)
-    {
-    if ( entity is IAuditable )
-    {
-    creates++;
-    for ( int i=0; i<propertyNames.Length; i++ )
-    {
-    if ( "CreateTimestamp" == propertyNames[i] )
-    {
-    state[i] = DateTime.Now;
-    return true;
-    }
-    }
-    }
-    return false;
-    }
-    public void PostFlush(ICollection entities)
-    {
-    Console.Out.WriteLine("Creations: {0}, Updates: {1}", creates, updates);
-    }
-    public void PreFlush(ICollection entities) {
-    updates=0;
-    creates=0;
-    }
-    ......
-    ......
-    }
-    }
+  using System;
+  using NHibernate.Type;
+  namespace NHibernate.Test
+  {
+      [Serializable]
+      public class AuditInterceptor : IInterceptor
+      {
+          private int updates;
+          private int creates;
+          public void OnDelete(object entity,
+                               object id,
+                               object[] state,
+                               string[] propertyNames,
+                               IType[] types)
+          {
+              // do nothing
+          }
+          public boolean OnFlushDirty(object entity,
+                                      object id,
+                                      object[] currentState,
+                                      object[] previousState,
+                                      string[] propertyNames,
+                                      IType[] types) {
+              if ( entity is IAuditable )
+              {
+                  updates++;
+                  for ( int i=0; i < propertyNames.Length; i++ )
+                  {
+                      if ( "LastUpdateTimestamp" == propertyNames[i] )
+                      {
+                          currentState[i] = DateTime.Now;
+                          return true;
+                      }
+                  }
+              }
+              return false;
+          }
+          public boolean OnLoad(object entity,
+                                object id,
+                                object[] state,
+                                string[] propertyNames,
+                                IType[] types)
+          {
+              return false;
+          }
+          public boolean OnSave(object entity,
+                                object id,
+                                object[] state,
+                                string[] propertyNames,
+                                IType[] types)
+          {
+              if ( entity is IAuditable )
+              {
+                  creates++;
+                  for ( int i=0; i<propertyNames.Length; i++ )
+                  {
+                      if ( "CreateTimestamp" == propertyNames[i] )
+                      {
+                          state[i] = DateTime.Now;
+                          return true;
+                      }
+                  }
+              }
+              return false;
+          }
+          public void PostFlush(ICollection entities)
+          {
+              Console.Out.WriteLine("Creations: {0}, Updates: {1}", creates, updates);
+          }
+          public void PreFlush(ICollection entities) {
+              updates=0;
+              creates=0;
+          }
+          ......
+          ......
+      }
+  }
 
 The interceptor would be specified when a session is created.
 
 .. code-block:: csharp
 
-    ISession session = sf.OpenSession( new AuditInterceptor() );
+  ISession session = sf.OpenSession( new AuditInterceptor() );
 
 You may also set an interceptor on a global level, using the ``Configuration``:
 
 .. code-block:: csharp
 
-    new Configuration().SetInterceptor( new AuditInterceptor() );
+  new Configuration().SetInterceptor( new AuditInterceptor() );
 
 Metadata API
 ############
@@ -957,21 +937,20 @@ hierarchy. Instances of the metadata interfaces may be obtained from the
 
 .. code-block:: csharp
 
-    Cat fritz = ......;
-    IClassMetadata catMeta = sessionfactory.GetClassMetadata(typeof(Cat));
-    long id = (long) catMeta.GetIdentifier(fritz);
-    object[] propertyValues = catMeta.GetPropertyValues(fritz);
-    string[] propertyNames = catMeta.PropertyNames;
-    IType[] propertyTypes = catMeta.PropertyTypes;
-    // get an IDictionary of all properties which are not collections or associations
-    // TODO: what about components?
-    IDictionary namedValues = new Hashtable();
-    for ( int i=0; i<propertyNames.Length; i++ )
-    {
-    if ( !propertyTypes[i].IsEntityType && !propertyTypes[i].IsCollectionType )
-    {
-    namedValues[ propertyNames[i] ] = propertyValues[i];
-    }
-    }
-
+  Cat fritz = ......;
+  IClassMetadata catMeta = sessionfactory.GetClassMetadata(typeof(Cat));
+  long id = (long) catMeta.GetIdentifier(fritz);
+  object[] propertyValues = catMeta.GetPropertyValues(fritz);
+  string[] propertyNames = catMeta.PropertyNames;
+  IType[] propertyTypes = catMeta.PropertyTypes;
+  // get an IDictionary of all properties which are not collections or associations
+  // TODO: what about components?
+  IDictionary namedValues = new Hashtable();
+  for ( int i=0; i<propertyNames.Length; i++ )
+  {
+      if ( !propertyTypes[i].IsEntityType && !propertyTypes[i].IsCollectionType )
+  	{
+          namedValues[ propertyNames[i] ] = propertyValues[i];
+      }
+  }
 

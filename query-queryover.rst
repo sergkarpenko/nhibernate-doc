@@ -19,13 +19,13 @@ So, for example:
 
 .. code-block:: csharp
 
-    .Add(Expression.Eq("Name", "Smith"))
+  .Add(Expression.Eq("Name", "Smith"))
 
 becomes:
 
 .. code-block:: csharp
 
-    .Where<Person>(p => p.Name == "Smith")
+  .Where<Person>(p => p.Name == "Smith")
 
 With this kind of syntax there are no 'magic strings', and refactoring tools like
 'Find All References', and 'Refactor->Rename' work perfectly.
@@ -41,33 +41,33 @@ Queries are created from an ISession using the syntax:
 
 .. code-block:: csharp
 
-    IList<Cat> cats =
-    session.QueryOver<Cat>()
-    .Where(c => c.Name == "Max")
-    .List();
+  IList<Cat> cats =
+      session.QueryOver<Cat>()
+          .Where(c => c.Name == "Max")
+          .List();
 
 Detached QueryOver (analagous to DetachedCriteria) can be created, and then used with an ISession using:
 
 .. code-block:: csharp
 
-    QueryOver<Cat> query =
-    QueryOver.Of<Cat>()
-    .Where(c => c.Name == "Paddy");
-    IList<Cat> cats =
-    query.GetExecutableQueryOver(session)
-    .List();
+  QueryOver<Cat> query =
+      QueryOver.Of<Cat>()
+          .Where(c => c.Name == "Paddy");
+  IList<Cat> cats =
+      query.GetExecutableQueryOver(session)
+          .List();
 
 Queries can be built up to use restrictions, projections, and ordering using
 a fluent inline syntax:
 
 .. code-block:: csharp
 
-    var catNames =
-    session.QueryOver<Cat>()
-    .WhereRestrictionOn(c => c.Age).IsBetween(2).And(8)
-    .Select(c => c.Name)
-    .OrderBy(c => c.Name).Asc
-    .List<string>();
+  var catNames =
+      session.QueryOver<Cat>()
+          .WhereRestrictionOn(c => c.Age).IsBetween(2).And(8)
+          .Select(c => c.Name)
+          .OrderBy(c => c.Name).Asc
+          .List<string>();
 
 Simple Expressions
 ##################
@@ -78,13 +78,13 @@ so instead of:
 
 .. code-block:: csharp
 
-    ICriterion equalCriterion = Restrictions.Eq("Name", "Max")
+  ICriterion equalCriterion = Restrictions.Eq("Name", "Max")
 
 You can write:
 
 .. code-block:: csharp
 
-    ICriterion equalCriterion = Restrictions.Where<Cat>(c => c.Name == "Max")
+  ICriterion equalCriterion = Restrictions.Where<Cat>(c => c.Name == "Max")
 
 Since the QueryOver class (and IQueryOver interface) is generic and knows the type of the query,
 there is an inline syntax for restrictions that does not require the additional qualification
@@ -92,11 +92,11 @@ of class name.  So you can also write:
 
 .. code-block:: csharp
 
-    var cats =
-    session.QueryOver<Cat>()
-    .Where(c => c.Name == "Max")
-    .And(c => c.Age > 4)
-    .List();
+  var cats =
+      session.QueryOver<Cat>()
+          .Where(c => c.Name == "Max")
+          .And(c => c.Age > 4)
+          .List();
 
 Note, the methods Where() and And() are semantically identical; the And() method is purely to allow
 QueryOver to look similar to HQL/SQL.
@@ -105,31 +105,31 @@ Boolean comparisons can be made directly instead of comparing to true/false:
 
 .. code-block:: csharp
 
-    .Where(p => p.IsParent)
-    .And(p => !p.IsRetired)
+  .Where(p => p.IsParent)
+          .And(p => !p.IsRetired)
 
 Simple expressions can also be combined using the \|| and && operators.  So ICriteria like:
 
 .. code-block:: csharp
 
-    .Add(Restrictions.And(
-    Restrictions.Eq("Name", "test name"),
-    Restrictions.Or(
-    Restrictions.Gt("Age", 21),
-    Restrictions.Eq("HasCar", true))))
+  .Add(Restrictions.And(
+                  Restrictions.Eq("Name", "test name"),
+                  Restrictions.Or(
+                      Restrictions.Gt("Age", 21),
+                      Restrictions.Eq("HasCar", true))))
 
 Can be written in QueryOver as:
 
 .. code-block:: csharp
 
-    .Where(p => p.Name == "test name" && (p.Age > 21 \|| p.HasCar))
+  .Where(p => p.Name == "test name" && (p.Age > 21 || p.HasCar))
 
 Each of the corresponding overloads in the QueryOver API allows the use of regular ICriterion
 to allow access to private properties.
 
 .. code-block:: csharp
 
-    .Where(Restrictions.Eq("Name", "Max"))
+  .Where(Restrictions.Eq("Name", "Max"))
 
 It is worth noting that the QueryOver API is built on top of the ICriteria API.  Internally the structures are the same, so at runtime
 the statement below, and the statement above, are stored as exactly the same ICriterion.  The actual Lambda Expression is not stored
@@ -137,7 +137,7 @@ in the query.
 
 .. code-block:: csharp
 
-    .Where(c => c.Name == "Max")
+  .Where(c => c.Name == "Max")
 
 Additional Restrictions
 #######################
@@ -148,43 +148,43 @@ These operators have overloads for QueryOver in the Restrictions class, so you c
 
 .. code-block:: csharp
 
-    .Where(Restrictions.On<Cat>(c => c.Name).IsLike("%anna%"))
+  .Where(Restrictions.On<Cat>(c => c.Name).IsLike("%anna%"))
 
 There is also an inline syntax to avoid the qualification of the type:
 
 .. code-block:: csharp
 
-    .WhereRestrictionOn(c => c.Name).IsLike("%anna%")
+  .WhereRestrictionOn(c => c.Name).IsLike("%anna%")
 
 While simple expressions (see above) can be combined using the \|| and && operators, this is not possible with the other
 restrictions.  So this ICriteria:
 
 .. code-block:: csharp
 
-    .Add(Restrictions.Or(
-    Restrictions.Gt("Age", 5)
-    Restrictions.In("Name", new string[] { "Max", "Paddy" })))
+  .Add(Restrictions.Or(
+              Restrictions.Gt("Age", 5)
+              Restrictions.In("Name", new string[] { "Max", "Paddy" })))
 
 Would have to be written as:
 
 .. code-block:: csharp
 
-    .Add(Restrictions.Or(
-    Restrictions.Where<Cat>(c => c.Age > 5)
-    Restrictions.On<Cat>(c => c.Name).IsIn(new string[] { "Max", "Paddy" })))
+  .Add(Restrictions.Or(
+              Restrictions.Where<Cat>(c => c.Age > 5)
+              Restrictions.On<Cat>(c => c.Name).IsIn(new string[] { "Max", "Paddy" })))
 
 However, in addition to the additional restrictions factory methods, there are extension methods to allow
 a more concise inline syntax for some of the operators.  So this:
 
 .. code-block:: csharp
 
-    .WhereRestrictionOn(c => c.Name).IsLike("%anna%")
+  .WhereRestrictionOn(c => c.Name).IsLike("%anna%")
 
 May also be written as:
 
 .. code-block:: csharp
 
-    .Where(c => c..Name.IsLike("%anna%"))
+  .Where(c => c..Name.IsLike("%anna%"))
 
 Associations
 ############
@@ -200,10 +200,10 @@ a join to create a sub-QueryOver (analagous to creating sub-criteria in the ICri
 
 .. code-block:: csharp
 
-    IQueryOver<Cat,Kitten> catQuery =
-    session.QueryOver<Cat>()
-    .JoinQueryOver(c => c.Kittens)
-    .Where(k => k.Name == "Tiddles");
+  IQueryOver<Cat,Kitten> catQuery =
+      session.QueryOver<Cat>()
+          .JoinQueryOver(c => c.Kittens)
+              .Where(k => k.Name == "Tiddles");
 
 The JoinQueryOver returns a new instance of the IQueryOver than has its root at the Kittens collection.
 The default type for restrictions is now Kitten (restricting on the name 'Tiddles' in the above example),
@@ -214,10 +214,9 @@ If your collection type is not IEnumerable<T>, then you need to qualify the type
 
 .. code-block:: csharp
 
-    IQueryOver<Cat,Kitten> catQuery =
-    session.QueryOver<Cat>()
-    .JoinQueryOver<*Kitten*>(c => c.Kittens)
-    .Where(k => k.Name == "Tiddles");
+  IQueryOver<Cat,Kitten> catQuery =
+      session.QueryOver<Cat>()
+          .JoinQueryOver<
 
 The default join is an inner-join.  Each of the additional join types can be specified using
 the methods ``.Inner, .Left, .Right,`` or ``.Full``.
@@ -225,10 +224,10 @@ For example, to left outer-join on Kittens use:
 
 .. code-block:: csharp
 
-    IQueryOver<Cat,Kitten> catQuery =
-    session.QueryOver<Cat>()
-    .Left.JoinQueryOver(c => c.Kittens)
-    .Where(k => k.Name == "Tiddles");
+  IQueryOver<Cat,Kitten> catQuery =
+      session.QueryOver<Cat>()
+          .Left.JoinQueryOver(c => c.Kittens)
+              .Where(k => k.Name == "Tiddles");
 
 Aliases
 #######
@@ -249,13 +248,13 @@ and a .JoinAlias function to traverse associations using aliases without creatin
 
 .. code-block:: csharp
 
-    Cat catAlias = null;
-    Kitten kittenAlias = null;
-    IQueryOver<Cat,Cat> catQuery =
-    session.QueryOver<Cat>(() => catAlias)
-    .JoinAlias(() => catAlias.Kittens, () => kittenAlias)
-    .Where(() => catAlias.Age > 5)
-    .And(() => kittenAlias.Name == "Tiddles");
+  Cat catAlias = null;
+  Kitten kittenAlias = null;
+  IQueryOver<Cat,Cat> catQuery =
+      session.QueryOver<Cat>(() => catAlias)
+          .JoinAlias(() => catAlias.Kittens, () => kittenAlias)
+          .Where(() => catAlias.Age > 5)
+          .And(() => kittenAlias.Name == "Tiddles");
 
 Projections
 ###########
@@ -265,22 +264,22 @@ which can take multiple Lambda Expression arguments:
 
 .. code-block:: csharp
 
-    IList selection =
-    session.QueryOver<Cat>()
-    .Select(
-    c => c.Name,
-    c => c.Age)
-    .List<object[]>();
+  IList selection =
+      session.QueryOver<Cat>()
+          .Select(
+              c => c.Name,
+              c => c.Age)
+          .List<object[]>();
 
 Because this query no longer returns a Cat, the return type must be explicitly specified.
 If a single property is projected, the return type can be specified using:
 
 .. code-block:: csharp
 
-    IList<int> ages =
-    session.QueryOver<Cat>()
-    .Select(c => c.Age)
-    .List<int>();
+  IList<int> ages =
+      session.QueryOver<Cat>()
+          .Select(c => c.Age)
+          .List<int>();
 
 However, if multiple properties are projected, then the returned list will contain
 object arrays, as per a projection
@@ -288,18 +287,18 @@ in ICriteria.  This could be fed into an anonymous type using:
 
 .. code-block:: csharp
 
-    var catDetails =
-    session.QueryOver<Cat>()
-    .Select(
-    c => c.Name,
-    c => c.Age)
-    .List<object[]>()
-    .Select(properties => new {
-    CatName = (string)properties[0],
-    CatAge = (int)properties[1],
-    });
-    Console.WriteLine(catDetails[0].CatName);
-    Console.WriteLine(catDetails[0].CatAge);
+  var catDetails =
+      session.QueryOver<Cat>()
+          .Select(
+              c => c.Name,
+              c => c.Age)
+          .List<object[]>()
+          .Select(properties => new {
+              CatName = (string)properties[0],
+              CatAge = (int)properties[1],
+              });
+  Console.WriteLine(catDetails[0].CatName);
+  Console.WriteLine(catDetails[0].CatAge);
 
 Note that the second ``.Select`` call in this example is an extension method on IEnumerable<T> supplied in System.Linq;
 it is not part of NHibernate.
@@ -309,47 +308,47 @@ class also has overloads to allow Lambda Expressions to be used:
 
 .. code-block:: csharp
 
-    IList selection =
-    session.QueryOver<Cat>()
-    .Select(Projections.ProjectionList()
-    .Add(Projections.Property<Cat>(c => c.Name))
-    .Add(Projections.Avg<Cat>(c => c.Age)))
-    .List<object[]>();
+  IList selection =
+      session.QueryOver<Cat>()
+          .Select(Projections.ProjectionList()
+              .Add(Projections.Property<Cat>(c => c.Name))
+              .Add(Projections.Avg<Cat>(c => c.Age)))
+          .List<object[]>();
 
 In addition there is an inline syntax for creating projection lists that does not require the explicit class qualification:
 
 .. code-block:: csharp
 
-    IList selection =
-    session.QueryOver<Cat>()
-    .SelectList(list => list
-    .Select(c => c.Name)
-    .SelectAvg(c => c.Age))
-    .List<object[]>();
+  IList selection =
+      session.QueryOver<Cat>()
+          .SelectList(list => list
+              .Select(c => c.Name)
+              .SelectAvg(c => c.Age))
+          .List<object[]>();
 
 Projections can also have arbitrary aliases assigned to them to allow result transformation.
 If there is a CatSummary DTO class defined as:
 
 .. code-block:: csharp
 
-    public class CatSummary
-    {
-    public string Name { get; set; }
-    public int AverageAge { get; set; }
-    }
+  public class CatSummary
+  {
+      public string Name { get; set; }
+      public int AverageAge { get; set; }
+  }
 
 ... then aliased projections can be used with the AliasToBean<T> transformer:
 
 .. code-block:: csharp
 
-    CatSummary summaryDto = null;
-    IList<CatSummary> catReport =
-    session.QueryOver<Cat>()
-    .SelectList(list => list
-    .SelectGroup(c => c.Name).WithAlias(() => summaryDto.Name)
-    .SelectAvg(c => c.Age).WithAlias(() => summaryDto.AverageAge))
-    .TransformUsing(Transformers.AliasToBean<CatSummary>())
-    .List<CatSummary>();
+  CatSummary summaryDto = null;
+  IList<CatSummary> catReport =
+      session.QueryOver<Cat>()
+          .SelectList(list => list
+              .SelectGroup(c => c.Name).WithAlias(() => summaryDto.Name)
+              .SelectAvg(c => c.Age).WithAlias(() => summaryDto.AverageAge))
+          .TransformUsing(Transformers.AliasToBean<CatSummary>())
+          .List<CatSummary>();
 
 Projection Functions
 ####################
@@ -359,15 +358,15 @@ functions to be applied.  For example you can write the following to extract jus
 
 .. code-block:: csharp
 
-    .Where(p => p.BirthDate.YearPart() == 1971)
+  .Where(p => p.BirthDate.YearPart() == 1971)
 
 The functions can also be used inside projections:
 
 .. code-block:: csharp
 
-    .Select(
-    p => Projections.Concat(p.LastName, ", ", p.FirstName),
-    p => p.Height.Abs())
+  .Select(
+              p => Projections.Concat(p.LastName, ", ", p.FirstName),
+              p => p.Height.Abs())
 
 Subqueries
 ##########
@@ -377,22 +376,22 @@ restrictions.  For example:
 
 .. code-block:: csharp
 
-    QueryOver<Cat> maximumAge =
-    QueryOver.Of<Cat>()
-    .SelectList(p => p.SelectMax(c => c.Age));
-    IList<Cat> oldestCats =
-    session.QueryOver<Cat>()
-    .Where(Subqueries.WhereProperty<Cat>(c => c.Age).Eq(maximumAge))
-    .List();
+  QueryOver<Cat> maximumAge =
+      QueryOver.Of<Cat>()
+          .SelectList(p => p.SelectMax(c => c.Age));
+  IList<Cat> oldestCats =
+      session.QueryOver<Cat>()
+          .Where(Subqueries.WhereProperty<Cat>(c => c.Age).Eq(maximumAge))
+          .List();
 
 The inline syntax allows you to use subqueries without requalifying the type:
 
 .. code-block:: csharp
 
-    IList<Cat> oldestCats =
-    session.QueryOver<Cat>()
-    .WithSubquery.WhereProperty(c => c.Age).Eq(maximumAge)
-    .List();
+  IList<Cat> oldestCats =
+      session.QueryOver<Cat>()
+          .WithSubquery.WhereProperty(c => c.Age).Eq(maximumAge)
+          .List();
 
 There is an extension method ``As()`` on (a detached) QueryOver that allows you to cast it to any type.
 This is used in conjunction with the overloads ``Where(), WhereAll(),`` and ``WhereSome()``
@@ -400,9 +399,8 @@ to allow use of the built-in C# operators for comparison, so the above query can
 
 .. code-block:: csharp
 
-    IList<Cat> oldestCats =
-    session.QueryOver<Cat>()
-    .WithSubquery.Where(c => c.Age == maximumAge.As<int>())
-    .List();
-
+  IList<Cat> oldestCats =
+      session.QueryOver<Cat>()
+          .WithSubquery.Where(c => c.Age == maximumAge.As<int>())
+          .List();
 

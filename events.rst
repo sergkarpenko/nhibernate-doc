@@ -25,77 +25,77 @@ You may either implement ``IInterceptor`` directly or (better) extend
 
 .. code-block:: csharp
 
-    using System;
-    using NHibernate;
-    using NHibernate.Type;
-    public class AuditInterceptor : EmptyInterceptor {
-    private int updates;
-    private int creates;
-    private int loads;
-    public override void OnDelete(object entity,
-    object id,
-    object[] state,
-    string[] propertyNames,
-    IType[] types)
-    {
-    // do nothing
-    }
-    public override bool OnFlushDirty(object entity,
-    object id,
-    object[] currentState,
-    object[] previousState,
-    string[] propertyNames,
-    IType[] types)
-    {
-    if ( entity is IAuditable ) {
-    updates++;
-    for ( int i=0; i < propertyNames.Length; i++ ) {
-    if ( "lastUpdateTimestamp".Equals( propertyNames[i] ) ) {
-    currentState[i] = new DateTime();
-    return true;
-    }
-    }
-    }
-    return false;
-    }
-    public override bool OnLoad(object entity,
-    object id,
-    object[] state,
-    string[] propertyNames,
-    IType[] types)
-    {
-    if ( entity is IAuditable ) {
-    loads++;
-    }
-    return false;
-    }
-    public override bool OnSave(object entity,
-    object id,
-    object[] state,
-    string[] propertyNames,
-    IType[] types)
-    {
-    if ( entity is IAuditable ) {
-    creates++;
-    for ( int i=0; i<propertyNames.Length; i++ ) {
-    if ( "createTimestamp".Equals( propertyNames[i] ) ) {
-    state[i] = new DateTime();
-    return true;
-    }
-    }
-    }
-    return false;
-    }
-    public override void AfterTransactionCompletion(ITransaction tx)
-    {
-    if ( tx.WasCommitted ) {
-    System.Console.WriteLine("Creations: " + creates + ", Updates: " + updates, "Loads: " + loads);
-    }
-    updates=0;
-    creates=0;
-    loads=0;
-    }
-    }
+  using System;
+  using NHibernate;
+  using NHibernate.Type;
+  public class AuditInterceptor : EmptyInterceptor {
+      private int updates;
+      private int creates;
+      private int loads;
+      public override void OnDelete(object entity,
+                                    object id,
+                                    object[] state,
+                                    string[] propertyNames,
+                                    IType[] types)
+      {
+          // do nothing
+      }
+      public override bool OnFlushDirty(object entity,
+                                        object id,
+  				      object[] currentState,
+  				      object[] previousState,
+  				      string[] propertyNames,
+  				      IType[] types)
+      {
+          if ( entity is IAuditable ) {
+              updates++;
+              for ( int i=0; i < propertyNames.Length; i++ ) {
+                  if ( "lastUpdateTimestamp".Equals( propertyNames[i] ) ) {
+                      currentState[i] = new DateTime();
+                      return true;
+                  }
+              }
+          }
+          return false;
+      }
+      public override bool OnLoad(object entity,
+                                  object id,
+  				object[] state,
+  				string[] propertyNames,
+  				IType[] types)
+      {
+          if ( entity is IAuditable ) {
+              loads++;
+          }
+          return false;
+      }
+      public override bool OnSave(object entity,
+                                  object id,
+  				object[] state,
+  				string[] propertyNames,
+  				IType[] types)
+      {
+          if ( entity is IAuditable ) {
+              creates++;
+              for ( int i=0; i<propertyNames.Length; i++ ) {
+                  if ( "createTimestamp".Equals( propertyNames[i] ) ) {
+                      state[i] = new DateTime();
+                      return true;
+                  }
+              }
+          }
+          return false;
+      }
+      public override void AfterTransactionCompletion(ITransaction tx)
+      {
+          if ( tx.WasCommitted ) {
+              System.Console.WriteLine("Creations: " + creates + ", Updates: " + updates, "Loads: " + loads);
+          }
+          updates=0;
+          creates=0;
+          loads=0;
+      }
+  }
 
 Interceptors come in two flavors: ``ISession``-scoped and
 ``ISessionFactory``-scoped.
@@ -106,7 +106,7 @@ methods accepting an ``IInterceptor``.
 
 .. code-block:: csharp
 
-    ISession session = sf.OpenSession( new AuditInterceptor() );
+  ISession session = sf.OpenSession( new AuditInterceptor() );
 
 An ``ISessionFactory``-scoped interceptor is registered with the ``Configuration``
 object prior to building the ``ISessionFactory``.  In this case, the supplied interceptor
@@ -117,7 +117,7 @@ sessions will use this interceptor (potentially) concurrently.
 
 .. code-block:: csharp
 
-    new Configuration().SetInterceptor( new AuditInterceptor() );
+  new Configuration().SetInterceptor( new AuditInterceptor() );
 
 Event system
 ############
@@ -151,39 +151,39 @@ XML. Here's an example of a custom load event listener:
 
 .. code-block:: csharp
 
-    public class MyLoadListener : ILoadEventListener
-    {
-    // this is the single method defined by the LoadEventListener interface
-    public void OnLoad(LoadEvent theEvent, LoadType loadType)
-    {
-    if ( !MySecurity.IsAuthorized( theEvent.EntityClassName, theEvent.EntityId ) ) {
-    throw new MySecurityException("Unauthorized access");
-    }
-    }
-    }
+  public class MyLoadListener : ILoadEventListener
+  {
+      // this is the single method defined by the LoadEventListener interface
+      public void OnLoad(LoadEvent theEvent, LoadType loadType)
+      {
+          if ( !MySecurity.IsAuthorized( theEvent.EntityClassName, theEvent.EntityId ) ) {
+              throw new MySecurityException("Unauthorized access");
+          }
+      }
+  }
 
 You also need a configuration entry telling NHibernate to use the listener in addition
 to the default listener:
 
 .. code-block:: csharp
 
-    <hibernate-configuration>
-    <session-factory>
-    ...
-    <event type="load">
-    <listener class="MyLoadListener"/>
-    <listener class="NHibernate.Event.Default.DefaultLoadEventListener"/>
-    </event>
-    </session-factory>
-    </hibernate-configuration>
+  <hibernate-configuration>
+      <session-factory>
+          ...
+          <event type="load">
+              <listener class="MyLoadListener"/>
+              <listener class="NHibernate.Event.Default.DefaultLoadEventListener"/>
+          </event>
+      </session-factory>
+  </hibernate-configuration>
 
 Instead, you may register it programmatically:
 
 .. code-block:: csharp
 
-    Configuration cfg = new Configuration();
-    ILoadEventListener[] stack = new ILoadEventListener[] { new MyLoadListener(), new DefaultLoadEventListener() };
-    cfg.EventListeners.LoadEventListeners = stack;
+  Configuration cfg = new Configuration();
+  ILoadEventListener[] stack = new ILoadEventListener[] { new MyLoadListener(), new DefaultLoadEventListener() };
+  cfg.EventListeners.LoadEventListeners = stack;
 
 Listeners registered declaratively cannot share instances. If the same class name is
 used in multiple ``<listener/>`` elements, each reference will
@@ -195,5 +195,4 @@ Why implement an interface and define the specific type during configuration? We
 listener implementation could implement multiple event listener interfaces. Having the
 type additionally defined during registration makes it easier to turn custom listeners on
 or off during configuration.
-
 

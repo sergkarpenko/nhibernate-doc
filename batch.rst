@@ -9,14 +9,14 @@ look like this:
 
 .. code-block:: csharp
 
-    ISession session = sessionFactory.OpenSession();
-    ITransaction tx = session.BeginTransaction();
-    for ( int i=0; i<100000; i++ ) {
-    Customer customer = new Customer(.....);
-    session.Save(customer);
-    }
-    tx.Commit();
-    session.Close();
+  ISession session = sessionFactory.OpenSession();
+  ITransaction tx = session.BeginTransaction();
+  for ( int i=0; i<100000; i++ ) {
+      Customer customer = new Customer(.....);
+      session.Save(customer);
+  }
+  tx.Commit();
+  session.Close();
 
 This would fall over with an ``OutOfMemoryException`` somewhere
 around the 50 000th row. That's because NHibernate caches all the newly inserted
@@ -29,7 +29,7 @@ size to a reasonable number (say, 10-50):
 
 .. code-block:: csharp
 
-    adonet.batch_size 20
+  adonet.batch_size 20
 
 Note that NHibernate disables insert batching at the ADO level transparently if you
 use an ``identiy`` identifier generator.
@@ -39,7 +39,7 @@ the second-level cache is completely disabled:
 
 .. code-block:: csharp
 
-    cache.use_second_level_cache false
+  cache.use_second_level_cache false
 
 However, this is not absolutely necessary, since we can explicitly set the
 ``CacheMode`` to disable interaction with the second-level cache.
@@ -53,19 +53,19 @@ the first-level cache.
 
 .. code-block:: csharp
 
-    ISession session = sessionFactory.openSession();
-    ITransaction tx = session.BeginTransaction();
-    for ( int i=0; i<100000; i++ ) {
-    Customer customer = new Customer(.....);
-    session.Save(customer);
-    if ( i % 20 == 0 ) { //20, same as the ADO batch size
-    //flush a batch of inserts and release memory:
-    session.Flush();
-    session.Clear();
-    }
-    }
-    tx.Commit();
-    session.Close();
+  ISession session = sessionFactory.openSession();
+  ITransaction tx = session.BeginTransaction();
+  for ( int i=0; i<100000; i++ ) {
+      Customer customer = new Customer(.....);
+      session.Save(customer);
+      if ( i % 20 == 0 ) { //20, same as the ADO batch size
+          //flush a batch of inserts and release memory:
+          session.Flush();
+          session.Clear();
+      }
+  }
+  tx.Commit();
+  session.Close();
 
 The StatelessSession interface
 ##############################
@@ -85,17 +85,17 @@ session is a lower-level abstraction, much closer to the underlying ADO.
 
 .. code-block:: csharp
 
-    IStatelessSession session = sessionFactory.OpenStatelessSession();
-    ITransaction tx = session.BeginTransaction();
-    var customers = session.GetNamedQuery("GetCustomers")
-    .Enumerable<Customer>();
-    while ( customers.MoveNext() ) {
-    Customer customer = customers.Current;
-    customer.updateStuff(...);
-    session.Update(customer);
-    }
-    tx.Commit();
-    session.Close();
+  IStatelessSession session = sessionFactory.OpenStatelessSession();
+  ITransaction tx = session.BeginTransaction();
+  var customers = session.GetNamedQuery("GetCustomers")
+      .Enumerable<Customer>();
+  while ( customers.MoveNext() ) {
+      Customer customer = customers.Current;
+      customer.updateStuff(...);
+      session.Update(customer);
+  }
+  tx.Commit();
+  session.Close();
 
 Note that in this code example, the ``Customer`` instances returned
 by the query are immediately detached. They are never associated with any persistence
@@ -142,16 +142,16 @@ As an example, to execute an HQL ``UPDATE``, use the
 
 .. code-block:: csharp
 
-    ISession session = sessionFactory.OpenSession();
-    ITransaction tx = session.BeginTransaction();
-    string hqlUpdate = "update Customer c set c.name = :newName where c.name = :oldName";
-    // or string hqlUpdate = "update Customer set name = :newName where name = :oldName";
-    int updatedEntities = s.CreateQuery( hqlUpdate )
-    .SetString( "newName", newName )
-    .SetString( "oldName", oldName )
-    .ExecuteUpdate();
-    tx.Commit();
-    session.Close();
+  ISession session = sessionFactory.OpenSession();
+  ITransaction tx = session.BeginTransaction();
+  string hqlUpdate = "update Customer c set c.name = :newName where c.name = :oldName";
+  // or string hqlUpdate = "update Customer set name = :newName where name = :oldName";
+  int updatedEntities = s.CreateQuery( hqlUpdate )
+          .SetString( "newName", newName )
+          .SetString( "oldName", oldName )
+          .ExecuteUpdate();
+  tx.Commit();
+  session.Close();
 
 HQL ``UPDATE`` statements, by default do not effect the
 :ref:`version <mapping-declaration-version>`
@@ -164,15 +164,15 @@ keyword.
 
 .. code-block:: csharp
 
-    ISession session = sessionFactory.OpenSession();
-    ITransaction tx = session.BeginTransaction();
-    string hqlVersionedUpdate = "update versioned Customer set name = :newName where name = :oldName";
-    int updatedEntities = s.CreateQuery( hqlUpdate )
-    .SetString( "newName", newName )
-    .SetString( "oldName", oldName )
-    .ExecuteUpdate();
-    tx.Commit();
-    session.Close();
+  ISession session = sessionFactory.OpenSession();
+  ITransaction tx = session.BeginTransaction();
+  string hqlVersionedUpdate = "update versioned Customer set name = :newName where name = :oldName";
+  int updatedEntities = s.CreateQuery( hqlUpdate )
+          .SetString( "newName", newName )
+          .SetString( "oldName", oldName )
+          .ExecuteUpdate();
+  tx.Commit();
+  session.Close();
 
 Note that custom version types (``NHibernate.Usertype.IUserVersionType``)
 are not allowed in conjunction with a ``update versioned`` statement.
@@ -182,15 +182,15 @@ method:
 
 .. code-block:: csharp
 
-    ISession session = sessionFactory.OpenSession();
-    ITransaction tx = session.BeginTransaction();
-    String hqlDelete = "delete Customer c where c.name = :oldName";
-    // or String hqlDelete = "delete Customer where name = :oldName";
-    int deletedEntities = s.CreateQuery( hqlDelete )
-    .SetString( "oldName", oldName )
-    .ExecuteUpdate();
-    tx.Commit();
-    session.Close();
+  ISession session = sessionFactory.OpenSession();
+  ITransaction tx = session.BeginTransaction();
+  String hqlDelete = "delete Customer c where c.name = :oldName";
+  // or String hqlDelete = "delete Customer where name = :oldName";
+  int deletedEntities = s.CreateQuery( hqlDelete )
+          .SetString( "oldName", oldName )
+          .ExecuteUpdate();
+  tx.Commit();
+  session.Close();
 
 The ``int`` value returned by the ``IQuery.ExecuteUpdate()``
 method indicate the number of entities effected by the operation.  Consider this may or may not
@@ -216,7 +216,7 @@ points to note:
 - select_statement can be any valid HQL select query, with the caveat that the return types
   must match the types expected by the insert.  Currently, this is checked during query
   compilation rather than allowing the check to relegate to the database.  Note however
-  that this might cause problems between NHibernate ``Type``s which are
+  that this might cause problems between NHibernate ``Type`` which are
   *equivalent* as opposed to *equal*.  This might cause
   issues with mismatches between a property defined as a ``NHibernate.Type.DateType``
   and a property defined as a ``NHibernate.Type.TimestampType``, even though the
@@ -237,19 +237,18 @@ points to note:
 - For properties mapped as either ``version`` or ``timestamp``,
   the insert statement gives you two options.  You can either specify the property in the
   properties_list (in which case its value is taken from the corresponding select expressions)
-  or omit it from the properties_list (in which case the ``seed value`` defined
+  or omit it from the properties_list (in which case the ``eed value`` defined
   by the ``NHibernate.Type.IVersionType`` is used).
 
 An example HQL ``INSERT`` statement execution:
 
 .. code-block:: csharp
 
-    ISession session = sessionFactory.OpenSession();
-    ITransaction tx = session.BeginTransaction();
-    var hqlInsert = "insert into DelinquentAccount (id, name) select c.id, c.name from Customer c where ...";
-    int createdEntities = s.CreateQuery( hqlInsert )
-    .ExecuteUpdate();
-    tx.Commit();
-    session.Close();
-
+  ISession session = sessionFactory.OpenSession();
+  ITransaction tx = session.BeginTransaction();
+  var hqlInsert = "insert into DelinquentAccount (id, name) select c.id, c.name from Customer c where ...";
+  int createdEntities = s.CreateQuery( hqlInsert )
+          .ExecuteUpdate();
+  tx.Commit();
+  session.Close();
 

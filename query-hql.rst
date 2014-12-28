@@ -13,7 +13,7 @@ Case Sensitivity
 
 Queries are case-insensitive, except for names of .NET classes and properties.
 So ``SeLeCT`` is the same as
-``sELEct`` is the same as
+``ELEct`` is the same as
 ``SELECT`` but
 ``Eg.FOO`` is not
 ``Eg.Foo`` and
@@ -30,7 +30,7 @@ The simplest possible NHibernate query is of the form:
 
 .. code-block:: sql
 
-    from Eg.Cat
+  from Eg.Cat
 
 which simply returns all instances of the class ``Eg.Cat``.
 
@@ -40,7 +40,7 @@ query.
 
 .. code-block:: sql
 
-    from Eg.Cat as cat
+  from Eg.Cat as cat
 
 This query assigns the alias ``cat`` to ``Cat``
 instances, so we could use that alias later in the query. The ``as``
@@ -48,17 +48,17 @@ keyword is optional; we could also write:
 
 .. code-block:: sql
 
-    from Eg.Cat cat
+  from Eg.Cat cat
 
 Multiple classes may appear, resulting in a cartesian product or "cross" join.
 
 .. code-block:: sql
 
-    from Formula, Parameter
+  from Formula, Parameter
 
 .. code-block:: sql
 
-    from Formula as form, Parameter as param
+  from Formula as form, Parameter as param
 
 It is considered good practice to name query aliases using an initial lowercase,
 consistent with naming standards for local variables
@@ -72,11 +72,11 @@ values, using a ``join``.
 
 .. code-block:: sql
 
-    from Eg.Cat as cat
-    inner join cat.Mate as mate
-    left outer join cat.Kittens as kitten
-    from Eg.Cat as cat left join cat.Mate.Kittens as kittens
-    from Formula form full join form.Parameter param
+  from Eg.Cat as cat
+      inner join cat.Mate as mate
+      left outer join cat.Kittens as kitten
+  from Eg.Cat as cat left join cat.Mate.Kittens as kittens
+  from Formula form full join form.Parameter param
 
 The supported join types are borrowed from ANSI SQL
 
@@ -93,9 +93,9 @@ The ``inner join``, ``left outer join`` and
 
 .. code-block:: sql
 
-    from Eg.Cat as cat
-    join cat.Mate as mate
-    left join cat.Kittens as kitten
+  from Eg.Cat as cat
+      join cat.Mate as mate
+      left join cat.Kittens as kitten
 
 In addition, a "fetch" join allows associations or collections of values to be
 initialized along with their parent objects, using a single select. This is particularly
@@ -105,9 +105,9 @@ lazy declarations of the mapping file for associations and collections. See
 
 .. code-block:: sql
 
-    from Eg.Cat as cat
-    inner join fetch cat.Mate
-    left join fetch cat.Kittens
+  from Eg.Cat as cat
+      inner join fetch cat.Mate
+      left join fetch cat.Kittens
 
 The associated objects are not returned directly in the query results. Instead, they may
 be accessed via the parent object.
@@ -121,55 +121,55 @@ be used in queries called using ``Enumerable()``. Finally, note that
 The select clause
 #################
 
-The ``select`` clause picks which objects and properties to return in
+The ``elect`` clause picks which objects and properties to return in
 the query result set. Consider:
 
 .. code-block:: sql
 
-    select mate
-    from Eg.Cat as cat
-    inner join cat.Mate as mate
+  select mate
+  from Eg.Cat as cat
+      inner join cat.Mate as mate
 
-The query will select ``Mate``s of other ``Cat``s.
+The query will select ``Mate`` of other ``Cat``.
 Actually, you may express this query more compactly as:
 
 .. code-block:: sql
 
-    select cat.Mate from Eg.Cat cat
+  select cat.Mate from Eg.Cat cat
 
 You may even select collection elements, using the special ``elements``
 function. The following query returns all kittens of any cat.
 
 .. code-block:: sql
 
-    select elements(cat.Kittens) from Eg.Cat cat
+  select elements(cat.Kittens) from Eg.Cat cat
 
 Queries may return properties of any value type including properties of component type:
 
 .. code-block:: sql
 
-    select cat.Name from Eg.DomesticCat cat
-    where cat.Name like 'fri%'
-    select cust.Name.FirstName from Customer as cust
+  select cat.Name from Eg.DomesticCat cat
+  where cat.Name like 'fri%'
+  select cust.Name.FirstName from Customer as cust
 
 Queries may return multiple objects and/or properties as an array of type
 ``object[]``
 
 .. code-block:: sql
 
-    select mother, offspr, mate.Name
-    from Eg.DomesticCat as mother
-    inner join mother.Mate as mate
-    left outer join mother.Kittens as offspr
+  select mother, offspr, mate.Name
+  from Eg.DomesticCat as mother
+      inner join mother.Mate as mate
+      left outer join mother.Kittens as offspr
 
 or as an actual typesafe object
 
 .. code-block:: sql
 
-    select new Family(mother, mate, offspr)
-    from Eg.DomesticCat as mother
-    join mother.Mate as mate
-    left join mother.Kittens as offspr
+  select new Family(mother, mate, offspr)
+  from Eg.DomesticCat as mother
+      join mother.Mate as mate
+      left join mother.Kittens as offspr
 
 assuming that the class ``Family`` has an appropriate constructor.
 
@@ -180,16 +180,16 @@ HQL queries may even return the results of aggregate functions on properties:
 
 .. code-block:: sql
 
-    select avg(cat.Weight), sum(cat.Weight), max(cat.Weight), count(cat)
-    from Eg.Cat cat
+  select avg(cat.Weight), sum(cat.Weight), max(cat.Weight), count(cat)
+  from Eg.Cat cat
 
-Collections may also appear inside aggregate functions in the ``select``
+Collections may also appear inside aggregate functions in the ``elect``
 clause.
 
 .. code-block:: sql
 
-    select cat, count( elements(cat.Kittens) )
-    from Eg.Cat cat group by cat.Id, cat.Weight, ...
+  select cat, count( elements(cat.Kittens) )
+  from Eg.Cat cat group by cat.Id, cat.Weight, ...
 
 The supported aggregate functions are
 
@@ -204,8 +204,8 @@ the same semantics as in SQL.
 
 .. code-block:: sql
 
-    select distinct cat.Name from Eg.Cat cat
-    select count(distinct cat.Name), count(cat) from Eg.Cat cat
+  select distinct cat.Name from Eg.Cat cat
+  select count(distinct cat.Name), count(cat) from Eg.Cat cat
 
 Polymorphic queries
 ###################
@@ -214,7 +214,7 @@ A query like:
 
 .. code-block:: sql
 
-    from Eg.Cat as cat
+  from Eg.Cat as cat
 
 returns instances not only of ``Cat``, but also of subclasses like
 ``DomesticCat``. NHibernate queries may name *any* .NET
@@ -224,14 +224,14 @@ query would return all persistent objects:
 
 .. code-block:: sql
 
-    from System.Object o
+  from System.Object o
 
 The interface ``INamed`` might be implemented by various persistent
 classes:
 
 .. code-block:: sql
 
-    from Eg.Named n, Eg.Named m where n.Name = m.Name
+  from Eg.Named n, Eg.Named m where n.Name = m.Name
 
 Note that these last two queries will require more than one SQL ``SELECT``. This
 means that the ``order by`` clause does not correctly order the whole result set.
@@ -245,15 +245,15 @@ The ``where`` clause allows you to narrow the list of instances returned.
 
 .. code-block:: sql
 
-    from Eg.Cat as cat where cat.Name='Fritz'
+  from Eg.Cat as cat where cat.Name='Fritz'
 
 returns instances of ``Cat`` named 'Fritz'.
 
 .. code-block:: sql
 
-    select foo
-    from Eg.Foo foo, Eg.Bar bar
-    where foo.StartDate = bar.Date
+  select foo
+  from Eg.Foo foo, Eg.Bar bar
+  where foo.StartDate = bar.Date
 
 will return all instances of ``Foo`` for which
 there exists an instance of ``Bar`` with a
@@ -264,15 +264,15 @@ there exists an instance of ``Bar`` with a
 
 .. code-block:: sql
 
-    from Eg.Cat cat where cat.Mate.Name is not null
+  from Eg.Cat cat where cat.Mate.Name is not null
 
 This query translates to an SQL query with a table (inner) join. If you were to write
 something like
 
 .. code-block:: sql
 
-    from Eg.Foo foo
-    where foo.Bar.Baz.Customer.Address.City is not null
+  from Eg.Foo foo
+  where foo.Bar.Baz.Customer.Address.City is not null
 
 you would end up with a query that would require four table joins in SQL.
 
@@ -281,18 +281,18 @@ instances:
 
 .. code-block:: sql
 
-    from Eg.Cat cat, Eg.Cat rival where cat.Mate = rival.Mate
-    select cat, mate
-    from Eg.Cat cat, Eg.Cat mate
-    where cat.Mate = mate
+  from Eg.Cat cat, Eg.Cat rival where cat.Mate = rival.Mate
+  select cat, mate
+  from Eg.Cat cat, Eg.Cat mate
+  where cat.Mate = mate
 
 The special property (lowercase) ``id`` may be used to reference the
 unique identifier of an object. (You may also use its property name.)
 
 .. code-block:: sql
 
-    from Eg.Cat as cat where cat.id = 123
-    from Eg.Cat as cat where cat.Mate.id = 69
+  from Eg.Cat as cat where cat.id = 123
+  from Eg.Cat as cat where cat.Mate.id = 69
 
 The second query is efficient. No table join is required!
 
@@ -302,12 +302,12 @@ has a composite identifier consisting of ``Country`` and
 
 .. code-block:: sql
 
-    from Bank.Person person
-    where person.id.Country = 'AU'
-    and person.id.MedicareNumber = 123456
-    from Bank.Account account
-    where account.Owner.id.Country = 'AU'
-    and account.Owner.id.MedicareNumber = 123456
+  from Bank.Person person
+  where person.id.Country = 'AU'
+      and person.id.MedicareNumber = 123456
+  from Bank.Account account
+  where account.Owner.id.Country = 'AU'
+      and account.Owner.id.MedicareNumber = 123456
 
 Once again, the second query requires no table join.
 
@@ -317,17 +317,17 @@ where clause will be translated to its discriminator value.
 
 .. code-block:: sql
 
-    from Eg.Cat cat where cat.class = Eg.DomesticCat
+  from Eg.Cat cat where cat.class = Eg.DomesticCat
 
 You may also specify properties of components or composite user types (and of components
 of components, etc). Never try to use a path-expression that ends in a property of component
-type (as opposed to a property of a component). For example, if ``store.Owner``
+type (as opposed to a property of a component). For example, if ``tore.Owner``
 is an entity with a component ``Address``
 
 .. code-block:: csharp
 
-    store.Owner.Address.City    // okay
-    store.Owner.Address         // error!
+  store.Owner.Address.City    // okay
+  store.Owner.Address         // error!
 
 An "any" type has the special properties ``id`` and ``class``,
 allowing us to express a join in the following way (where ``AuditLog.Item``
@@ -335,8 +335,8 @@ is a property mapped with ``<any>``).
 
 .. code-block:: sql
 
-    from Eg.AuditLog log, Eg.Payment payment
-    where log.Item.class = 'Eg.Payment, Eg, Version=...' and log.Item.id = payment.id
+  from Eg.AuditLog log, Eg.Payment payment
+  where log.Item.class = 'Eg.Payment, Eg, Version=...' and log.Item.id = payment.id
 
 Notice that ``log.Item.class`` and ``payment.class``
 would refer to the values of completely different database columns in the above query.
@@ -376,15 +376,15 @@ most of the kind of things you could write in SQL:
 
 .. code-block:: sql
 
-    from Eg.DomesticCat cat where cat.Name between 'A' and 'B'
-    from Eg.DomesticCat cat where cat.Name in ( 'Foo', 'Bar', 'Baz' )
+  from Eg.DomesticCat cat where cat.Name between 'A' and 'B'
+  from Eg.DomesticCat cat where cat.Name in ( 'Foo', 'Bar', 'Baz' )
 
 and the negated forms may be written
 
 .. code-block:: sql
 
-    from Eg.DomesticCat cat where cat.Name not between 'A' and 'B'
-    from Eg.DomesticCat cat where cat.Name not in ( 'Foo', 'Bar', 'Baz' )
+  from Eg.DomesticCat cat where cat.Name not between 'A' and 'B'
+  from Eg.DomesticCat cat where cat.Name not in ( 'Foo', 'Bar', 'Baz' )
 
 Likewise, ``is null`` and ``is not null`` may be used to test
 for null values.
@@ -394,22 +394,22 @@ configuration:
 
 .. code-block:: csharp
 
-    <property name="hibernate.query.substitutions">true 1, false 0</property>
+  <property name="hibernate.query.substitutions">true 1, false 0</property>
 
 This will replace the keywords ``true`` and ``false`` with the
 literals ``1`` and ``0`` in the translated SQL from this HQL:
 
 .. code-block:: sql
 
-    from Eg.Cat cat where cat.Alive = true
+  from Eg.Cat cat where cat.Alive = true
 
-You may test the size of a collection with the special property ``size``, or
-the special ``size()`` function.
+You may test the size of a collection with the special property ``ize``, or
+the special ``ize()`` function.
 
 .. code-block:: sql
 
-    from Eg.Cat cat where cat.Kittens.size > 0
-    from Eg.Cat cat where size(cat.Kittens) > 0
+  from Eg.Cat cat where cat.Kittens.size > 0
+  from Eg.Cat cat where size(cat.Kittens) > 0
 
 For indexed collections, you may refer to the minimum and maximum indices using
 ``minIndex`` and ``maxIndex``. Similarly, you may refer to the
@@ -418,14 +418,14 @@ and ``maxElement``.
 
 .. code-block:: sql
 
-    from Calendar cal where cal.Holidays.maxElement > current date
+  from Calendar cal where cal.Holidays.maxElement > current date
 
 There are also functional forms (which, unlike the constructs above, are not case sensitive):
 
 .. code-block:: sql
 
-    from Order order where maxindex(order.Items) > 100
-    from Order order where minelement(order.Items) > 10000
+  from Order order where maxindex(order.Items) > 100
+  from Order order where minelement(order.Items) > 10000
 
 The SQL functions ``any, some, all, exists, in`` are supported when passed the element
 or index set of a collection (``elements`` and ``indices`` functions)
@@ -433,22 +433,22 @@ or the result of a subquery (see below).
 
 .. code-block:: sql
 
-    select mother from Eg.Cat as mother, Eg.Cat as kit
-    where kit in elements(mother.Kittens)
-    select p from Eg.NameList list, Eg.Person p
-    where p.Name = some elements(list.Names)
-    from Eg.Cat cat where exists elements(cat.Kittens)
-    from Eg.Player p where 3 > all elements(p.Scores)
-    from Eg.Show show where 'fizard' in indices(show.Acts)
+  select mother from Eg.Cat as mother, Eg.Cat as kit
+  where kit in elements(mother.Kittens)
+  select p from Eg.NameList list, Eg.Person p
+  where p.Name = some elements(list.Names)
+  from Eg.Cat cat where exists elements(cat.Kittens)
+  from Eg.Player p where 3 > all elements(p.Scores)
+  from Eg.Show show where 'fizard' in indices(show.Acts)
 
-Note that these constructs - ``size``, ``elements``,
+Note that these constructs - ``ize``, ``elements``,
 ``indices``, ``minIndex``, ``maxIndex``,
 ``minElement``, ``maxElement`` - have certain usage
 restrictions:
 
 - in a ``where`` clause: only for databases with subselects
 
-- in a ``select`` clause: only ``elements`` and
+- in a ``elect`` clause: only ``elements`` and
   ``indices`` make sense
 
 Elements of indexed collections (arrays, lists, maps) may be referred to by
@@ -456,71 +456,71 @@ index (in a where clause only):
 
 .. code-block:: sql
 
-    from Order order where order.Items[0].id = 1234
-    select person from Person person, Calendar calendar
-    where calendar.Holidays['national day'] = person.BirthDay
-    and person.Nationality.Calendar = calendar
-    select item from Item item, Order order
-    where order.Items[ order.DeliveredItemIndices[0] ] = item and order.id = 11
-    select item from Item item, Order order
-    where order.Items[ maxindex(order.items) ] = item and order.id = 11
+  from Order order where order.Items[0].id = 1234
+  select person from Person person, Calendar calendar
+  where calendar.Holidays['national day'] = person.BirthDay
+      and person.Nationality.Calendar = calendar
+  select item from Item item, Order order
+  where order.Items[ order.DeliveredItemIndices[0] ] = item and order.id = 11
+  select item from Item item, Order order
+  where order.Items[ maxindex(order.items) ] = item and order.id = 11
 
 The expression inside ``[]`` may even be an arithmetic expression.
 
 .. code-block:: sql
 
-    select item from Item item, Order order
-    where order.Items[ size(order.Items) - 1 ] = item
+  select item from Item item, Order order
+  where order.Items[ size(order.Items) - 1 ] = item
 
 HQL also provides the built-in ``index()`` function, for elements of
 a one-to-many association or collection of values.
 
 .. code-block:: sql
 
-    select item, index(item) from Order order
-    join order.Items item
-    where index(item) < 5
+  select item, index(item) from Order order
+      join order.Items item
+  where index(item) < 5
 
 Scalar SQL functions supported by the underlying database may be used
 
 .. code-block:: sql
 
-    from Eg.DomesticCat cat where upper(cat.Name) like 'FRI%'
+  from Eg.DomesticCat cat where upper(cat.Name) like 'FRI%'
 
 If you are not yet convinced by all this, think how much longer and less readable the
 following query would be in SQL:
 
 .. code-block:: sql
 
-    select cust
-    from Product prod,
-    Store store
-    inner join store.Customers cust
-    where prod.Name = 'widget'
-    and store.Location.Name in ( 'Melbourne', 'Sydney' )
-    and prod = all elements(cust.CurrentOrder.LineItems)
+  select cust
+  from Product prod,
+      Store store
+      inner join store.Customers cust
+  where prod.Name = 'widget'
+      and store.Location.Name in ( 'Melbourne', 'Sydney' )
+      and prod = all elements(cust.CurrentOrder.LineItems)
 
 *Hint:* something like
 
 .. code-block:: csharp
 
-    SELECT cust.name, cust.address, cust.phone, cust.id, cust.current_order
-    FROM customers cust,
-    stores store,
-    locations loc,
-    store_customers sc,
-    product prod
-    WHERE prod.name = 'widget'
-    AND store.loc_id = loc.id
-    AND loc.name IN ( 'Melbourne', 'Sydney' )
-    AND sc.store_id = store.id
-    AND sc.cust_id = cust.id
-    AND prod.id = ALL(
-    SELECT item.prod_id
-    FROM line_items item, orders o
-    WHERE item.order_id = o.id
-    AND cust.current_order = o.id
-    )
+  SELECT cust.name, cust.address, cust.phone, cust.id, cust.current_order
+  FROM customers cust,
+      stores store,
+      locations loc,
+      store_customers sc,
+      product prod
+  WHERE prod.name = 'widget'
+      AND store.loc_id = loc.id
+      AND loc.name IN ( 'Melbourne', 'Sydney' )
+      AND sc.store_id = store.id
+      AND sc.cust_id = cust.id
+      AND prod.id = ALL(
+          SELECT item.prod_id
+          FROM line_items item, orders o
+          WHERE item.order_id = o.id
+              AND cust.current_order = o.id
+      )
 
 The order by clause
 ###################
@@ -529,8 +529,8 @@ The list returned by a query may be ordered by any property of a returned class 
 
 .. code-block:: sql
 
-    from Eg.DomesticCat cat
-    order by cat.Name asc, cat.Weight desc, cat.Birthdate
+  from Eg.DomesticCat cat
+  order by cat.Name asc, cat.Weight desc, cat.Birthdate
 
 The optional ``asc`` or ``desc`` indicate ascending or descending order
 respectively.
@@ -542,12 +542,12 @@ A query that returns aggregate values may be grouped by any property of a return
 
 .. code-block:: sql
 
-    select cat.Color, sum(cat.Weight), count(cat)
-    from Eg.Cat cat
-    group by cat.Color
-    select foo.id, avg( elements(foo.Names) ), max( indices(foo.Names) )
-    from Eg.Foo foo
-    group by foo.id
+  select cat.Color, sum(cat.Weight), count(cat)
+  from Eg.Cat cat
+  group by cat.Color
+  select foo.id, avg( elements(foo.Names) ), max( indices(foo.Names) )
+  from Eg.Foo foo
+  group by foo.id
 
 Note: You may use the ``elements`` and ``indices`` constructs
 inside a select clause, even on databases with no subselects.
@@ -556,10 +556,10 @@ A ``having`` clause is also allowed.
 
 .. code-block:: sql
 
-    select cat.color, sum(cat.Weight), count(cat)
-    from Eg.Cat cat
-    group by cat.Color
-    having cat.Color in (Eg.Color.Tabby, Eg.Color.Black)
+  select cat.color, sum(cat.Weight), count(cat)
+  from Eg.Cat cat
+  group by cat.Color
+  having cat.Color in (Eg.Color.Tabby, Eg.Color.Black)
 
 SQL functions and aggregate functions are allowed in the ``having``
 and ``order by`` clauses, if supported by the underlying database (ie.
@@ -567,12 +567,12 @@ not in MySQL).
 
 .. code-block:: sql
 
-    select cat
-    from Eg.Cat cat
-    join cat.Kittens kitten
-    group by cat.Id, cat.Name, cat.Other, cat.Properties
-    having avg(kitten.Weight) > 100
-    order by count(kitten) asc, sum(kitten.Weight) desc
+  select cat
+  from Eg.Cat cat
+      join cat.Kittens kitten
+  group by cat.Id, cat.Name, cat.Other, cat.Properties
+  having avg(kitten.Weight) > 100
+  order by count(kitten) asc, sum(kitten.Weight) desc
 
 Note that neither the ``group by`` clause nor the
 ``order by`` clause may contain arithmetic expressions.
@@ -590,22 +590,22 @@ be surrounded by parentheses (often by an SQL aggregate function call). Even cor
 
 .. code-block:: sql
 
-    from Eg.Cat as fatcat
-    where fatcat.Weight > (
-    select avg(cat.Weight) from Eg.DomesticCat cat
-    )
-    from Eg.DomesticCat as cat
-    where cat.Name = some (
-    select name.NickName from Eg.Name as name
-    )
-    from Eg.Cat as cat
-    where not exists (
-    from eg.Cat as mate where mate.Mate = cat
-    )
-    from Eg.DomesticCat as cat
-    where cat.Name not in (
-    select name.NickName from Eg.Name as name
-    )
+  from Eg.Cat as fatcat
+  where fatcat.Weight > (
+      select avg(cat.Weight) from Eg.DomesticCat cat
+  )
+  from Eg.DomesticCat as cat
+  where cat.Name = some (
+      select name.NickName from Eg.Name as name
+  )
+  from Eg.Cat as cat
+  where not exists (
+      from eg.Cat as mate where mate.Mate = cat
+  )
+  from Eg.DomesticCat as cat
+  where cat.Name not in (
+      select name.NickName from Eg.Name as name
+  )
 
 HQL examples
 ############
@@ -623,43 +623,43 @@ against the ``ORDER``, ``ORDER_LINE``, ``PRODUCT``,
 
 .. code-block:: sql
 
-    select order.id, sum(price.Amount), count(item)
-    from Order as order
-    join order.LineItems as item
-    join item.Product as product,
-    Catalog as catalog
-    join catalog.Prices as price
-    where order.Paid = false
-    and order.Customer = :customer
-    and price.Product = product
-    and catalog.EffectiveDate < sysdate
-    and catalog.EffectiveDate >= all (
-    select cat.EffectiveDate
-    from Catalog as cat
-    where cat.EffectiveDate < sysdate
-    )
-    group by order
-    having sum(price.Amount) > :minAmount
-    order by sum(price.Amount) desc
+  select order.id, sum(price.Amount), count(item)
+  from Order as order
+      join order.LineItems as item
+      join item.Product as product,
+      Catalog as catalog
+      join catalog.Prices as price
+  where order.Paid = false
+      and order.Customer = :customer
+      and price.Product = product
+      and catalog.EffectiveDate < sysdate
+      and catalog.EffectiveDate >= all (
+          select cat.EffectiveDate
+          from Catalog as cat
+          where cat.EffectiveDate < sysdate
+      )
+  group by order
+  having sum(price.Amount) > :minAmount
+  order by sum(price.Amount) desc
 
 What a monster! Actually, in real life, I'm not very keen on subqueries, so my query was
 really more like this:
 
 .. code-block:: sql
 
-    select order.id, sum(price.amount), count(item)
-    from Order as order
-    join order.LineItems as item
-    join item.Product as product,
-    Catalog as catalog
-    join catalog.Prices as price
-    where order.Paid = false
-    and order.Customer = :customer
-    and price.Product = product
-    and catalog = :currentCatalog
-    group by order
-    having sum(price.Amount) > :minAmount
-    order by sum(price.Amount) desc
+  select order.id, sum(price.amount), count(item)
+  from Order as order
+      join order.LineItems as item
+      join item.Product as product,
+      Catalog as catalog
+      join catalog.Prices as price
+  where order.Paid = false
+      and order.Customer = :customer
+      and price.Product = product
+      and catalog = :currentCatalog
+  group by order
+  having sum(price.Amount) > :minAmount
+  order by sum(price.Amount) desc
 
 The next query counts the number of payments in each status, excluding all payments in the
 ``AwaitingApproval`` status where the most recent status change was made by the
@@ -669,34 +669,34 @@ against the ``PAYMENT``, ``PAYMENT_STATUS`` and
 
 .. code-block:: sql
 
-    select count(payment), status.Name
-    from Payment as payment
-    join payment.CurrentStatus as status
-    join payment.StatusChanges as statusChange
-    where payment.Status.Name <> PaymentStatus.AwaitingApproval
-    or (
-    statusChange.TimeStamp = (
-    select max(change.TimeStamp)
-    from PaymentStatusChange change
-    where change.Payment = payment
-    )
-    and statusChange.User <> :currentUser
-    )
-    group by status.Name, status.SortOrder
-    order by status.SortOrder
+  select count(payment), status.Name
+  from Payment as payment
+      join payment.CurrentStatus as status
+      join payment.StatusChanges as statusChange
+  where payment.Status.Name <> PaymentStatus.AwaitingApproval
+      or (
+          statusChange.TimeStamp = (
+              select max(change.TimeStamp)
+              from PaymentStatusChange change
+              where change.Payment = payment
+          )
+          and statusChange.User <> :currentUser
+      )
+  group by status.Name, status.SortOrder
+  order by status.SortOrder
 
 If I would have mapped the ``StatusChanges`` collection as a list, instead of a set,
 the query would have been much simpler to write.
 
 .. code-block:: sql
 
-    select count(payment), status.Name
-    from Payment as payment
-    join payment.CurrentStatus as status
-    where payment.Status.Name <> PaymentStatus.AwaitingApproval
-    or payment.StatusChanges[ maxIndex(payment.StatusChanges) ].User <> :currentUser
-    group by status.Name, status.SortOrder
-    order by status.SortOrder
+  select count(payment), status.Name
+  from Payment as payment
+      join payment.CurrentStatus as status
+  where payment.Status.Name <> PaymentStatus.AwaitingApproval
+      or payment.StatusChanges[ maxIndex(payment.StatusChanges) ].User <> :currentUser
+  group by status.Name, status.SortOrder
+  order by status.SortOrder
 
 The next query uses the MS SQL Server ``isNull()`` function to return all
 the accounts and unpaid payments for the organization to which the current user belongs.
@@ -707,24 +707,24 @@ the ``ACCOUNT``, ``PAYMENT``, ``PAYMENT_STATUS``,
 
 .. code-block:: sql
 
-    select account, payment
-    from Account as account
-    left outer join account.Payments as payment
-    where :currentUser in elements(account.Holder.Users)
-    and PaymentStatus.Unpaid = isNull(payment.CurrentStatus.Name, PaymentStatus.Unpaid)
-    order by account.Type.SortOrder, account.AccountNumber, payment.DueDate
+  select account, payment
+  from Account as account
+      left outer join account.Payments as payment
+  where :currentUser in elements(account.Holder.Users)
+      and PaymentStatus.Unpaid = isNull(payment.CurrentStatus.Name, PaymentStatus.Unpaid)
+  order by account.Type.SortOrder, account.AccountNumber, payment.DueDate
 
 For some databases, we would need to do away with the (correlated) subselect.
 
 .. code-block:: sql
 
-    select account, payment
-    from Account as account
-    join account.Holder.Users as user
-    left outer join account.Payments as payment
-    where :currentUser = user
-    and PaymentStatus.Unpaid = isNull(payment.CurrentStatus.Name, PaymentStatus.Unpaid)
-    order by account.Type.SortOrder, account.AccountNumber, payment.DueDate
+  select account, payment
+  from Account as account
+      join account.Holder.Users as user
+      left outer join account.Payments as payment
+  where :currentUser = user
+      and PaymentStatus.Unpaid = isNull(payment.CurrentStatus.Name, PaymentStatus.Unpaid)
+  order by account.Type.SortOrder, account.AccountNumber, payment.DueDate
 
 Tips & Tricks
 #############
@@ -733,68 +733,67 @@ You can count the number of query results without actually returning them:
 
 .. code-block:: csharp
 
-    int count = (int) session.CreateQuery("select count(\*) from ....").UniqueResult();
+  int count = (int) session.CreateQuery("select count(*) from ....").UniqueResult();
 
 To order a result by the size of a collection, use the following query:
 
 .. code-block:: sql
 
-    select usr.id, usr.Name
-    from User as usr
-    left join usr.Messages as msg
-    group by usr.id, usr.Name
-    order by count(msg)
+  select usr.id, usr.Name
+  from User as usr
+      left join usr.Messages as msg
+  group by usr.id, usr.Name
+  order by count(msg)
 
 If your database supports subselects, you can place a condition upon selection
 size in the where clause of your query:
 
 .. code-block:: sql
 
-    from User usr where size(usr.Messages) >= 1
+  from User usr where size(usr.Messages) >= 1
 
 If your database doesn't support subselects, use the following query:
 
 .. code-block:: sql
 
-    select usr.id, usr.Name
-    from User usr
-    join usr.Messages msg
-    group by usr.id, usr.Name
-    having count(msg) >= 1
+  select usr.id, usr.Name
+  from User usr
+      join usr.Messages msg
+  group by usr.id, usr.Name
+  having count(msg) >= 1
 
 As this solution can't return a ``User`` with zero messages
 because of the inner join, the following form is also useful:
 
 .. code-block:: sql
 
-    select usr.id, usr.Name
-    from User as usr
-    left join usr.Messages as msg
-    group by usr.id, usr.Name
-    having count(msg) = 0
+  select usr.id, usr.Name
+  from User as usr
+      left join usr.Messages as msg
+  group by usr.id, usr.Name
+  having count(msg) = 0
 
 Properties of an object can be bound to named query parameters:
 
 .. code-block:: csharp
 
-    IQuery q = s.CreateQuery("from foo in class Foo where foo.Name=:Name and foo.Size=:Size");
-    q.SetProperties(fooBean); // fooBean has properties Name and Size
-    IList foos = q.List();
+  IQuery q = s.CreateQuery("from foo in class Foo where foo.Name=:Name and foo.Size=:Size");
+  q.SetProperties(fooBean); // fooBean has properties Name and Size
+  IList foos = q.List();
 
 Collections are pageable by using the ``IQuery`` interface with a filter:
 
 .. code-block:: csharp
 
-    IQuery q = s.CreateFilter( collection, "" ); // the trivial filter
-    q.setMaxResults(PageSize);
-    q.setFirstResult(PageSize * pageNumber);
-    IList page = q.List();
+  IQuery q = s.CreateFilter( collection, "" ); // the trivial filter
+  q.setMaxResults(PageSize);
+  q.setFirstResult(PageSize * pageNumber);
+  IList page = q.List();
 
 Collection elements may be ordered or grouped using a query filter:
 
 .. code-block:: csharp
 
-    ICollection orderedCollection = s.Filter( collection, "order by this.Amount" );
-    ICollection counts = s.Filter( collection, "select this.Type, count(this) group by this.Type" );
-
+  ICollection orderedCollection = s.Filter( collection, "order by this.Amount" );
+  ICollection counts = s.Filter( collection, "select this.Type, count(this) group by this.Type" );
 

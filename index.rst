@@ -1,39 +1,77 @@
 
 
-==================================
-NHibernate Reference Documentation
-==================================
-
-Contents:
+======================================================
+NHibernate - Relational Persistence for Idiomatic .NET
+======================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth:3
+   :hidden:
 
    preface
    quickstart
    architecture
    configuration
-   persistent_classes
-   basic_mapping
-   collection_mapping
-   component_mapping
-   inheritance_mapping
-   manipulating_data
-   readonly
+   persistent-classes
+   basic-mapping
+   collection-mapping
+   component-mapping
+   inheritance-mapping
+   manipulating-data
+   read-only
    transactions
    events
    batch
-   query_hql
-   query_criteria
-   query_queryover
-   query_sql
+   query-hql
+   query-criteria
+   query-queryover
+   query-sql
    filters
    performance
-   toolset_guide
-   example_parentchild
-   example_weblog
-   example_mappings
-   best_practices
+   toolset-guide
+   example-parentchild
+   example-weblog
+   example-mappings
+   best-practices
+   nhc-preface
+   nhcaches-chapter
+   nhma-chapter
+
+NHibernate Reference Documentation
+----------------------------------
+
+- :doc:`preface`
+- :doc:`quickstart`
+- :doc:`architecture`
+- :doc:`configuration`
+- :doc:`persistent-classes`
+- :doc:`basic-mapping`
+- :doc:`collection-mapping`
+- :doc:`component-mapping`
+- :doc:`inheritance-mapping`
+- :doc:`manipulating-data`
+- :doc:`read-only`
+- :doc:`transactions`
+- :doc:`events`
+- :doc:`batch`
+- :doc:`query-hql`
+- :doc:`query-criteria`
+- :doc:`query-queryover`
+- :doc:`query-sql`
+- :doc:`filters`
+- :doc:`performance`
+- :doc:`toolset-guide`
+- :doc:`example-parentchild`
+- :doc:`example-weblog`
+- :doc:`example-mappings`
+- :doc:`best-practices`
+
+
+NHibernate Contrib Documentation
+--------------------------------
+- :doc:`nhc-preface`
+- :doc:`nhcaches-chapter`
+- :doc:`nhma-chapter`
 
 
 Indices and tables

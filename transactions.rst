@@ -23,14 +23,12 @@ using:
 
 .. code-block:: csharp
 
-    ISessionFactory sf = Global.SessionFactory;
+  ISessionFactory sf = Global.SessionFactory;
 
 Each call to a service method could create a new ``ISession``,
 ``Flush()`` it, ``Commit()`` its transaction,
 ``Close()`` it and finally discard it. (The ``ISessionFactory``
-may also be kept in
-
-.. COMMENT: Active Directory or a static *Singleton* helper variable.)
+may also be kept in  a static *Singleton* helper variable.)
 
 We use the NHibernate ``ITransaction`` API as discussed previously,
 a single ``Commit()`` of a NHibernate ``ITransaction``
@@ -124,13 +122,13 @@ instances.
 
 .. code-block:: csharp
 
-    // foo is an instance loaded earlier by the Session
-    session.Reconnect();
-    transaction = session.BeginTransaction();
-    foo.Property = "bar";
-    session.Flush();
-    transaction.Commit();
-    session.Disconnect();
+  // foo is an instance loaded earlier by the Session
+  session.Reconnect();
+  transaction = session.BeginTransaction();
+  foo.Property = "bar";
+  session.Flush();
+  transaction.Commit();
+  session.Disconnect();
 
 The ``foo`` object still knows which ``ISession``
 it was loaded it. As soon as the ``ISession`` has an ADO.NET connection,
@@ -154,14 +152,14 @@ The application manipulates the state of detached instances originally loaded in
 
 .. code-block:: csharp
 
-    // foo is an instance loaded by a previous Session
-    foo.Property = "bar";
-    session = factory.OpenSession();
-    transaction = session.BeginTransaction();
-    session.SaveOrUpdate(foo);
-    session.Flush();
-    transaction.Commit();
-    session.Close();
+  // foo is an instance loaded by a previous Session
+  foo.Property = "bar";
+  session = factory.OpenSession();
+  transaction = session.BeginTransaction();
+  session.SaveOrUpdate(foo);
+  session.Flush();
+  transaction.Commit();
+  session.Close();
 
 You may also call ``Lock()`` instead of ``Update()``
 and use ``LockMode.Read`` (performing a version check, bypassing all
@@ -195,7 +193,7 @@ and update the information. If you use transitive persistence to cascade reattac
 to associated entities, NHibernate might execute uneccessary updates. This is usually
 not a problem, but *on update* triggers in the database might be
 executed even when no changes have been made to detached instances. You can customize
-this behavior by setting  ``select-before-update="true"`` in the
+this behavior by setting  ``elect-before-update="true"`` in the
 ``<class>`` mapping, forcing NHibernate to ``SELECT``
 the instance to ensure that changes did actually occur, before updating the row.
 
@@ -210,16 +208,16 @@ version numbers for you.) This approach is the least efficient in terms of datab
 
 .. code-block:: csharp
 
-    // foo is an instance loaded by a previous Session
-    session = factory.OpenSession();
-    transaction = session.BeginTransaction();
-    int oldVersion = foo.Version;
-    session.Load( foo, foo.Key );
-    if ( oldVersion != foo.Version ) throw new StaleObjectStateException();
-    foo.Property = "bar";
-    session.Flush();
-    transaction.Commit();
-    session.close();
+  // foo is an instance loaded by a previous Session
+  session = factory.OpenSession();
+  transaction = session.BeginTransaction();
+  int oldVersion = foo.Version;
+  session.Load( foo, foo.Key );
+  if ( oldVersion != foo.Version ) throw new StaleObjectStateException();
+  foo.Property = "bar";
+  session.Flush();
+  transaction.Commit();
+  session.close();
 
 Of course, if you are operating in a low-data-concurrency environment and don't
 require version checking, you may use this approach and just skip the version
@@ -251,59 +249,59 @@ Heres an example:
 
 .. code-block:: csharp
 
-    ISessionFactory sessions;
-    IList fooList;
-    Bar bar;
-    ....
-    ISession s = sessions.OpenSession();
-    ITransaction tx = null;
-    try
-    {
-    tx = s.BeginTransaction())
-    fooList = s.Find(
-    "select foo from Eg.Foo foo where foo.Date = current date"
-    // uses db2 date function
-    );
-    bar = new Bar();
-    s.Save(bar);
-    tx.Commit();
-    }
-    catch (Exception)
-    {
-    if (tx != null) tx.Rollback();
-    s.Close();
-    throw;
-    }
-    s.Disconnect();
+  ISessionFactory sessions;
+  IList fooList;
+  Bar bar;
+  ....
+  ISession s = sessions.OpenSession();
+  ITransaction tx = null;
+  try
+  {
+      tx = s.BeginTransaction())
+      fooList = s.Find(
+      	"select foo from Eg.Foo foo where foo.Date = current date"
+          // uses db2 date function
+      );
+      bar = new Bar();
+      s.Save(bar);
+      tx.Commit();
+  }
+  catch (Exception)
+  {
+      if (tx != null) tx.Rollback();
+      s.Close();
+      throw;
+  }
+  s.Disconnect();
 
 Later on:
 
 .. code-block:: csharp
 
-    s.Reconnect();
-    try
-    {
-    tx = s.BeginTransaction();
-    bar.FooTable = new HashMap();
-    foreach (Foo foo in fooList)
-    {
-    s.Lock(foo, LockMode.Read);    //check that foo isn't stale
-    bar.FooTable.Put( foo.Name, foo );
-    }
-    tx.Commit();
-    }
-    catch (Exception)
-    {
-    if (tx != null) tx.Rollback();
-    throw;
-    }
-    finally
-    {
-    s.Close();
-    }
+  s.Reconnect();
+  try
+  {
+      tx = s.BeginTransaction();
+      bar.FooTable = new HashMap();
+      foreach (Foo foo in fooList)
+      {
+          s.Lock(foo, LockMode.Read);    //check that foo isn't stale
+          bar.FooTable.Put( foo.Name, foo );
+      }
+      tx.Commit();
+  }
+  catch (Exception)
+  {
+      if (tx != null) tx.Rollback();
+      throw;
+  }
+  finally
+  {
+      s.Close();
+  }
 
-You can see from this how the relationship between ``ITransaction``s and
-``ISession``s is many-to-one, An ``ISession`` represents a
+You can see from this how the relationship between ``ITransaction`` and
+``ISession`` is many-to-one, An ``ISession`` represents a
 conversation between the application and the database. The
 ``ITransaction`` breaks that conversation up into atomic units of work
 at the database level.
@@ -402,5 +400,4 @@ As of NHibernate, if your application manages transactions through .NET APIs suc
 NHibernate to open and close several connections during one transaction, leading to unnecessary overhead and
 transaction promotion from local to distributed. Specifying ``ConnectionReleaseMode.OnClose``
 will revert to the legacy behavior and prevent this problem from occuring.
-
 

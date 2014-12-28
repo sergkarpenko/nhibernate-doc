@@ -174,10 +174,10 @@ namespace Eg
         </para>
 
         <para>
-            <emphasis>This only applies if these objects are loaded in two different
+            This only applies if these objects are loaded in two different
             <literal>ISession</literal>s, as NHibernate only guarantees identity (<literal> a == b </literal>,
             the default implementation of <literal>Equals()</literal>) inside a single
-            <literal>ISession</literal>!</emphasis>
+            <literal>ISession</literal>!
         </para>
 
         <para>

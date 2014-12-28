@@ -19,32 +19,32 @@ Most .NET applications require a persistent class representing felines.
 
 .. code-block:: csharp
 
-    using System;
-    using Iesi.Collections;
-    namespace Eg
-    {
-    public class Cat
-    {
-    long id; // identifier
-    public virtual long Id
-    {
-    get { return id; }
-    protected set { id = value; }
-    }
-    public virtual string Name { get; set; }
-    public virtual Cat Mate { get; set; }
-    public virtual DateTime Birthdate { get; set; }
-    public virtual float Weight { get; set; }
-    public virtual Color Color { get; set; }
-    public virtual ISet Kittens { get; set; }
-    public virtual char Sex { get; set; }
-    // AddKitten not needed by NHibernate
-    public virtual void AddKitten(Cat kitten)
-    {
-    kittens.Add(kitten);
-    }
-    }
-    }
+  using System;
+  using Iesi.Collections;
+  namespace Eg
+  {
+      public class Cat
+      {
+          long id; // identifier
+          public virtual long Id
+          {
+              get { return id; }
+              protected set { id = value; }
+          }
+          public virtual string Name { get; set; }
+          public virtual Cat Mate { get; set; }
+          public virtual DateTime Birthdate { get; set; }
+          public virtual float Weight { get; set; }
+          public virtual Color Color { get; set; }
+          public virtual ISet Kittens { get; set; }
+          public virtual char Sex { get; set; }
+          // AddKitten not needed by NHibernate
+          public virtual void AddKitten(Cat kitten)
+          {
+              kittens.Add(kitten);
+          }
+      }
+  }
 
 There are four main rules to follow here:
 
@@ -75,7 +75,7 @@ Provide an identifier property (optional)
 
 ``Cat`` has a property called ``Id``. This property
 holds the primary key column of a database table. The property might have been called
-anything, and its type might have been any primitive type, ``string``
+anything, and its type might have been any primitive type, ``tring``
 or ``System.DateTime``. (If your legacy database table has composite
 keys, you can even use a user-defined class with properties of these types - see the
 section on composite identifiers below.)
@@ -102,7 +102,7 @@ persistent class being non-sealed and all its public methods, properties and
 events declared as virtual. Another possibility is for the class to implement
 an interface that declares all public members.
 
-You can persist ``sealed`` classes that do not implement an interface
+You can persist ``ealed`` classes that do not implement an interface
 and don't have virtual members with NHibernate, but you won't be able to use proxies
 - which will limit your options for performance tuning.
 
@@ -114,14 +114,14 @@ identifier property from ``Cat``.
 
 .. code-block:: csharp
 
-    using System;
-    namespace Eg
-    {
-    public class DomesticCat : Cat
-    {
-    public virtual string Name { get; set; }
-    }
-    }
+  using System;
+  namespace Eg
+  {
+      public class DomesticCat : Cat
+      {
+          public virtual string Name { get; set; }
+      }
+  }
 
 Implementing ``Equals()`` and ``GetHashCode()``
 ###############################################
@@ -129,10 +129,10 @@ Implementing ``Equals()`` and ``GetHashCode()``
 You have to override the ``Equals()`` and ``GetHashCode()``
 methods if you intend to mix objects of persistent classes (e.g. in an ``ISet``).
 
-*This only applies if these objects are loaded in two different
-``ISession``s, as NHibernate only guarantees identity (``a == b``,
+This only applies if these objects are loaded in two different
+``ISession``, as NHibernate only guarantees identity (``a == b``,
 the default implementation of ``Equals()``) inside a single
-``ISession``!*
+``ISession``!
 
 Even if both objects ``a`` and ``b`` are the same database row
 (they have the same primary key value as their identifier), we can't guarantee that they are
@@ -153,29 +153,29 @@ identify our instance in the real world (a *natural* candidate key):
 
 .. code-block:: csharp
 
-    public class Cat
-    {
-    ...
-    public override bool Equals(object other)
-    {
-    if (this == other) return true;
-    Cat cat = other as Cat;
-    if (cat == null) return false; // null or not a cat
-    if (Name != cat.Name) return false;
-    if (!Birthday.Equals(cat.Birthday)) return false;
-    return true;
-    }
-    public override int GetHashCode()
-    {
-    unchecked
-    {
-    int result;
-    result = Name.GetHashCode();
-    result = 29 * result + Birthday.GetHashCode();
-    return result;
-    }
-    }
-    }
+  public class Cat
+  {
+      ...
+      public override bool Equals(object other)
+      {
+          if (this == other) return true;
+          Cat cat = other as Cat;
+          if (cat == null) return false; // null or not a cat
+          if (Name != cat.Name) return false;
+          if (!Birthday.Equals(cat.Birthday)) return false;
+          return true;
+      }
+      public override int GetHashCode()
+      {
+          unchecked
+          {
+              int result;
+              result = Name.GetHashCode();
+              result = 29 * result + Birthday.GetHashCode();
+              return result;
+          }
+      }
+  }
 
 Keep in mind that our candidate key (in this case a composite of name and birthday)
 has to be only valid for a particular comparison operation (maybe even only in a
@@ -190,7 +190,7 @@ experimental and may change in the near future.*
 
 Persistent entities don't necessarily have to be represented as POCO classes
 at runtime. NHibernate also supports dynamic models
-(using ``Dictionaries`` of ``Dictionary``s at runtime) . With this approach, you don't
+(using ``Dictionaries`` of ``Dictionary`` at runtime) . With this approach, you don't
 write persistent classes, only mapping files.
 
 By default, NHibernate works in normal POCO mode. You may set a default entity
@@ -198,37 +198,37 @@ representation mode for a particular ``ISessionFactory`` using the
 ``default_entity_mode`` configuration option (see
 :ref:`configuration-optional-properties`.
 
-The following examples demonstrates the representation using ``Map``s (Dictionary).
+The following examples demonstrates the representation using ``Map`` (Dictionary).
 First, in the mapping file, an ``entity-name`` has to be declared
 instead of (or in addition to) a class name:
 
 .. code-block:: csharp
 
-    <hibernate-mapping>
-    <class entity-name="Customer">
-    <id name="id"
-    type="long"
-    column="ID">
-    <generator class="sequence"/>
-    </id>
-    <property name="name"
-    column="NAME"
-    type="string"/>
-    <property name="address"
-    column="ADDRESS"
-    type="string"/>
-    <many-to-one name="organization"
-    column="ORGANIZATION_ID"
-    class="Organization"/>
-    <bag name="orders"
-    inverse="true"
-    lazy="false"
-    cascade="all">
-    <key column="CUSTOMER_ID"/>
-    <one-to-many class="Order"/>
-    </bag>
-    </class>
-    </hibernate-mapping>
+  <hibernate-mapping>
+      <class entity-name="Customer">
+          <id name="id"
+              type="long"
+              column="ID">
+              <generator class="sequence"/>
+          </id>
+          <property name="name"
+              column="NAME"
+              type="string"/>
+          <property name="address"
+              column="ADDRESS"
+              type="string"/>
+          <many-to-one name="organization"
+              column="ORGANIZATION_ID"
+              class="Organization"/>
+          <bag name="orders"
+              inverse="true"
+              lazy="false"
+              cascade="all">
+              <key column="CUSTOMER_ID"/>
+              <one-to-many class="Order"/>
+          </bag>
+      </class>
+  </hibernate-mapping>
 
 Note that even though associations are declared using target class names,
 the target type of an associations may also be a dynamic entity instead
@@ -240,22 +240,22 @@ for the ``ISessionFactory``, we can at runtime work with
 
 .. code-block:: csharp
 
-    using(ISession s = OpenSession())
-    using(ITransaction tx = s.BeginTransaction())
-    {
-    // Create a customer
-    var frank = new Dictionary<string, object>();
-    frank["name"] = "Frank";
-    // Create an organization
-    var foobar = new Dictionary<string, object>();
-    foobar["name"] = "Foobar Inc.";
-    // Link both
-    frank["organization"] =  foobar;
-    // Save both
-    s.Save("Customer", frank);
-    s.Save("Organization", foobar);
-    tx.Commit();
-    }
+  using(ISession s = OpenSession())
+  using(ITransaction tx = s.BeginTransaction())
+  {
+      // Create a customer
+      var frank = new Dictionary<string, object>();
+      frank["name"] = "Frank";
+      // Create an organization
+      var foobar = new Dictionary<string, object>();
+      foobar["name"] = "Foobar Inc.";
+      // Link both
+      frank["organization"] =  foobar;
+      // Save both
+      s.Save("Customer", frank);
+      s.Save("Organization", foobar);
+      tx.Commit();
+  }
 
 The advantages of a dynamic mapping are quick turnaround time for prototyping
 without the need for entity class implementation. However, you lose compile-time
@@ -268,15 +268,15 @@ basis:
 
 .. code-block:: csharp
 
-    using (ISession dynamicSession = pocoSession.GetSession(EntityMode.Map))
-    {
-    // Create a customer
-    var frank = new Dictionary<string, object>();
-    frank["name"] = "Frank";
-    dynamicSession.Save("Customer", frank);
-    ...
-    }
-    // Continue on pocoSession
+  using (ISession dynamicSession = pocoSession.GetSession(EntityMode.Map))
+  {
+      // Create a customer
+      var frank = new Dictionary<string, object>();
+      frank["name"] = "Frank";
+      dynamicSession.Save("Customer", frank);
+      ...
+  }
+  // Continue on pocoSession
 
 Please note that the call to ``GetSession()`` using an
 ``EntityMode`` is on the ``ISession`` API, not the
@@ -298,8 +298,8 @@ for the POCO entity mode, the correpsonding tuplizer knows how create the POCO t
 constructor and how to access the POCO properties using the defined property accessors.
 There are two high-level types of Tuplizers, represented by the
 ``NHibernate.Tuple.Entity.IEntityTuplizer`` and ``NHibernate.Tuple.Component.IComponentTuplizer``
-interfaces.  ``IEntityTuplizer``s are responsible for managing the above mentioned
-contracts in regards to entities, while ``IComponentTuplizer``s do the same for
+interfaces.  ``IEntityTuplizer`` are responsible for managing the above mentioned
+contracts in regards to entities, while ``IComponentTuplizer`` do the same for
 components.
 
 Users may also plug in their own tuplizers.  Perhaps you require that a ``System.Collections.IDictionary``
@@ -311,37 +311,37 @@ are meant to manage.  Going back to the example of our customer entity:
 
 .. code-block:: csharp
 
-    <hibernate-mapping>
-    <class entity-name="Customer">
-    <!--
-    Override the dynamic-map entity-mode
-    tuplizer for the customer entity
-    -->
-    <tuplizer entity-mode="dynamic-map"
-    class="CustomMapTuplizerImpl"/>
-    <id name="id" type="long" column="ID">
-    <generator class="sequence"/>
-    </id>
-    <!-- other properties -->
-    ...
-    </class>
-    </hibernate-mapping>
-    public class CustomMapTuplizerImpl : NHibernate.Tuple.Entity.DynamicMapEntityTuplizer
-    {
-    // override the BuildInstantiator() method to plug in our custom map...
-    protected override IInstantiator BuildInstantiator(NHibernate.Mapping.PersistentClass mappingInfo)
-    {
-    return new CustomMapInstantiator(mappingInfo);
-    }
-    private sealed class CustomMapInstantiator : NHibernate.Tuple.DynamicMapInstantiator
-    {
-    // override the generateMap() method to return our custom map...
-    protected override IDictionary GenerateMap()
-    {
-    return new CustomMap();
-    }
-    }
-    }
+  <hibernate-mapping>
+      <class entity-name="Customer">
+          <!--
+              Override the dynamic-map entity-mode
+              tuplizer for the customer entity
+          -->
+          <tuplizer entity-mode="dynamic-map"
+                  class="CustomMapTuplizerImpl"/>
+          <id name="id" type="long" column="ID">
+              <generator class="sequence"/>
+          </id>
+          <!-- other properties -->
+          ...
+      </class>
+  </hibernate-mapping>
+  public class CustomMapTuplizerImpl : NHibernate.Tuple.Entity.DynamicMapEntityTuplizer
+  {
+      // override the BuildInstantiator() method to plug in our custom map...
+      protected override IInstantiator BuildInstantiator(NHibernate.Mapping.PersistentClass mappingInfo)
+      {
+          return new CustomMapInstantiator(mappingInfo);
+      }
+      private sealed class CustomMapInstantiator : NHibernate.Tuple.DynamicMapInstantiator
+      {
+          // override the generateMap() method to return our custom map...
+          protected override IDictionary GenerateMap()
+          {
+              return new CustomMap();
+          }
+      }
+  }
 
 Lifecycle Callbacks
 ###################
@@ -351,19 +351,18 @@ Optionally, a persistent class might implement the interface
 the persistent object to perform necessary initialization/cleanup after
 save or load and before deletion or update.
 
-.. COMMENT: TODO: add xref to interceptor
 The NHibernate ``IInterceptor`` offers a less intrusive
 alternative, however.
 
 .. code-block:: csharp
 
-    public interface ILifecycle
-    {
-    LifecycleVeto OnSave(ISession s);
-    LifecycleVeto OnUpdate(ISession s);
-    LifecycleVeto OnDelete(ISession s);
-    void OnLoad(ISession s, object id);
-    }
+  public interface ILifecycle
+  {
+          LifecycleVeto OnSave(ISession s);
+          LifecycleVeto OnUpdate(ISession s);
+          LifecycleVeto OnDelete(ISession s);
+          void OnLoad(ISession s, object id);
+  }
 
 ``OnSave`` - called just before the object is saved or
 inserted
@@ -406,10 +405,10 @@ persisted, it may implement the following interface:
 
 .. code-block:: csharp
 
-    public interface IValidatable
-    {
-    void Validate();
-    }
+  public interface IValidatable
+  {
+          void Validate();
+  }
 
 The object should throw a ``ValidationFailure`` if an invariant
 was violated. An instance of ``Validatable`` should not change
@@ -419,5 +418,4 @@ Unlike the callback methods of the ``ILifecycle`` interface,
 ``Validate()`` might be called at unpredictable times. The
 application should not rely upon calls to ``Validate()`` for
 business functionality.
-
 

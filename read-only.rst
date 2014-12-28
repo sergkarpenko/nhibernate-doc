@@ -108,20 +108,20 @@ makes them read-only, call:
 
 .. code-block:: csharp
 
-    Session.DefaultReadOnly = true;
+  Session.DefaultReadOnly = true;
 
 To change the default back so entities loaded by NHibernate are not
 made read-only, call:
 
 .. code-block:: csharp
 
-    Session.DefaultReadOnly = false;
+  Session.DefaultReadOnly = false;
 
 You can determine the current setting by using the property:
 
 .. code-block:: csharp
 
-    Session.DefaultReadOnly;
+  Session.DefaultReadOnly;
 
 If Session.DefaultReadOnly property returns true, entities loaded by
 the following are automatically made read-only:
@@ -171,7 +171,7 @@ For an HQL query, call:
 
 .. code-block:: csharp
 
-    Query.SetReadOnly(true);
+  Query.SetReadOnly(true);
 
 ``Query.SetReadOnly(true)`` must be called before
 ``Query.List()``, ``Query.UniqueResult()``, or ``Query.Iterate()``
@@ -180,7 +180,7 @@ For an HQL criteria, call:
 
 .. code-block:: csharp
 
-    Criteria.SetReadOnly(true);
+  Criteria.SetReadOnly(true);
 
 ``Criteria.SetReadOnly(true)`` must be called before
 ``Criteria.List()``, or ``Criteria.UniqueResult()``
@@ -208,17 +208,17 @@ before restoring the session default.
 
 .. code-block:: csharp
 
-    ISession session = factory.OpenSession();
-    ITransaction tx = session.BeginTransaction();
-    session.DefaultReadOnly = true;
-    Contract contract = session.CreateQuery("from Contract where CustomerName = 'Sherman'").UniqueResult<Contract>();
-    NHibernate.Initialize(contract.Plan);
-    NHibernate.Initialize(contract.Variations);
-    NHibernate.Initialize(contract.Notes);
-    session.DefaultReadOnly = false;
-    ...
-    tx.Commit();
-    session.Close();
+  ISession session = factory.OpenSession();
+  ITransaction tx = session.BeginTransaction();
+  session.DefaultReadOnly = true;
+  Contract contract = session.CreateQuery("from Contract where CustomerName = 'Sherman'").UniqueResult<Contract>();
+  NHibernate.Initialize(contract.Plan);
+  NHibernate.Initialize(contract.Variations);
+  NHibernate.Initialize(contract.Notes);
+  session.DefaultReadOnly = false;
+  ...
+  tx.Commit();
+  session.Close();
 
 If Session.DefaultReadOnly returns true, then you can
 use Query.SetReadOnly(false) and Criteria.SetReadOnly(false)
@@ -237,14 +237,14 @@ To make a persistent entity or proxy read-only, call:
 
 .. code-block:: csharp
 
-    Session.SetReadOnly(entityOrProxy, true)
+  Session.SetReadOnly(entityOrProxy, true)
 
 To change a read-only entity or proxy of a mutable class so
 it is no longer read-only, call:
 
 .. code-block:: csharp
 
-    Session.SetReadOnly(entityOrProxy, false)
+  Session.SetReadOnly(entityOrProxy, false)
 
 .. important:: When a read-only entity or proxy is changed so it is no longer
    read-only, NHibernate assumes that the current state of the
@@ -257,7 +257,7 @@ consistent with its database representation, call:
 
 .. code-block:: csharp
 
-    Session.Refresh(entity);
+  Session.Refresh(entity);
 
 To flush changes made before or while the entity
 was read-only and make the database representation
@@ -266,12 +266,12 @@ entity:
 
 .. code-block:: csharp
 
-    // evict the read-only entity so it is detached
-    session.Evict(entity);
-    // make the detached entity (with the non-flushed changes) persistent
-    session.Update(entity);
-    // now entity is no longer read-only and its changes can be flushed
-    s.Flush();
+  // evict the read-only entity so it is detached
+  session.Evict(entity);
+  // make the detached entity (with the non-flushed changes) persistent
+  session.Update(entity);
+  // now entity is no longer read-only and its changes can be flushed
+  s.Flush();
 
 .. _readonly-proptypes:
 
@@ -355,20 +355,20 @@ will not increment the version if any simple properties change.
 
 .. code-block:: csharp
 
-    ISession session = factory.OpenSession();
-    ITransaction tx = session.BeginTransaction();
-    // get a contract and make it read-only
-    Contract contract = session.Get<Contract>(contractId);
-    session.SetReadOnly(contract, true);
-    // contract.CustomerName is "Sherman"
-    contract.CustomerName = "Yogi";
-    tx.Commit();
-    tx = session.BeginTransaction();
-    contract = session.Get<Contract>(contractId);
-    // contract.CustomerName is still "Sherman"
-    ...
-    tx.Commit();
-    session.Close();
+  ISession session = factory.OpenSession();
+  ITransaction tx = session.BeginTransaction();
+  // get a contract and make it read-only
+  Contract contract = session.Get<Contract>(contractId);
+  session.SetReadOnly(contract, true);
+  // contract.CustomerName is "Sherman"
+  contract.CustomerName = "Yogi";
+  tx.Commit();
+  tx = session.BeginTransaction();
+  contract = session.Get<Contract>(contractId);
+  // contract.CustomerName is still "Sherman"
+  ...
+  tx.Commit();
+  session.Close();
 
 Unidirectional associations
 ===========================
@@ -416,19 +416,19 @@ on the entity's database representation.
 
 .. code-block:: csharp
 
-    // get a contract with an existing plan;
-    // make the contract read-only and set its plan to null
-    tx = session.BeginTransaction();
-    Contract contract = session.Get<Contract>(contractId);
-    session.SetReadOnly(contract, true);
-    contract.Plan = null;
-    tx.Commit();
-    // get the same contract
-    tx = session.BeginTransaction();
-    Contract contract = session.Get<Contract>(contractId);
-    // contract.Plan still refers to the original plan;
-    tx.Commit();
-    session.Close();
+  // get a contract with an existing plan;
+  // make the contract read-only and set its plan to null
+  tx = session.BeginTransaction();
+  Contract contract = session.Get<Contract>(contractId);
+  session.SetReadOnly(contract, true);
+  contract.Plan = null;
+  tx.Commit();
+  // get the same contract
+  tx = session.BeginTransaction();
+  Contract contract = session.Get<Contract>(contractId);
+  // contract.Plan still refers to the original plan;
+  tx.Commit();
+  session.Close();
 
 The following shows that, even though
 an update to a read-only entity's many-to-one
@@ -439,23 +439,23 @@ changed association.
 
 .. code-block:: csharp
 
-    // get a contract with an existing plan;
-    // make the contract read-only and change to a new plan
-    tx = session.BeginTransaction();
-    Contract contract = session.Get<Contract>(contractId);
-    session.SetReadOnly(contract, true);
-    Plan newPlan = new Plan("new plan");
-    contract.Plan = newPlan;
-    tx.Commit();
-    // get the same contract
-    tx = session.BeginTransaction();
-    contract = session.Get<Contract>(contractId);
-    newPlan = session.Get<Plan>(newPlan.Id);
-    // contract.Plan still refers to the original plan;
-    // newPlan is non-null because it was persisted when
-    // the previous transaction was committed;
-    tx.Commit();
-    session.Close();
+  // get a contract with an existing plan;
+  // make the contract read-only and change to a new plan
+  tx = session.BeginTransaction();
+  Contract contract = session.Get<Contract>(contractId);
+  session.SetReadOnly(contract, true);
+  Plan newPlan = new Plan("new plan");
+  contract.Plan = newPlan;
+  tx.Commit();
+  // get the same contract
+  tx = session.BeginTransaction();
+  contract = session.Get<Contract>(contractId);
+  newPlan = session.Get<Plan>(newPlan.Id);
+  // contract.Plan still refers to the original plan;
+  // newPlan is non-null because it was persisted when
+  // the previous transaction was committed;
+  tx.Commit();
+  session.Close();
 
 .. _readonly-proptypes-manyended-unidir:
 
@@ -565,5 +565,4 @@ If automatic versioning is used, NHibernate will
 update the version due to changes in both sides of
 the collection if they dirty the entity owning the
 respective collections.
-
 

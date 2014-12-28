@@ -29,10 +29,10 @@ The most basic SQL query is to get a list of scalars
 
 .. code-block:: csharp
 
-    sess.CreateSQLQuery("SELECT * FROM CATS")
-    .AddScalar("ID", NHibernateUtil.Int64)
-    .AddScalar("NAME", NHibernateUtil.String)
-    .AddScalar("BIRTHDATE", NHibernateUtil.Date)
+  sess.CreateSQLQuery("SELECT * FROM CATS")
+   .AddScalar("ID", NHibernateUtil.Int64)
+   .AddScalar("NAME", NHibernateUtil.String)
+   .AddScalar("BIRTHDATE", NHibernateUtil.Date)
 
 This query specified:
 
@@ -56,8 +56,8 @@ shows how to get entity objects from a native SQL query via
 
 .. code-block:: csharp
 
-    sess.CreateSQLQuery("SELECT * FROM CATS").AddEntity(typeof(Cat));
-    sess.CreateSQLQuery("SELECT ID, NAME, BIRTHDATE FROM CATS").AddEntity(typeof(Cat));
+  sess.CreateSQLQuery("SELECT * FROM CATS").AddEntity(typeof(Cat));
+  sess.CreateSQLQuery("SELECT ID, NAME, BIRTHDATE FROM CATS").AddEntity(typeof(Cat));
 
 This query specified:
 
@@ -79,7 +79,7 @@ the following example for a ``many-to-one`` to a
 
 .. code-block:: csharp
 
-    sess.CreateSQLQuery("SELECT ID, NAME, BIRTHDATE, DOG_ID FROM CATS").AddEntity(typeof(Cat));
+  sess.CreateSQLQuery("SELECT ID, NAME, BIRTHDATE, DOG_ID FROM CATS").AddEntity(typeof(Cat));
 
 This will allow cat.Dog property access to function properly.
 
@@ -93,9 +93,9 @@ join in an association or collection.
 
 .. code-block:: csharp
 
-    sess.CreateSQLQuery("SELECT c.ID, NAME, BIRTHDATE, DOG_ID, D_ID, D_NAME FROM CATS c, DOGS d WHERE c.DOG_ID = d.D_ID")
-    .AddEntity("cat", typeof(Cat))
-    .AddJoin("cat.Dog");
+  sess.CreateSQLQuery("SELECT c.ID, NAME, BIRTHDATE, DOG_ID, D_ID, D_NAME FROM CATS c, DOGS d WHERE c.DOG_ID = d.D_ID")
+   .AddEntity("cat", typeof(Cat))
+   .AddJoin("cat.Dog");
 
 In this example the returned ``Cat``'s will have
 their ``Dog`` property fully initialized without any
@@ -107,9 +107,9 @@ instead.
 
 .. code-block:: csharp
 
-    sess.CreateSQLQuery("SELECT ID, NAME, BIRTHDATE, D_ID, D_NAME, CAT_ID FROM CATS c, DOGS d WHERE c.ID = d.CAT_ID")
-    .AddEntity("cat", typeof(Cat))
-    .AddJoin("cat.Dogs");
+  sess.CreateSQLQuery("SELECT ID, NAME, BIRTHDATE, D_ID, D_NAME, CAT_ID FROM CATS c, DOGS d WHERE c.ID = d.CAT_ID")
+   .AddEntity("cat", typeof(Cat))
+   .AddJoin("cat.Dogs");
 
 At this stage we are reaching the limits of what is possible with
 native queries without starting to enhance the SQL queries to make them
@@ -130,9 +130,9 @@ most likely will fail):
 
 .. code-block:: csharp
 
-    sess.CreateSQLQuery("SELECT c.*, m.*  FROM CATS c, CATS m WHERE c.MOTHER_ID = c.ID")
-    .AddEntity("cat", typeof(Cat))
-    .AddEntity("mother", typeof(Cat))
+  sess.CreateSQLQuery("SELECT c.*, m.*  FROM CATS c, CATS m WHERE c.MOTHER_ID = c.ID")
+   .AddEntity("cat", typeof(Cat))
+   .AddEntity("mother", typeof(Cat))
 
 The intention for this query is to return two Cat instances per
 row, a cat and its mother. This will fail since there is a conflict of
@@ -146,9 +146,9 @@ duplication:
 
 .. code-block:: csharp
 
-    sess.CreateSQLQuery("SELECT {cat.*}, {mother.*}  FROM CATS c, CATS m WHERE c.MOTHER_ID = c.ID")
-    .AddEntity("cat", typeof(Cat))
-    .AddEntity("mother", typeof(Cat))
+  sess.CreateSQLQuery("SELECT {cat.*}, {mother.*}  FROM CATS c, CATS m WHERE c.MOTHER_ID = c.ID")
+   .AddEntity("cat", typeof(Cat))
+   .AddEntity("mother", typeof(Cat))
 
 This query specified:
 
@@ -168,12 +168,12 @@ property aliases in the where clause if we like.
 
 .. code-block:: csharp
 
-    String sql = "SELECT ID as {c.Id}, NAME as {c.Name}, " +
-    "BIRTHDATE as {c.BirthDate}, MOTHER_ID as {c.Mother}, {mother.*} " +
-    "FROM CAT_LOG c, CAT_LOG m WHERE {c.Mother} = c.ID";
-    IList loggedCats = sess.CreateSQLQuery(sql)
-    .AddEntity("cat", typeof(Cat))
-    .AddEntity("mother", typeof(Cat)).List();
+  String sql = "SELECT ID as {c.Id}, NAME as {c.Name}, " +
+           "BIRTHDATE as {c.BirthDate}, MOTHER_ID as {c.Mother}, {mother.*} " +
+           "FROM CAT_LOG c, CAT_LOG m WHERE {c.Mother} = c.ID";
+  IList loggedCats = sess.CreateSQLQuery(sql)
+          .AddEntity("cat", typeof(Cat))
+          .AddEntity("mother", typeof(Cat)).List();
 
 Alias and property references
 -----------------------------
@@ -213,8 +213,8 @@ It is possible to apply an ``IResultTransformer`` to native sql queries. Allowin
 
 .. code-block:: csharp
 
-    sess.CreateSQLQuery("SELECT NAME, BIRTHDATE FROM CATS")
-    .SetResultTransformer(Transformers.AliasToBean(typeof(CatDTO)))
+  sess.CreateSQLQuery("SELECT NAME, BIRTHDATE FROM CATS")
+          .SetResultTransformer(Transformers.AliasToBean(typeof(CatDTO)))
 
 This query specified:
 
@@ -243,10 +243,10 @@ parameters:
 
 .. code-block:: csharp
 
-    Query query = sess.CreateSQLQuery("SELECT * FROM CATS WHERE NAME like ?").AddEntity(typeof(Cat));
-    IList pusList = query.SetString(0, "Pus%").List();
-    query = sess.createSQLQuery("SELECT * FROM CATS WHERE NAME like :name").AddEntity(typeof(Cat));
-    IList pusList = query.SetString("name", "Pus%").List();
+  Query query = sess.CreateSQLQuery("SELECT * FROM CATS WHERE NAME like ?").AddEntity(typeof(Cat));
+  IList pusList = query.SetString(0, "Pus%").List();
+  query = sess.createSQLQuery("SELECT * FROM CATS WHERE NAME like :name").AddEntity(typeof(Cat));
+  IList pusList = query.SetString("name", "Pus%").List();
 
 Named SQL queries
 #################
@@ -258,21 +258,21 @@ in exactly the same way as a named HQL query. In this case, we do
 
 .. code-block:: csharp
 
-    <sql-query name="persons">
-    <return alias="person" class="eg.Person"/>
-    SELECT person.NAME AS {person.Name},
-    person.AGE AS {person.Age},
-    person.SEX AS {person.Sex}
-    FROM PERSON person
-    WHERE person.NAME LIKE :namePattern
-    </sql-query>
+  <sql-query name="persons">
+      <return alias="person" class="eg.Person"/>
+      SELECT person.NAME AS {person.Name},
+             person.AGE AS {person.Age},
+             person.SEX AS {person.Sex}
+      FROM PERSON person
+      WHERE person.NAME LIKE :namePattern
+  </sql-query>
 
 .. code-block:: csharp
 
-    IList people = sess.GetNamedQuery("persons")
-    .SetString("namePattern", namePattern)
-    .SetMaxResults(50)
-    .List();
+  IList people = sess.GetNamedQuery("persons")
+      .SetString("namePattern", namePattern)
+      .SetMaxResults(50)
+      .List();
 
 The ``<return-join>`` and
 ``<load-collection>`` elements are used to join
@@ -281,21 +281,21 @@ respectively.
 
 .. code-block:: csharp
 
-    <sql-query name="personsWith">
-    <return alias="person" class="eg.Person"/>
-    <return-join alias="address" property="person.MailingAddress"/>
-    SELECT person.NAME AS {person.Name},
-    person.AGE AS {person.Age},
-    person.SEX AS {person.Sex},
-    adddress.STREET AS {address.Street},
-    adddress.CITY AS {address.City},
-    adddress.STATE AS {address.State},
-    adddress.ZIP AS {address.Zip}
-    FROM PERSON person
-    JOIN ADDRESS adddress
-    ON person.ID = address.PERSON_ID AND address.TYPE='MAILING'
-    WHERE person.NAME LIKE :namePattern
-    </sql-query>
+  <sql-query name="personsWith">
+      <return alias="person" class="eg.Person"/>
+      <return-join alias="address" property="person.MailingAddress"/>
+      SELECT person.NAME AS {person.Name},
+             person.AGE AS {person.Age},
+             person.SEX AS {person.Sex},
+             adddress.STREET AS {address.Street},
+             adddress.CITY AS {address.City},
+             adddress.STATE AS {address.State},
+             adddress.ZIP AS {address.Zip}
+      FROM PERSON person
+      JOIN ADDRESS adddress
+          ON person.ID = address.PERSON_ID AND address.TYPE='MAILING'
+      WHERE person.NAME LIKE :namePattern
+  </sql-query>
 
 A named SQL query may return a scalar value. You must declare the
 column alias and NHibernate type using the
@@ -303,13 +303,13 @@ column alias and NHibernate type using the
 
 .. code-block:: csharp
 
-    <sql-query name="mySqlQuery">
-    <return-scalar column="name" type="String"/>
-    <return-scalar column="age" type="Int64"/>
-    SELECT p.NAME AS name,
-    p.AGE AS age,
-    FROM PERSON p WHERE p.NAME LIKE 'Hiber%'
-    </sql-query>
+  <sql-query name="mySqlQuery">
+      <return-scalar column="name" type="String"/>
+      <return-scalar column="age" type="Int64"/>
+      SELECT p.NAME AS name,
+             p.AGE AS age,
+      FROM PERSON p WHERE p.NAME LIKE 'Hiber%'
+  </sql-query>
 
 You can externalize the resultset mapping informations in a
 ``<resultset>`` element to either reuse them accross
@@ -318,34 +318,34 @@ several named queries or through the
 
 .. code-block:: csharp
 
-    <resultset name="personAddress">
-    <return alias="person" class="eg.Person"/>
-    <return-join alias="address" property="person.MailingAddress"/>
-    </resultset>
-    <sql-query name="personsWith" resultset-ref="personAddress">
-    SELECT person.NAME AS {person.Name},
-    person.AGE AS {person.Age},
-    person.SEX AS {person.Sex},
-    adddress.STREET AS {address.Street},
-    adddress.CITY AS {address.City},
-    adddress.STATE AS {address.State},
-    adddress.ZIP AS {address.Zip}
-    FROM PERSON person
-    JOIN ADDRESS adddress
-    ON person.ID = address.PERSON_ID AND address.TYPE='MAILING'
-    WHERE person.NAME LIKE :namePattern
-    </sql-query>
+  <resultset name="personAddress">
+      <return alias="person" class="eg.Person"/>
+      <return-join alias="address" property="person.MailingAddress"/>
+  </resultset>
+  <sql-query name="personsWith" resultset-ref="personAddress">
+      SELECT person.NAME AS {person.Name},
+             person.AGE AS {person.Age},
+             person.SEX AS {person.Sex},
+             adddress.STREET AS {address.Street},
+             adddress.CITY AS {address.City},
+             adddress.STATE AS {address.State},
+             adddress.ZIP AS {address.Zip}
+      FROM PERSON person
+      JOIN ADDRESS adddress
+          ON person.ID = address.PERSON_ID AND address.TYPE='MAILING'
+      WHERE person.NAME LIKE :namePattern
+  </sql-query>
 
 You can alternatively use the resultset mapping information in your
 .hbm.xml files directly in code.
 
 .. code-block:: csharp
 
-    IList cats = sess.CreateSQLQuery(
-    "select {cat.*}, {kitten.*} from cats cat, cats kitten where kitten.mother = cat.id"
-    )
-    .SetResultSetMapping("catAndKitten")
-    .List();
+  IList cats = sess.CreateSQLQuery(
+          "select {cat.*}, {kitten.*} from cats cat, cats kitten where kitten.mother = cat.id"
+      )
+      .SetResultSetMapping("catAndKitten")
+      .List();
 
 Using return-property to explicitly specify column/alias
 names
@@ -358,17 +358,17 @@ aliases.
 
 .. code-block:: csharp
 
-    <sql-query name="mySqlQuery">
-    <return alias="person" class="eg.Person">
-    <return-property name="Name" column="myName"/>
-    <return-property name="Age" column="myAge"/>
-    <return-property name="Sex" column="mySex"/>
-    </return>
-    SELECT person.NAME AS myName,
-    person.AGE AS myAge,
-    person.SEX AS mySex,
-    FROM PERSON person WHERE person.NAME LIKE :name
-    </sql-query>
+  <sql-query name="mySqlQuery">
+      <return alias="person" class="eg.Person">
+          <return-property name="Name" column="myName"/>
+          <return-property name="Age" column="myAge"/>
+          <return-property name="Sex" column="mySex"/>
+      </return>
+      SELECT person.NAME AS myName,
+             person.AGE AS myAge,
+             person.SEX AS mySex,
+      FROM PERSON person WHERE person.NAME LIKE :name
+  </sql-query>
 
 ``<return-property>`` also works with
 multiple columns. This solves a limitation with the
@@ -377,21 +377,21 @@ multi-column properties.
 
 .. code-block:: csharp
 
-    <sql-query name="organizationCurrentEmployments">
-    <return alias="emp" class="Employment">
-    <return-property name="Salary">
-    <return-column name="VALUE"/>
-    <return-column name="CURRENCY"/>
-    </return-property>
-    <return-property name="EndDate" column="myEndDate"/>
-    </return>
-    SELECT EMPLOYEE AS {emp.Employee}, EMPLOYER AS {emp.Employer},
-    STARTDATE AS {emp.StartDate}, ENDDATE AS {emp.EndDate},
-    REGIONCODE as {emp.RegionCode}, EID AS {emp.Id}, VALUE, CURRENCY
-    FROM EMPLOYMENT
-    WHERE EMPLOYER = :id AND ENDDATE IS NULL
-    ORDER BY STARTDATE ASC
-    </sql-query>
+  <sql-query name="organizationCurrentEmployments">
+      <return alias="emp" class="Employment">
+          <return-property name="Salary">
+              <return-column name="VALUE"/>
+              <return-column name="CURRENCY"/>
+          </return-property>
+          <return-property name="EndDate" column="myEndDate"/>
+      </return>
+          SELECT EMPLOYEE AS {emp.Employee}, EMPLOYER AS {emp.Employer},
+          STARTDATE AS {emp.StartDate}, ENDDATE AS {emp.EndDate},
+          REGIONCODE as {emp.RegionCode}, EID AS {emp.Id}, VALUE, CURRENCY
+          FROM EMPLOYMENT
+          WHERE EMPLOYER = :id AND ENDDATE IS NULL
+          ORDER BY STARTDATE ASC
+  </sql-query>
 
 Notice that in this example we used
 ``<return-property>`` in combination with the
@@ -413,31 +413,31 @@ higher is as follows:
 
 .. code-block:: csharp
 
-    CREATE PROCEDURE selectAllEmployments AS
-    SELECT EMPLOYEE, EMPLOYER, STARTDATE, ENDDATE,
-    REGIONCODE, EMPID, VALUE, CURRENCY
-    FROM EMPLOYMENT
+  CREATE PROCEDURE selectAllEmployments AS
+      SELECT EMPLOYEE, EMPLOYER, STARTDATE, ENDDATE,
+      REGIONCODE, EMPID, VALUE, CURRENCY
+      FROM EMPLOYMENT
 
 To use this query in NHibernate you need to map it via a named
 query.
 
 .. code-block:: csharp
 
-    <sql-query name="selectAllEmployments_SP">
-    <return alias="emp" class="Employment">
-    <return-property name="employee" column="EMPLOYEE"/>
-    <return-property name="employer" column="EMPLOYER"/>
-    <return-property name="startDate" column="STARTDATE"/>
-    <return-property name="endDate" column="ENDDATE"/>
-    <return-property name="regionCode" column="REGIONCODE"/>
-    <return-property name="id" column="EID"/>
-    <return-property name="salary">
-    <return-column name="VALUE"/>
-    <return-column name="CURRENCY"/>
-    </return-property>
-    </return>
-    exec selectAllEmployments
-    </sql-query>
+  <sql-query name="selectAllEmployments_SP">
+      <return alias="emp" class="Employment">
+          <return-property name="employee" column="EMPLOYEE"/>
+          <return-property name="employer" column="EMPLOYER"/>
+          <return-property name="startDate" column="STARTDATE"/>
+          <return-property name="endDate" column="ENDDATE"/>
+          <return-property name="regionCode" column="REGIONCODE"/>
+          <return-property name="id" column="EID"/>
+          <return-property name="salary">
+              <return-column name="VALUE"/>
+              <return-column name="CURRENCY"/>
+          </return-property>
+      </return>
+      exec selectAllEmployments
+  </sql-query>
 
 Notice that stored procedures currently only return scalars and
 entities. ``<return-join>`` and
@@ -449,7 +449,7 @@ Rules/limitations for using stored procedures
 To use stored procedures with NHibernate the procedures/functions
 have to follow some rules. If they do not follow those rules they are
 not usable with NHibernate. If you still want to use these procedures
-you have to execute them via ``session.Connection``.
+you have to execute them via ``ession.Connection``.
 The rules are different for each database, since database vendors have
 different stored procedure semantics/syntax.
 
@@ -491,17 +491,17 @@ deletesql, updatesql etc.). The mapping tags
 
 .. code-block:: csharp
 
-    <class name="Person">
-    <id name="id">
-    <generator class="increment"/>
-    </id>
-    <property name="name" not-null="true"/>
-    <sql-insert>INSERT INTO PERSON (NAME, ID) VALUES ( UPPER(?), ? )</sql-insert>
-    <sql-update>UPDATE PERSON SET NAME=UPPER(?) WHERE ID=?</sql-update>
-    <sql-delete>DELETE FROM PERSON WHERE ID=?</sql-delete>
-    </class>
+  <class name="Person">
+      <id name="id">
+          <generator class="increment"/>
+      </id>
+      <property name="name" not-null="true"/>
+      <sql-insert>INSERT INTO PERSON (NAME, ID) VALUES ( UPPER(?), ? )</sql-insert>
+      <sql-update>UPDATE PERSON SET NAME=UPPER(?) WHERE ID=?</sql-update>
+      <sql-delete>DELETE FROM PERSON WHERE ID=?</sql-delete>
+  </class>
 
-Note that the custom ``sql-insert`` will not be used
+Note that the custom ``ql-insert`` will not be used
 if you use ``identity`` to generate identifier values for
 the class.
 
@@ -513,15 +513,15 @@ Stored procedures are supported if the database-native syntax is used:
 
 .. code-block:: csharp
 
-    <class name="Person">
-    <id name="id">
-    <generator class="increment"/>
-    </id>
-    <property name="name" not-null="true"/>
-    <sql-insert>exec createPerson ?, ?</sql-insert>
-    <sql-delete>exec deletePerson ?</sql-delete>
-    <sql-update>exec updatePerson ?, ?</sql-update>
-    </class>
+  <class name="Person">
+      <id name="id">
+          <generator class="increment"/>
+      </id>
+      <property name="name" not-null="true"/>
+      <sql-insert>exec createPerson ?, ?</sql-insert>
+      <sql-delete>exec deletePerson ?</sql-delete>
+      <sql-update>exec updatePerson ?, ?</sql-update>
+  </class>
 
 The order of the positional parameters is currently vital, as they
 must be in the same sequence as NHibernate expects them.
@@ -537,7 +537,7 @@ The stored procedures are by default required to affect the same number
 of rows as NHibernate-generated SQL would. NHibernate uses
 ``IDbCommand.ExecuteNonQuery`` to retrieve the number of rows
 affected. This check can be disabled by using ``check="none"``
-attribute in ``sql-insert`` element.
+attribute in ``ql-insert`` element.
 
 Custom SQL for loading
 ######################
@@ -547,26 +547,26 @@ loading:
 
 .. code-block:: csharp
 
-    <sql-query name="person">
-    <return alias="pers" class="Person" lock-mode="upgrade"/>
-    SELECT NAME AS {pers.Name}, ID AS {pers.Id}
-    FROM PERSON
-    WHERE ID=?
-    FOR UPDATE
-    </sql-query>
+  <sql-query name="person">
+      <return alias="pers" class="Person" lock-mode="upgrade"/>
+      SELECT NAME AS {pers.Name}, ID AS {pers.Id}
+      FROM PERSON
+      WHERE ID=?
+      FOR UPDATE
+  </sql-query>
 
 This is just a named query declaration, as discussed earlier. You
 may reference this named query in a class mapping:
 
 .. code-block:: csharp
 
-    <class name="Person">
-    <id name="Id">
-    <generator class="increment"/>
-    </id>
-    <property name="Name" not-null="true"/>
-    <loader query-ref="person"/>
-    </class>
+  <class name="Person">
+      <id name="Id">
+          <generator class="increment"/>
+      </id>
+      <property name="Name" not-null="true"/>
+      <loader query-ref="person"/>
+  </class>
 
 This even works with stored procedures.
 
@@ -574,35 +574,34 @@ You may even define a query for collection loading:
 
 .. code-block:: csharp
 
-    <set name="Employments" inverse="true">
-    <key/>
-    <one-to-many class="Employment"/>
-    <loader query-ref="employments"/>
-    </set>
+  <set name="Employments" inverse="true">
+      <key/>
+      <one-to-many class="Employment"/>
+      <loader query-ref="employments"/>
+  </set>
 
 .. code-block:: csharp
 
-    <sql-query name="employments">
-    <load-collection alias="emp" role="Person.Employments"/>
-    SELECT {emp.*}
-    FROM EMPLOYMENT emp
-    WHERE EMPLOYER = :id
-    ORDER BY STARTDATE ASC, EMPLOYEE ASC
-    </sql-query>
+  <sql-query name="employments">
+      <load-collection alias="emp" role="Person.Employments"/>
+      SELECT {emp.*}
+      FROM EMPLOYMENT emp
+      WHERE EMPLOYER = :id
+      ORDER BY STARTDATE ASC, EMPLOYEE ASC
+  </sql-query>
 
 You could even define an entity loader that loads a collection by
 join fetching:
 
 .. code-block:: csharp
 
-    <sql-query name="person">
-    <return alias="pers" class="Person"/>
-    <return-join alias="emp" property="pers.Employments"/>
-    SELECT NAME AS {pers.*}, {emp.*}
-    FROM PERSON pers
-    LEFT OUTER JOIN EMPLOYMENT emp
-    ON pers.ID = emp.PERSON_ID
-    WHERE ID=?
-    </sql-query>
-
+  <sql-query name="person">
+      <return alias="pers" class="Person"/>
+      <return-join alias="emp" property="pers.Employments"/>
+      SELECT NAME AS {pers.*}, {emp.*}
+      FROM PERSON pers
+      LEFT OUTER JOIN EMPLOYMENT emp
+          ON pers.ID = emp.PERSON_ID
+      WHERE ID=?
+  </sql-query>
 

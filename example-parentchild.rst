@@ -48,20 +48,20 @@ Suppose we start with a simple ``<one-to-many>`` association from
 
 .. code-block:: csharp
 
-    <set name="Children">
-    <key column="parent_id" />
-    <one-to-many class="Child" />
-    </set>
+  <set name="Children">
+      <key column="parent_id" />
+      <one-to-many class="Child" />
+  </set>
 
 If we were to execute the following code
 
 .. code-block:: csharp
 
-    Parent p = .....;
-    Child c = new Child();
-    p.Children.Add(c);
-    session.Save(c);
-    session.Flush();
+  Parent p = .....;
+  Child c = new Child();
+  p.Children.Add(c);
+  session.Save(c);
+  session.Flush();
 
 NHibernate would issue two SQL statements:
 
@@ -80,7 +80,7 @@ of the ``Child`` mapping.
 
 .. code-block:: csharp
 
-    <many-to-one name="Parent" column="parent_id" not-null="true"/>
+  <many-to-one name="Parent" column="parent_id" not-null="true"/>
 
 (We also need to add the ``Parent`` property to the ``Child`` class.)
 
@@ -89,21 +89,21 @@ to update the link. We use the ``inverse`` attribute.
 
 .. code-block:: csharp
 
-    <set name="Children" inverse="true">
-    <key column="parent_id"/>
-    <one-to-many class="Child"/>
-    </set>
+  <set name="Children" inverse="true">
+      <key column="parent_id"/>
+      <one-to-many class="Child"/>
+  </set>
 
 The following code would be used to add a new ``Child``.
 
 .. code-block:: csharp
 
-    Parent p = (Parent) session.Load(typeof(Parent), pid);
-    Child c = new Child();
-    c.Parent = p;
-    p.Children.Add(c);
-    session.Save(c);
-    session.Flush();
+  Parent p = (Parent) session.Load(typeof(Parent), pid);
+  Child c = new Child();
+  c.Parent = p;
+  p.Children.Add(c);
+  session.Save(c);
+  session.Flush();
 
 And now, only one SQL ``INSERT`` would be issued!
 
@@ -112,21 +112,21 @@ To tighten things up a bit, we could create an ``AddChild()`` method of
 
 .. code-block:: csharp
 
-    public void AddChild(Child c)
-    {
-    c.Parent = this;
-    children.Add(c);
-    }
+  public void AddChild(Child c)
+  {
+      c.Parent = this;
+      children.Add(c);
+  }
 
 Now, the code to add a ``Child`` looks like
 
 .. code-block:: csharp
 
-    Parent p = (Parent) session.Load(typeof(Parent), pid);
-    Child c = new Child();
-    p.AddChild(c);
-    session.Save(c);
-    session.Flush();
+  Parent p = (Parent) session.Load(typeof(Parent), pid);
+  Child c = new Child();
+  p.AddChild(c);
+  session.Save(c);
+  session.Flush();
 
 Cascading lifecycle
 ###################
@@ -136,41 +136,41 @@ using cascades.
 
 .. code-block:: csharp
 
-    <set name="Children" inverse="true" cascade="all">
-    <key column="parent_id"/>
-    <one-to-many class="Child"/>
-    </set>
+  <set name="Children" inverse="true" cascade="all">
+      <key column="parent_id"/>
+      <one-to-many class="Child"/>
+  </set>
 
 This simplifies the code above to
 
 .. code-block:: csharp
 
-    Parent p = (Parent) session.Load(typeof(Parent), pid);
-    Child c = new Child();
-    p.AddChild(c);
-    session.Flush();
+  Parent p = (Parent) session.Load(typeof(Parent), pid);
+  Child c = new Child();
+  p.AddChild(c);
+  session.Flush();
 
 Similarly, we don't need to iterate over the children when saving or deleting a ``Parent``.
 The following removes ``p`` and all its children from the database.
 
 .. code-block:: csharp
 
-    Parent p = (Parent) session.Load(typeof(Parent), pid);
-    session.Delete(p);
-    session.Flush();
+  Parent p = (Parent) session.Load(typeof(Parent), pid);
+  session.Delete(p);
+  session.Flush();
 
 However, this code
 
 .. code-block:: csharp
 
-    Parent p = (Parent) session.Load(typeof(Parent), pid);
-    // Get one child out of the set
-    IEnumerator childEnumerator = p.Children.GetEnumerator();
-    childEnumerator.MoveNext();
-    Child c = (Child) childEnumerator.Current;
-    p.Children.Remove(c);
-    c.Parent = null;
-    session.Flush();
+  Parent p = (Parent) session.Load(typeof(Parent), pid);
+  // Get one child out of the set
+  IEnumerator childEnumerator = p.Children.GetEnumerator();
+  childEnumerator.MoveNext();
+  Child c = (Child) childEnumerator.Current;
+  p.Children.Remove(c);
+  c.Parent = null;
+  session.Flush();
 
 will not remove ``c`` from the database; it will only remove the link to ``p``
 (and cause a ``NOT NULL`` constraint violation, in this case). You need to explicitly
@@ -178,14 +178,14 @@ will not remove ``c`` from the database; it will only remove the link to ``p``
 
 .. code-block:: csharp
 
-    Parent p = (Parent) session.Load(typeof(Parent), pid);
-    // Get one child out of the set
-    IEnumerator childEnumerator = p.Children.GetEnumerator();
-    childEnumerator.MoveNext();
-    Child c = (Child) childEnumerator.Current;
-    p.Children.Remove(c);
-    session.Delete(c);
-    session.Flush();
+  Parent p = (Parent) session.Load(typeof(Parent), pid);
+  // Get one child out of the set
+  IEnumerator childEnumerator = p.Children.GetEnumerator();
+  childEnumerator.MoveNext();
+  Child c = (Child) childEnumerator.Current;
+  p.Children.Remove(c);
+  session.Delete(c);
+  session.Flush();
 
 Now, in our case, a ``Child`` can't really exist without its parent. So if we remove
 a ``Child`` from the collection, we really do want it to be deleted. For this, we must
@@ -193,10 +193,10 @@ use ``cascade="all-delete-orphan"``.
 
 .. code-block:: csharp
 
-    <set name="Children" inverse="true" cascade="all-delete-orphan">
-    <key column="parent_id"/>
-    <one-to-many class="Child"/>
-    </set>
+  <set name="Children" inverse="true" cascade="all-delete-orphan">
+      <key column="parent_id"/>
+      <one-to-many class="Child"/>
+  </set>
 
 Note: even though the collection mapping specifies ``inverse="true"``, cascades are still
 processed by iterating the collection elements. So if you require that an object be saved, deleted or
@@ -222,12 +222,12 @@ The following code will update ``parent`` and ``child`` and insert
 
 .. code-block:: csharp
 
-    //parent and child were both loaded in a previous session
-    parent.AddChild(child);
-    Child newChild = new Child();
-    parent.AddChild(newChild);
-    session.Update(parent);
-    session.Flush();
+  //parent and child were both loaded in a previous session
+  parent.AddChild(child);
+  Child newChild = new Child();
+  parent.AddChild(newChild);
+  session.Update(parent);
+  session.Flush();
 
 Well, thats all very well for the case of a generated identifier, but what about assigned identifiers
 and composite identifiers? This is more difficult, since ``unsaved-value`` can't
@@ -253,59 +253,59 @@ newly instantiated objects. For example, you could define a base class for your 
 
 .. code-block:: csharp
 
-    public class Persistent
-    {
-    private bool _saved = false;
-    public void OnSave()
-    {
-    _saved=true;
-    }
-    public void OnLoad()
-    {
-    _saved=true;
-    }
-    ......
-    public bool IsSaved
-    {
-    get { return _saved; }
-    }
-    }
+  public class Persistent
+  {
+      private bool _saved = false;
+      public void OnSave()
+      {
+          _saved=true;
+      }
+      public void OnLoad()
+      {
+          _saved=true;
+      }
+      ......
+      public bool IsSaved
+      {
+          get { return _saved; }
+      }
+  }
 
-(The ``saved`` property is non-persistent.)
+(The ``aved`` property is non-persistent.)
 Now implement ``IsTransient()``, along with ``OnLoad()``
 and ``OnSave()`` as follows.
 
 .. code-block:: csharp
 
-    public object IsTransient(object entity)
-    {
-    if (entity is Persistent)
-    {
-    return !( (Persistent) entity ).IsSaved;
-    }
-    else
-    {
-    return null;
-    }
-    }
-    public bool OnLoad(object entity,
-    object id,
-    object[] state,
-    string[] propertyNames,
-    IType[] types)
-    {
-    if (entity is Persistent) ( (Persistent) entity ).OnLoad();
-    return false;
-    }
-    public boolean OnSave(object entity,
-    object id,
-    object[] state,
-    string[] propertyNames,
-    IType[] types)
-    {
-    if (entity is Persistent) ( (Persistent) entity ).OnSave();
-    return false;
-    }
+  public object IsTransient(object entity)
+  {
+      if (entity is Persistent)
+      {
+          return !( (Persistent) entity ).IsSaved;
+      }
+      else
+      {
+          return null;
+      }
+  }
+  public bool OnLoad(object entity,
+      object id,
+      object[] state,
+      string[] propertyNames,
+      IType[] types)
+  {
+      if (entity is Persistent) ( (Persistent) entity ).OnLoad();
+      return false;
+  }
+  public boolean OnSave(object entity,
+      object id,
+      object[] state,
+      string[] propertyNames,
+      IType[] types)
+  {
+      if (entity is Persistent) ( (Persistent) entity ).OnSave();
+      return false;
+  }
 
 Conclusion
 ##########
@@ -318,5 +318,4 @@ We mentioned an alternative in the first paragraph. None of the above issues exi
 relationship. Unfortunately, there are two big limitations to composite element classes: composite elements may
 not own collections, and they should not be the child of any entity other than the unique parent. (However,
 they *may* have a surrogate primary key, using an ``<idbag>`` mapping.)
-
 

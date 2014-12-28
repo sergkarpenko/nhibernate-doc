@@ -70,14 +70,13 @@
                 NHibernate distribution.
             </para>
             
-            <para><emphasis>
+            <para>
                 Tip: to enable IntelliSense for mapping and configuration files, copy the appropriate
                 <literal>.xsd</literal> files as part of any project in your solution,
                 (<literal>Build Action</literal> can be "None") or as "Solution Files" or in your
               <literal>"Lib"</literal> folder and then add it to the <literal>Schemas</literal> property of the xml file.
               You can copy it in <literal>&lt;VS installation directory&gt;\Xml\Schemas</literal>, take care because you will have to deal
               with different version of the xsd for different versions of NHibernate.
-            </emphasis>
             </para>
             
         </sect2>
@@ -224,7 +223,7 @@
                     </callout>
                     <callout arearefs="class2">
                         <para>
-                            <literal>table</literal>(optional - defaults to the unqualified class name): The name of its database table.
+                            <literal>table</literal> (optional - defaults to the unqualified class name): The name of its database table.
                         </para>
                     </callout>
                     <callout arearefs="class3">

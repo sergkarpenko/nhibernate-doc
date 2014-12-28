@@ -5,8 +5,8 @@ Best Practices
 ==============
 
 Write fine-grained classes and map them using ``<component>``.
-    Use an ``Address`` class to encapsulate ``street``,
-    ``suburb``, ``state``, ``postcode``.
+    Use an ``Address`` class to encapsulate ``treet``,
+    ``uburb``, ``tate``, ``postcode``.
     This encourages code reuse and simplifies refactoring.
 
 Declare identifier properties on persistent classes.
@@ -22,7 +22,7 @@ Place each class mapping in its own file.
 
 Embed mappings in assemblies.
     Place mapping files along with the classes they map and declare them as
-    ``Embedded Resource``s in Visual Studio.
+    ``Embedded Resource`` in Visual Studio.
 
 Consider externalising query strings.
     This is a good practice if your queries call non-ANSI-standard SQL functions.
@@ -113,4 +113,3 @@ Don't use exotic association mappings.
     use two one-to-many associations to an intermediate link class. In fact, we think that
     most associations are one-to-many and many-to-one, you should be careful when using any
     other association style and ask yourself if it is really neccessary.
-

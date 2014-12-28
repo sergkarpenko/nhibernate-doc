@@ -56,22 +56,76 @@ _substitutions = set()
 # used for ReST substitutions
 _buffer = ""
 
+FILES = {
+    'preface': 'preface',
+    'quickstart': 'quickstart',
+    'architecture': 'architecture',
+#    'configuration': 'configuration',
+    'persistent_classes': 'persistent-classes',
+    'basic_mapping': 'basic-mapping',
+    'collection_mapping': 'collection-mapping',
+    'component_mapping': 'component-mapping',
+    'inheritance_mapping': 'inheritance-mapping',
+    'manipulating_data': 'manipulating-data',
+    'transactions': 'transactions',
+    'events': 'events',
+    'batch': 'batch',
+    'query_hql': 'query-hql',
+    'query_criteria': 'query-criteria',
+    'query_queryover': 'query-queryover',
+    'query_sql': 'query-sql',
+    'filters': 'filters',
+    'performance': 'performance',
+    'readonly': 'read-only',
+    'toolset_guide': 'toolset-guide',
+    'example_parentchild': 'example-parentchild',
+    'example_weblog': 'example-weblog',
+    'example_mappings': 'example-mappings',
+    'best_practices': 'best-practices',
+    'nhibernatecontrib_preface': 'nhc-preface',
+    'nhibernate_caches': 'nhcaches-chapter',
+    'nhibernate_mapping_attributes': 'nhma-chapter',
+#    'nhibernate_tool_hbm2net': 'nhbm2net-chapter',
+#    'nullables': 'nullables-chapter'
+}
+
+def replace(file_path, pattern, subst):
+    from tempfile import mkstemp
+    from shutil import move
+    from os import remove, close
+    fh, abs_path = mkstemp()
+    new_file = open(abs_path,'w')
+    old_file = open(file_path)
+    for line in old_file:
+        new_file.write(line.replace(pattern, subst))
+    new_file.close()
+    close(fh)
+    old_file.close()
+    remove(file_path)
+    move(abs_path, file_path)
+
 def _main():
-    if len(sys.argv) < 2 or len(sys.argv) > 3 or sys.argv[1] == '-h' or sys.argv[1] == '--help':
+    if sys.argv[1] and (sys.argv[1] == '-h' or sys.argv[1] == '--help'):
         sys.stderr.write(__doc__)
         sys.exit()
-    input_file = sys.argv[1]
-    if len(sys.argv) == 3:
-        output_dir = sys.argv[2]
-    else:
-        output_dir = None
-    sys.stderr.write("Parsing XML file `%s'...\n" % input_file)
-    parser = ET.XMLParser(remove_comments=REMOVE_COMMENTS)
-    tree = ET.parse(input_file, parser=parser)
-    for elem in tree.getiterator():
-        if elem.tag in ("xref", "link"):
-            _linked_ids.add(elem.get("linkend"))
-    obj = Convert(tree.getroot())
+
+    for file_name, rst_name in FILES.iteritems():
+        input_file = os.path.join('src/modules', file_name + '.xml')
+        sys.stderr.write("Parsing XML file `%s'...\n" % input_file)
+        parser = ET.XMLParser(remove_comments=REMOVE_COMMENTS)
+        replace(input_file, '&nbsp;', ' ')
+        replace(input_file, '&eacute;', 'e')
+        tree = ET.parse(input_file, parser=parser)
+        for elem in tree.getiterator():
+            if elem.tag in ("xref", "link"):
+                _linked_ids.add(elem.get("linkend"))
+        obj = Convert(tree.getroot())
+        output_file = os.path.join(rst_name + '.rst')
+        f = open(output_file, 'wb')
+        f.write(str(obj))
+        f.close()
+        replace(output_file, '``s', '``')
+    '''
     if output_dir is not None:
         output = str(obj).strip()
         for fname in obj.files:
@@ -95,7 +149,9 @@ def _main():
         c.write("exclude_patterns = ['_build']\n")
         c.close()
     else:
-        print obj
+    '''
+        
+
 
 class Convert(object):
     def __init__(self, el):
@@ -345,6 +401,9 @@ class Convert(object):
         symbols = []
         img = ""
         for imgo in el.findall("imageobject"):
+            if imgo.get("role") != "fo":
+                continue
+
             self._supports_only(imgo, ("imagedata",))
             fileref = imgo.find("imagedata").get("fileref")
             s = "\n\n.. image:: %s" % fileref
@@ -458,6 +517,11 @@ class Convert(object):
     def e_screen(self, el):
         return "\n::\n" + self._indent(el, 4) + "\n"
 
+    def _format_code(self, el):
+        lines = [" " * 2 + i for i in el.text.strip().splitlines()
+                 if i and not i.isspace()]
+        return "\n\n" + "\n".join(lines)
+
     def e_programlisting(self, el):
         if ("<?xml" in self._concat(el)):
             lang = "xml"
@@ -467,7 +531,8 @@ class Convert(object):
             lang = "sql"
         else:
             lang = "csharp"
-        return "\n.. code-block:: " + lang + "\n" + self._indent(el, 4) + "\n"
+        
+        return "\n.. code-block:: " + lang + "\n" + self._format_code(el) + "\n"
     e_literallayout = e_screen
     #e_programlisting = e_screen
     
@@ -477,14 +542,14 @@ class Convert(object):
     e_book = _no_special_markup
     e_article = _no_special_markup
     e_preface = _no_special_markup
-    e_para = _block_separated_with_blank_line
     e_section = _block_separated_with_blank_line
     e_appendix = _block_separated_with_blank_line
     e_chapter = _block_separated_with_blank_line
 
-    e_sect1 = _block_separated_with_blank_line
-    e_sect2 = _block_separated_with_blank_line
-    e_sect3 = _block_separated_with_blank_line
+    def e_para(self, el):
+        return self._block_separated_with_blank_line(el)
+
+    e_sect1 = e_sect2 = e_sect3 = e_sect4 = _block_separated_with_blank_line
     
     
     # lists
@@ -498,7 +563,7 @@ class Convert(object):
     
     def e_orderedlist(self, el):
         # OrderedList ::= (ListItem+)
-        # return self.e_itemizedlist(el, bullet="#.")
+        #return self.e_itemizedlist(el, bullet="#.")
         return self.e_itemizedlist(el, bullet="*")
     
     def e_simplelist(self, el):

@@ -16,53 +16,53 @@ The term "component" refers to the object-oriented notion of composition
 
 .. code-block:: csharp
 
-    public class Person
-    {
-    private DateTime birthday;
-    private Name name;
-    private string key;
-    public string Key
-    {
-    get { return key; }
-    set { key = value; }
-    }
-    public DateTime Birthday
-    {
-    get { return birthday; }
-    set { birthday = value; }
-    }
-    public Name Name
-    {
-    get { return name; }
-    set { name = value; }
-    }
-    ......
-    ......
-    }
+  public class Person
+  {
+      private DateTime birthday;
+      private Name name;
+      private string key;
+      public string Key
+      {
+          get { return key; }
+          set { key = value; }
+      }
+      public DateTime Birthday
+      {
+          get { return birthday; }
+          set { birthday = value; }
+      }
+      public Name Name
+      {
+          get { return name; }
+          set { name = value; }
+      }
+      ......
+      ......
+  }
 
 .. code-block:: csharp
 
-    public class Name
-    {
-    char initial;
-    string first;
-    string last;
-    public string First
-    {
-    get { return first; }
-    set { first = value; }
-    }
-    public string Last
-    {
-    get { return last; }
-    set { last = value; }
-    }
-    public char Initial
-    {
-    get { return initial; }
-    set { initial = value; }
-    }
-    }
+  public class Name
+  {
+      char initial;
+      string first;
+      string last;
+      public string First
+      {
+          get { return first; }
+          set { first = value; }
+      }
+      public string Last
+      {
+          get { return last; }
+          set { last = value; }
+      }
+      public char Initial
+      {
+          get { return initial; }
+          set { initial = value; }
+      }
+  }
 
 Now ``Name`` may be persisted as a component of
 ``Person``. Notice that ``Name`` defines getter
@@ -73,17 +73,17 @@ Our NHibernate mapping would look like:
 
 .. code-block:: csharp
 
-    <class name="Eg.Person, Eg" table="person">
-    <id name="Key" column="pid" type="string">
-    <generator class="uuid.hex"/>
-    </id>
-    <property name="Birthday" type="date"/>
-    <component name="Name" class="Eg.Name, Eg"> <!-- class attribute optional -->
-    <property name="Initial"/>
-    <property name="First"/>
-    <property name="Last"/>
-    </component>
-    </class>
+  <class name="Eg.Person, Eg" table="person">
+      <id name="Key" column="pid" type="string">
+          <generator class="uuid.hex"/>
+      </id>
+      <property name="Birthday" type="date"/>
+      <component name="Name" class="Eg.Name, Eg"> <!-- class attribute optional -->
+          <property name="Initial"/>
+          <property name="First"/>
+          <property name="Last"/>
+      </component>
+  </class>
 
 The person table would have the columns ``pid``,
 ``Birthday``,
@@ -107,18 +107,18 @@ containing entity.
 
 .. code-block:: csharp
 
-    <class name="Eg.Person, Eg" table="person">
-    <id name="Key" column="pid" type="string">
-    <generator class="uuid.hex"/>
-    </id>
-    <property name="Birthday" type="date"/>
-    <component name="Name" class="Eg.Name, Eg">
-    <parent name="NamedPerson"/> <!-- reference back to the Person -->
-    <property name="Initial"/>
-    <property name="First"/>
-    <property name="Last"/>
-    </component>
-    </class>
+  <class name="Eg.Person, Eg" table="person">
+      <id name="Key" column="pid" type="string">
+          <generator class="uuid.hex"/>
+      </id>
+      <property name="Birthday" type="date"/>
+      <component name="Name" class="Eg.Name, Eg">
+          <parent name="NamedPerson"/> <!-- reference back to the Person -->
+          <property name="Initial"/>
+          <property name="First"/>
+          <property name="Last"/>
+      </component>
+  </class>
 
 Collections of dependent objects
 ################################
@@ -130,14 +130,14 @@ replacing the ``<element>`` tag with a
 
 .. code-block:: csharp
 
-    <set name="SomeNames" table="some_names" lazy="true">
-    <key column="id"/>
-    <composite-element class="Eg.Name, Eg"> <!-- class attribute required -->
-    <property name="Initial"/>
-    <property name="First"/>
-    <property name="Last"/>
-    </composite-element>
-    </set>
+  <set name="SomeNames" table="some_names" lazy="true">
+      <key column="id"/>
+      <composite-element class="Eg.Name, Eg"> <!-- class attribute required -->
+          <property name="Initial"/>
+          <property name="First"/>
+          <property name="Last"/>
+      </composite-element>
+  </set>
 
 Note: if you define an ``ISet`` of composite elements, it is
 very important to implement ``Equals()`` and
@@ -172,33 +172,33 @@ from ``Order`` to ``Item`` where
 
 .. code-block:: csharp
 
-    <class name="Order" .... >
-    ....
-    <set name="PurchasedItems" table="purchase_items" lazy="true">
-    <key column="order_id">
-    <composite-element class="Purchase">
-    <property name="PurchaseDate"/>
-    <property name="Price"/>
-    <property name="Quantity"/>
-    <many-to-one name="Item" class="Item"/> <!-- class attribute is optional -->
-    </composite-element>
-    </set>
-    </class>
+  <class name="Order" .... >
+      ....
+      <set name="PurchasedItems" table="purchase_items" lazy="true">
+          <key column="order_id">
+          <composite-element class="Purchase">
+              <property name="PurchaseDate"/>
+              <property name="Price"/>
+              <property name="Quantity"/>
+              <many-to-one name="Item" class="Item"/> <!-- class attribute is optional -->
+          </composite-element>
+      </set>
+  </class>
 
 Even ternary (or quaternary, etc) associations are possible:
 
 .. code-block:: csharp
 
-    <class name="Order" .... >
-    ....
-    <set name="PurchasedItems" table="purchase_items" lazy="true">
-    <key column="order_id">
-    <composite-element class="OrderLine">
-    <many-to-one name="PurchaseDetails class="Purchase"/>
-    <many-to-one name="Item" class="Item"/>
-    </composite-element>
-    </set>
-    </class>
+  <class name="Order" .... >
+      ....
+      <set name="PurchasedItems" table="purchase_items" lazy="true">
+          <key column="order_id">
+          <composite-element class="OrderLine">
+              <many-to-one name="PurchaseDetails class="Purchase"/>
+              <many-to-one name="Item" class="Item"/>
+          </composite-element>
+      </set>
+  </class>
 
 Composite elements may appear in queries using the same syntax as
 associations to other entities.
@@ -246,15 +246,15 @@ class:
 
 .. code-block:: csharp
 
-    <class name="Foo" table="FOOS">
-    <composite-id name="CompId" class="FooCompositeID">
-    <key-property name="String"/>
-    <key-property name="Short"/>
-    <key-property name="Date" column="date_" type="Date"/>
-    </composite-id>
-    <property name="Name"/>
-    ....
-    </class>
+  <class name="Foo" table="FOOS">
+      <composite-id name="CompId" class="FooCompositeID">
+          <key-property name="String"/>
+          <key-property name="Short"/>
+          <key-property name="Date" column="date_" type="Date"/>
+      </composite-id>
+      <property name="Name"/>
+      ....
+  </class>
 
 Now, any foreign keys into the table ``FOOS`` are also composite.
 You must declare this in your mappings for other classes. An association to
@@ -262,12 +262,12 @@ You must declare this in your mappings for other classes. An association to
 
 .. code-block:: csharp
 
-    <many-to-one name="Foo" class="Foo">
-    <!-- the "class" attribute is optional, as usual -->
-    <column name="foo_string"/>
-    <column name="foo_short"/>
-    <column name="foo_date"/>
-    </many-to-one>
+  <many-to-one name="Foo" class="Foo">
+  <!-- the "class" attribute is optional, as usual -->
+      <column name="foo_string"/>
+      <column name="foo_short"/>
+      <column name="foo_date"/>
+  </many-to-one>
 
 This new ``<column>`` tag is also used by multi-column custom types.
 Actually it is an alternative to the ``column`` attribute everywhere. A
@@ -275,14 +275,14 @@ collection with elements of type ``Foo`` would use:
 
 .. code-block:: csharp
 
-    <set name="Foos">
-    <key column="owner_id"/>
-    <many-to-many class="Foo">
-    <column name="foo_string"/>
-    <column name="foo_short"/>
-    <column name="foo_date"/>
-    </many-to-many>
-    </set>
+  <set name="Foos">
+      <key column="owner_id"/>
+      <many-to-many class="Foo">
+          <column name="foo_string"/>
+          <column name="foo_short"/>
+          <column name="foo_date"/>
+      </many-to-many>
+  </set>
 
 On the other hand, ``<one-to-many>``, as usual, declares no columns.
 
@@ -291,18 +291,18 @@ composite foreign key.
 
 .. code-block:: csharp
 
-    <class name="Foo">
-    ....
-    ....
-    <set name="Dates" lazy="true">
-    <key>   <!-- a collection inherits the composite key type -->
-    <column name="foo_string"/>
-    <column name="foo_short"/>
-    <column name="foo_date"/>
-    </key>
-    <element column="foo_date" type="Date"/>
-    </set>
-    </class>
+  <class name="Foo">
+      ....
+      ....
+      <set name="Dates" lazy="true">
+          <key>   <!-- a collection inherits the composite key type -->
+              <column name="foo_string"/>
+              <column name="foo_short"/>
+              <column name="foo_date"/>
+          </key>
+          <element column="foo_date" type="Date"/>
+      </set>
+  </class>
 
 Dynamic components
 ##################
@@ -311,16 +311,15 @@ You may even map a property of type ``IDictionary``:
 
 .. code-block:: csharp
 
-    <dynamic-component name="UserAttributes">
-    <property name="Foo" column="FOO"/>
-    <property name="Bar" column="BAR"/>
-    <many-to-one name="Baz" class="Baz" column="BAZ"/>
-    </dynamic-component>
+  <dynamic-component name="UserAttributes">
+      <property name="Foo" column="FOO"/>
+      <property name="Bar" column="BAR"/>
+      <many-to-one name="Baz" class="Baz" column="BAZ"/>
+  </dynamic-component>
 
 The semantics of a ``<dynamic-component>`` mapping are identical
 to ``<component>``. The advantage of this kind of mapping is
 the ability to determine the actual properties of the component at deployment time, just
 by editing the mapping document. (Runtime manipulation of the mapping document is
 also possible, using a DOM parser.)
-
 

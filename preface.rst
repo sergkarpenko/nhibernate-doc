@@ -57,4 +57,3 @@ for bug reports and feature requests.
 If you are interested in the development of NHibernate, join the developer mailing list.
 If you are interested in translating this documentation into your language, contact us
 on the `developer mailing list <http://groups.google.com/group/nhibernate-development>`_.
-

@@ -25,26 +25,26 @@ within a ``<hibernate-mapping/>`` element:
 
 .. code-block:: csharp
 
-    <filter-def name="myFilter">
-    <filter-param name="myFilterParam" type="String"/>
-    </filter-def>
+  <filter-def name="myFilter">
+      <filter-param name="myFilterParam" type="String"/>
+  </filter-def>
 
 Then, this filter can be attached to a class:
 
 .. code-block:: csharp
 
-    <class name="MyClass" ...>
-    ...
-    <filter name="myFilter" condition=":myFilterParam = MY_FILTERED_COLUMN"/>
-    </class>
+  <class name="MyClass" ...>
+      ...
+      <filter name="myFilter" condition=":myFilterParam = MY_FILTERED_COLUMN"/>
+  </class>
 
 or, to a collection:
 
 .. code-block:: csharp
 
-    <set ...>
-    <filter name="myFilter" condition=":myFilterParam = MY_FILTERED_COLUMN"/>
-    </set>
+  <set ...>
+      <filter name="myFilter" condition=":myFilterParam = MY_FILTERED_COLUMN"/>
+  </set>
 
 or, even to both (or multiples of each) at the same time.
 
@@ -57,7 +57,7 @@ would look like:
 
 .. code-block:: csharp
 
-    session.EnableFilter("myFilter").SetParameter("myFilterParam", "some-value");
+  session.EnableFilter("myFilter").SetParameter("myFilterParam", "some-value");
 
 Note that methods on the ``NHibernate.IFilter`` interface do allow the method-chaining
 common to much of NHibernate.
@@ -66,42 +66,42 @@ A full example, using temporal data with an effective record date pattern:
 
 .. code-block:: csharp
 
-    <filter-def name="effectiveDate">
-    <filter-param name="asOfDate" type="date"/>
-    </filter-def>
-    <class name="Employee" ...>
-    ...
-    <many-to-one name="Department" column="dept_id" class="Department"/>
-    <property name="EffectiveStartDate" type="date" column="eff_start_dt"/>
-    <property name="EffectiveEndDate" type="date" column="eff_end_dt"/>
-    ...
-    <!--
-    Note that this assumes non-terminal records have an eff_end_dt set to
-    a max db date for simplicity-sake
-    -->
-    <filter name="effectiveDate"
-    condition=":asOfDate BETWEEN eff_start_dt and eff_end_dt"/>
-    </class>
-    <class name="Department" ...>
-    ...
-    <set name="Employees" lazy="true">
-    <key column="dept_id"/>
-    <one-to-many class="Employee"/>
-    <filter name="effectiveDate"
-    condition=":asOfDate BETWEEN eff_start_dt and eff_end_dt"/>
-    </set>
-    </class>
+  <filter-def name="effectiveDate">
+      <filter-param name="asOfDate" type="date"/>
+  </filter-def>
+  <class name="Employee" ...>
+  ...
+      <many-to-one name="Department" column="dept_id" class="Department"/>
+      <property name="EffectiveStartDate" type="date" column="eff_start_dt"/>
+      <property name="EffectiveEndDate" type="date" column="eff_end_dt"/>
+  ...
+      <!--
+          Note that this assumes non-terminal records have an eff_end_dt set to
+          a max db date for simplicity-sake
+      -->
+      <filter name="effectiveDate"
+              condition=":asOfDate BETWEEN eff_start_dt and eff_end_dt"/>
+  </class>
+  <class name="Department" ...>
+  ...
+      <set name="Employees" lazy="true">
+          <key column="dept_id"/>
+          <one-to-many class="Employee"/>
+          <filter name="effectiveDate"
+                  condition=":asOfDate BETWEEN eff_start_dt and eff_end_dt"/>
+      </set>
+  </class>
 
 Then, in order to ensure that you always get back currently effective records, simply
 enable the filter on the session prior to retrieving employee data:
 
 .. code-block:: csharp
 
-    ISession session = ...;
-    session.EnableFilter("effectiveDate").SetParameter("asOfDate", DateTime.Today);
-    IList results = session.CreateQuery("from Employee as e where e.Salary > :targetSalary")
-    .SetInt64("targetSalary", 1000000L)
-    .List();
+  ISession session = ...;
+  session.EnableFilter("effectiveDate").SetParameter("asOfDate", DateTime.Today);
+  IList results = session.CreateQuery("from Employee as e where e.Salary > :targetSalary")
+           .SetInt64("targetSalary", 1000000L)
+           .List();
 
 In the HQL above, even though we only explicitly mentioned a salary constraint on the results,
 because of the enabled filter the query will return only currently active employees who have
@@ -119,6 +119,5 @@ element.
 
 .. code-block:: csharp
 
-    <filter-def name="effectiveDate" use-many-to-one="false"/>
-
+  <filter-def name="effectiveDate" use-many-to-one="false"/>
 
