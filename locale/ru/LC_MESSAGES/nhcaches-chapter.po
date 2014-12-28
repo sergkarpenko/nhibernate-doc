@@ -1,0 +1,473 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../nhcaches-chapter.rst:5
+msgid "NHibernate.Caches"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:8
+msgid "What is NHibernate.Caches?"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:11
+msgid ""
+"NHibernate.Caches namespace contains several second-level cache providers "
+"for NHibernate."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:13
+msgid ""
+"A cache is place where entities are kept after being loaded from the "
+"database; once cached, they can be retrieved without going to the database. "
+"This means that they are faster to (re)load."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:16
+msgid ""
+"An NHibernate session has an internal (first-level) cache where it keeps its"
+" entities. There is no sharing between these caches - a first-level cache "
+"belongs to a given session and is destroyed with it. NHibernate provides a "
+"*second-level cache* system; it works at the session factory level. A "
+"second-level cache is shared by all sessions created by the same session "
+"factory."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:21
+msgid ""
+"An important point is that the second-level cache *does not* cache instances"
+" of the object type being cached; instead it caches the individual values of"
+" the properties of that object. This provides two benefits. One, NHibernate "
+"doesn't have to worry that your client code will manipulate the objects in a"
+" way that will disrupt the cache. Two, the relationships and associations do"
+" not become stale, and are easy to keep up-to-date because they are simply "
+"identifiers. The cache is not a tree of objects but rather a map of arrays."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:27
+msgid ""
+"With the *session-per-request* model, a high number of sessions can "
+"concurrently access the same entity without hitting the database each time; "
+"hence the performance gain."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:30
+msgid "Several cache providers have been contributed by NHibernate users:"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:35
+msgid "NHibernate.Caches.Prevalence"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:33
+msgid ""
+"Uses Bamboo.Prevalence as the cache provider. Open the file "
+":file:`Bamboo.Prevalence.license.txt` for more information about its "
+"license; you can also visit its `website "
+"<http://bbooprevalence.sourceforge.net/>`_."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:40
+msgid "NHibernate.Caches.SysCache"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:38
+msgid ""
+"Uses System.Web.Caching.Cache as the cache provider. This means that you can"
+" rely on ASP.NET caching feature to understand how it works. For more "
+"information, read (on the MSDN): `Caching Application Data "
+"<http://msdn.microsoft.com/library/en-us/cpguide/html/cpconcacheapis.asp>`_."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:46
+msgid "NHibernate.Caches.SysCache2"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:43
+msgid ""
+"Similar to NHibernate.Caches.SysCache, uses ASP.NET cache. This provider "
+"also supports SQL dependency-based expiration, meaning that it is possible "
+"to configure certain cache regions to automatically expire when the relevant"
+" data in the database changes. SysCache2 requires Microsoft SQL Server 2000 "
+"or higher and .NET Framework version 2.0 or higher."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:50
+msgid "NHibernate.Caches.MemCache"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:49
+msgid ""
+"Uses ``memcached``. See `memcached homepage "
+"<http://www.danga.com/memcached/>`_ for more information."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:56
+msgid "NCache provider for NHibernate"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:53
+msgid ""
+"Uses ``NCache``,NCache is a commercial distributed caching system with a "
+"provider for NHibernate. The NCache Express version is free for use, see "
+"`NCache Express homepage "
+"<http://www.alachisoft.com/ncache/ncache_express.html>`_ for more "
+"information."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:59
+msgid "How to use a cache?"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:61
+msgid ""
+"Here are the steps to follow to enable the second-level cache in NHibernate:"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:63
+msgid ""
+"Choose the cache provider you want to use and copy its assembly in your "
+"assemblies directory (:file:`NHibernate.Caches.Prevalence.dll` or "
+":file:`NHibernate.Caches.SysCache.dll`)."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:67
+msgid ""
+"To tell NHibernate which cache provider to use, add in your NHibernate "
+"configuration file (can be :file:`YourAssembly.exe.config` or "
+":file:`web.config` or a :file:`.cfg.xml` file, in the latter case the syntax"
+" will be different from what is shown below): ``<add "
+"key=\"hibernate.cache.provider_class\" value=\"XXX\" />`` ``<add "
+"key=\"expiration\" value=\"120\" />`` \"``XXX``\" is the assembly-qualified "
+"class name of a class implementing ICacheProvider, eg. "
+"\"NHibernate.Caches.SysCache.SysCacheProvider, NHibernate.Caches.SysCache\"."
+" The ``expiration`` value is the number of seconds you wish to cache each "
+"entry (here two minutes). This example applies to SysCache only."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:78
+msgid ""
+"Add ``<cache usage=\"read-write|nonstrict-read-write|read-only\"/>`` (just "
+"after ``<class>``) in the mapping of the entities you want to cache. It also"
+" works for collections (bag, list, map, set, ...)."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:83
+msgid "Be careful"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:85
+msgid ""
+"Caches are never aware of changes made to the persistent store by another "
+"process (though they may be configured to regularly expire cached data). As "
+"the caches are created at the session factory level, they are destroyed with"
+" the SessionFactory instance; so you must keep them alive as long as you "
+"need them."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:91
+msgid "Prevalence Cache Configuration"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:93
+msgid ""
+"There is only one configurable parameter: ``prevalenceBase``. This is the "
+"directory on the file system where the Prevalence engine will save data. It "
+"can be relative to the current directory or a full path. If the directory "
+"doesn't exist, it will be created."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:98
+msgid "SysCache Configuration"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:100
+msgid ""
+"As SysCache relies on System.Web.Caching.Cache for the underlying "
+"implementation, the configuration is based on the available options that "
+"make sense for NHibernate to utilize."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:104
+msgid "``expiration``"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:104
+msgid "Number of seconds to wait before expiring each item."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:108 ../../nhcaches-chapter.rst:338
+msgid "``priority``"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:107
+msgid ""
+"A numeric cost of expiring each item, where 1 is a low cost, 5 is the "
+"highest, and 3 is normal. Only values 1 through 5 are valid."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:110
+msgid ""
+"SysCache has a config file section handler to allow configuring different "
+"expirations and priorities for different regions. Here's an example:"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:128
+msgid "SysCache2 Configuration"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:130
+msgid ""
+"SysCache2 can use SqlCacheDependencies to invalidate cache regions when data"
+" in an underlying SQL Server table or query changes. Query dependencies are "
+"only available for SQL Server 2005. To use the cache provider, the "
+"application must be setup and configured to support SQL notifications as "
+"described in the MSDN documentation."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:135
+msgid ""
+"To configure cache regions with SqlCacheDependencies a ``syscache2`` config "
+"section must be defined in the application's configuration file. See the "
+"sample below."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:145
+msgid "Table-based Dependency"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:147
+msgid ""
+"A table-based dependency will monitor the data in a database table for "
+"changes. Table-based dependencies are generally used for a SQL Server 2000 "
+"database but will work with SQL Server 2005 as well. Before you can use SQL "
+"Server cache invalidation with table based dependencies, you need to enable "
+"notifications for the database. This task is performed with the "
+":command:`aspnet_regsql` command. With table-based notifications, the "
+"application will poll the database for changes at a predefined interval. A "
+"cache region will not be invalidated immediately when data in the table "
+"changes. The cache will be invalidated the next time the application polls "
+"the database for changes."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:155
+msgid ""
+"To configure the data in a cache region to be invalidated when data in an "
+"underlying table is changed, a cache region must be configured in the "
+"application's configuration file. See the sample below."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:173
+msgid "Table-based Dependency Configuration Properties"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:176 ../../nhcaches-chapter.rst:240
+msgid "``name``"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:176 ../../nhcaches-chapter.rst:240
+msgid "Unique name for the dependency"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:180
+msgid "``tableName``"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:179
+msgid ""
+"The name of the database table that the dependency is associated with. The "
+"table must be enabled for notification support with the "
+"``AspNet_SqlCacheRegisterTableStoredProcedure``."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:185
+msgid "``databaseEntryName``"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:183
+msgid ""
+"The name of a database defined in the ``databases`` element for "
+"``sqlCacheDependency`` for caching (ASP.NET Settings Schema) element of the "
+"application's ``Web.config`` file."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:188
+msgid "Command-Based Dependencies"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:190
+msgid ""
+"A command-based dependency will use a SQL command to identify records to "
+"monitor for data changes. Command-based dependencies work only with SQL "
+"Server 2005."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:193
+msgid ""
+"Before you can use SQL Server cache invalidation with command-based "
+"dependencies, you need to enable the Service Broker for query notifications."
+" The application must also start the listener for receiving change "
+"notifications from SQL Server. With command based notifications, SQL Server "
+"will notify the application when the data of a record returned in the "
+"results of a SQL query has changed. Note that a change will be indicated if "
+"the data in any of the columns of a record change, not just the columns "
+"returned by a query. The query is a way to limit the number of records "
+"monitored for changes, not the columns.  As soon as data in one of the "
+"records is modified, the data in the cache region will be invalidated "
+"immediately."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:202
+msgid ""
+"To configure the data in a cache region to be invalidated based on a SQL "
+"command, a cache region must be configured in the application's "
+"configuration file. See the samples below."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:206
+msgid "Stored Procedure"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:221
+msgid "SELECT Statement"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:237
+msgid "Command Configuration Properties"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:243
+msgid "``command`` (required)"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:243
+msgid ""
+"SQL command that returns results which should be monitored for data changes"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:246
+msgid "``isStoredProcedure`` (optional)"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:246
+msgid "Indicates if command is a stored procedure. The default is ``false``."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:251
+msgid "``connectionName`` (optional)"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:249
+msgid ""
+"The name of the connection in the applications configuration file to use for"
+" registering the cache dependency for change notifications. If no value is "
+"supplied for ``connectionName`` or ``connectionStringProviderType``, the "
+"connection properties from the NHibernate configruation will be used."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:257
+msgid "``connectionStringProviderType`` (optional)"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:254
+msgid ""
+"IConnectionStringProvider to use for retrieving the connection string to use"
+" for registering the cache dependency for change notifications.  If no value"
+" is supplied for ``connectionName``, the unnamed connection supplied by the "
+"provider will be used."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:260
+msgid "Aggregate Dependencies"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:262
+msgid ""
+"Multiple cache dependencies can be specified.  If any of the dependencies "
+"triggers a change notification, the data in the cache region will be "
+"invalidated.  See the samples below."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:266
+msgid "Multiple commands"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:283
+msgid "Mixed"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:303
+msgid "Additional Settings"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:305
+msgid ""
+"In addition to data dependencies for the cache regions, time based "
+"expiration policies can be specified for each item added to the cache.  Time"
+" based expiration policies will not invalidate the data dependencies for the"
+" whole cache region, but serve as a way to remove items from the cache after"
+" they have been in the cache for a specified amount of time.  See the "
+"samples below."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:311
+msgid "Relative Expiration"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:318
+msgid "Time of Day Expiration"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:325
+msgid "Additional Configuration Properties"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:328
+msgid "``relativeExpiration``"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:328
+msgid ""
+"Number of seconds that an individual item will exist in the cache before "
+"being removed."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:334
+msgid "``timeOfDayExpiration``"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:331
+msgid ""
+"24 hour based time of day that an item will exist in the cache until. 12am "
+"is specified as 00:00:00; 10pm is specified as 22:00:00. Only valid if "
+"relativeExpiration is not specified. Time of Day Expiration is useful for "
+"scenarios where items should be expired from the cache after a daily process"
+" completes."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:337
+msgid ""
+"System.Web.Caching.CacheItemPriority that identifies the relative priority "
+"of items stored in the cache."
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:341
+msgid "Patches"
+msgstr ""
+
+#: ../../nhcaches-chapter.rst:343
+msgid ""
+"There is a known issue where some SQL Server 2005 notifications might not be"
+" received when an application subscribes to query notifications by using "
+"ADO.NET 2.0. To fix this problem install `SQL hotfix for kb 913364 "
+"<http://support.microsoft.com/Default.aspx?kbid=913364>`_."
+msgstr ""

@@ -1,0 +1,337 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../query-queryover.rst:5
+msgid "QueryOver Queries"
+msgstr ""
+
+#: ../../query-queryover.rst:7
+msgid ""
+"The ICriteria API is NHibernate's implementation of Query Object. NHibernate"
+" 3.0 introduces the QueryOver api, which combines the use of Extension "
+"Methods and Lambda Expressions (both new in .Net 3.5) to provide a "
+"statically typesafe wrapper round the ICriteria API."
+msgstr ""
+
+#: ../../query-queryover.rst:15
+msgid ""
+"QueryOver uses Lambda Expressions to provide some extra syntax to remove the"
+" 'magic strings' from your ICriteria queries."
+msgstr ""
+
+#: ../../query-queryover.rst:18
+msgid "So, for example:"
+msgstr ""
+
+#: ../../query-queryover.rst:24
+msgid "becomes:"
+msgstr ""
+
+#: ../../query-queryover.rst:30
+msgid ""
+"With this kind of syntax there are no 'magic strings', and refactoring tools"
+" like 'Find All References', and 'Refactor->Rename' work perfectly."
+msgstr ""
+
+#: ../../query-queryover.rst:33
+msgid ""
+"Note: QueryOver is intended to remove the references to 'magic strings' from"
+" the ICriteria API while maintaining it's opaqueness.  It is *not* a LINQ "
+"provider; NHibernate has a built-in Linq provider for this."
+msgstr ""
+
+#: ../../query-queryover.rst:38
+msgid "Structure of a Query"
+msgstr ""
+
+#: ../../query-queryover.rst:40
+msgid "Queries are created from an ISession using the syntax:"
+msgstr ""
+
+#: ../../query-queryover.rst:49
+msgid ""
+"Detached QueryOver (analagous to DetachedCriteria) can be created, and then "
+"used with an ISession using:"
+msgstr ""
+
+#: ../../query-queryover.rst:61
+msgid ""
+"Queries can be built up to use restrictions, projections, and ordering using"
+" a fluent inline syntax:"
+msgstr ""
+
+#: ../../query-queryover.rst:74
+msgid "Simple Expressions"
+msgstr ""
+
+#: ../../query-queryover.rst:76
+msgid ""
+"The Restrictions class (used by ICriteria) has been extended to include "
+"overloads that allow Lambda Expression syntax.  The Where() method works for"
+" simple expressions (<, <=, ==, !=, >, >=) so instead of:"
+msgstr ""
+
+#: ../../query-queryover.rst:84
+msgid "You can write:"
+msgstr ""
+
+#: ../../query-queryover.rst:90
+msgid ""
+"Since the QueryOver class (and IQueryOver interface) is generic and knows "
+"the type of the query, there is an inline syntax for restrictions that does "
+"not require the additional qualification of class name.  So you can also "
+"write:"
+msgstr ""
+
+#: ../../query-queryover.rst:102
+msgid ""
+"Note, the methods Where() and And() are semantically identical; the And() "
+"method is purely to allow QueryOver to look similar to HQL/SQL."
+msgstr ""
+
+#: ../../query-queryover.rst:105
+msgid ""
+"Boolean comparisons can be made directly instead of comparing to true/false:"
+msgstr ""
+
+#: ../../query-queryover.rst:112
+msgid ""
+"Simple expressions can also be combined using the \\|| and && operators.  So"
+" ICriteria like:"
+msgstr ""
+
+#: ../../query-queryover.rst:122
+msgid "Can be written in QueryOver as:"
+msgstr ""
+
+#: ../../query-queryover.rst:128
+msgid ""
+"Each of the corresponding overloads in the QueryOver API allows the use of "
+"regular ICriterion to allow access to private properties."
+msgstr ""
+
+#: ../../query-queryover.rst:135
+msgid ""
+"It is worth noting that the QueryOver API is built on top of the ICriteria "
+"API.  Internally the structures are the same, so at runtime the statement "
+"below, and the statement above, are stored as exactly the same ICriterion.  "
+"The actual Lambda Expression is not stored in the query."
+msgstr ""
+
+#: ../../query-queryover.rst:144
+msgid "Additional Restrictions"
+msgstr ""
+
+#: ../../query-queryover.rst:146
+msgid ""
+"Some SQL operators/functions do not have a direct equivalent in C#. (e.g., "
+"the SQL ``where name like '%anna%'``). These operators have overloads for "
+"QueryOver in the Restrictions class, so you can write:"
+msgstr ""
+
+#: ../../query-queryover.rst:154
+msgid "There is also an inline syntax to avoid the qualification of the type:"
+msgstr ""
+
+#: ../../query-queryover.rst:160
+msgid ""
+"While simple expressions (see above) can be combined using the \\|| and && "
+"operators, this is not possible with the other restrictions.  So this "
+"ICriteria:"
+msgstr ""
+
+#: ../../query-queryover.rst:169
+msgid "Would have to be written as:"
+msgstr ""
+
+#: ../../query-queryover.rst:177
+msgid ""
+"However, in addition to the additional restrictions factory methods, there "
+"are extension methods to allow a more concise inline syntax for some of the "
+"operators.  So this:"
+msgstr ""
+
+#: ../../query-queryover.rst:184
+msgid "May also be written as:"
+msgstr ""
+
+#: ../../query-queryover.rst:191
+msgid "Associations"
+msgstr ""
+
+#: ../../query-queryover.rst:193
+msgid ""
+"QueryOver can navigate association paths using JoinQueryOver() (analagous to"
+" ICriteria.CreateCriteria() to create sub-criteria)."
+msgstr ""
+
+#: ../../query-queryover.rst:195
+msgid ""
+"The factory method QuerOver<T>() on ISession returns an IQueryOver<T>. More "
+"accurately, it returns an IQueryOver<T,T> (which inherits from "
+"IQueryOver<T>)."
+msgstr ""
+
+#: ../../query-queryover.rst:198
+msgid ""
+"An IQueryOver has two types of interest; the root type (the type of entity "
+"that the query returns), and the type of the 'current' entity being queried."
+"  For example, the following query uses a join to create a sub-QueryOver "
+"(analagous to creating sub-criteria in the ICriteria API):"
+msgstr ""
+
+#: ../../query-queryover.rst:209
+msgid ""
+"The JoinQueryOver returns a new instance of the IQueryOver than has its root"
+" at the Kittens collection. The default type for restrictions is now Kitten "
+"(restricting on the name 'Tiddles' in the above example), while calling "
+".List() will return an IList<Cat>.  The type IQueryOver<Cat,Kitten> inherits"
+" from IQueryOver<Cat>."
+msgstr ""
+
+#: ../../query-queryover.rst:213
+msgid ""
+"Note, the overload for JoinQueryOver takes an IEnumerable<T>, and the C# "
+"compiler infers the type from that. If your collection type is not "
+"IEnumerable<T>, then you need to qualify the type of the sub-criteria:"
+msgstr ""
+
+#: ../../query-queryover.rst:222
+msgid ""
+"The default join is an inner-join.  Each of the additional join types can be"
+" specified using the methods ``.Inner, .Left, .Right,`` or ``.Full``. For "
+"example, to left outer-join on Kittens use:"
+msgstr ""
+
+#: ../../query-queryover.rst:234
+msgid "Aliases"
+msgstr ""
+
+#: ../../query-queryover.rst:236
+msgid ""
+"In the traditional ICriteria interface aliases are assigned using 'magic "
+"strings', however their value does not correspond to a name in the object "
+"domain.  For example, when an alias is assigned using "
+"``.CreateAlias(\"Kitten\", \"kittenAlias\")``, the string \"kittenAlias\" "
+"does not correspond to a property or class in the domain."
+msgstr ""
+
+#: ../../query-queryover.rst:241
+msgid ""
+"In QueryOver, aliases are assigned using an empty variable. The variable can"
+" be declared anywhere (but should be ``null`` at runtime).  The compiler can"
+" then check the syntax against the variable is used correctly, but at "
+"runtime the variable is not evaluated (it's just used as a placeholder for "
+"the alias)."
+msgstr ""
+
+#: ../../query-queryover.rst:247
+msgid ""
+"Each Lambda Expression function in QueryOver has a corresponding overload to"
+" allow use of aliases, and a .JoinAlias function to traverse associations "
+"using aliases without creating a sub-QueryOver."
+msgstr ""
+
+#: ../../query-queryover.rst:262
+msgid "Projections"
+msgstr ""
+
+#: ../../query-queryover.rst:264
+msgid ""
+"Simple projections of the properties of the root type can be added using the"
+" ``.Select`` method which can take multiple Lambda Expression arguments:"
+msgstr ""
+
+#: ../../query-queryover.rst:276
+msgid ""
+"Because this query no longer returns a Cat, the return type must be "
+"explicitly specified. If a single property is projected, the return type can"
+" be specified using:"
+msgstr ""
+
+#: ../../query-queryover.rst:286
+msgid ""
+"However, if multiple properties are projected, then the returned list will "
+"contain object arrays, as per a projection in ICriteria.  This could be fed "
+"into an anonymous type using:"
+msgstr ""
+
+#: ../../query-queryover.rst:306
+msgid ""
+"Note that the second ``.Select`` call in this example is an extension method"
+" on IEnumerable<T> supplied in System.Linq; it is not part of NHibernate."
+msgstr ""
+
+#: ../../query-queryover.rst:309
+msgid ""
+"QueryOver allows arbitrary IProjection to be added (allowing private "
+"properties to be projected).  The Projections factory class also has "
+"overloads to allow Lambda Expressions to be used:"
+msgstr ""
+
+#: ../../query-queryover.rst:321
+msgid ""
+"In addition there is an inline syntax for creating projection lists that "
+"does not require the explicit class qualification:"
+msgstr ""
+
+#: ../../query-queryover.rst:332
+msgid ""
+"Projections can also have arbitrary aliases assigned to them to allow result"
+" transformation. If there is a CatSummary DTO class defined as:"
+msgstr ""
+
+#: ../../query-queryover.rst:343
+msgid ""
+"... then aliased projections can be used with the AliasToBean<T> "
+"transformer:"
+msgstr ""
+
+#: ../../query-queryover.rst:357
+msgid "Projection Functions"
+msgstr ""
+
+#: ../../query-queryover.rst:359
+msgid ""
+"In addition to projecting properties, there are extension methods to allow "
+"certain common dialect-registered functions to be applied.  For example you "
+"can write the following to extract just the year part of a date:"
+msgstr ""
+
+#: ../../query-queryover.rst:366
+msgid "The functions can also be used inside projections:"
+msgstr ""
+
+#: ../../query-queryover.rst:375
+msgid "Subqueries"
+msgstr ""
+
+#: ../../query-queryover.rst:377
+msgid ""
+"The Subqueries factory class has overloads to allow Lambda Expressions to "
+"express sub-query restrictions.  For example:"
+msgstr ""
+
+#: ../../query-queryover.rst:391
+msgid ""
+"The inline syntax allows you to use subqueries without requalifying the "
+"type:"
+msgstr ""
+
+#: ../../query-queryover.rst:400
+msgid ""
+"There is an extension method ``As()`` on (a detached) QueryOver that allows "
+"you to cast it to any type. This is used in conjunction with the overloads "
+"``Where(), WhereAll(),`` and ``WhereSome()`` to allow use of the built-in C#"
+" operators for comparison, so the above query can be written as:"
+msgstr ""

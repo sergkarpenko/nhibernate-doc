@@ -1,0 +1,250 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../batch.rst:5
+msgid "Batch processing"
+msgstr ""
+
+#: ../../batch.rst:7
+msgid ""
+"A naive approach to inserting 100 000 rows in the database using NHibernate "
+"might look like this:"
+msgstr ""
+
+#: ../../batch.rst:21
+msgid ""
+"This would fall over with an ``OutOfMemoryException`` somewhere around the "
+"50 000th row. That's because NHibernate caches all the newly inserted "
+"``Customer`` instances in the session-level cache."
+msgstr ""
+
+#: ../../batch.rst:25
+msgid ""
+"In this chapter we'll show you how to avoid this problem. First, however, if"
+" you are doing batch processing, it is absolutely critical that you enable "
+"the use of ADO batching, if you intend to achieve reasonable performance. "
+"Set the ADO batch size to a reasonable number (say, 10-50):"
+msgstr ""
+
+#: ../../batch.rst:34
+msgid ""
+"Note that NHibernate disables insert batching at the ADO level transparently"
+" if you use an ``identiy`` identifier generator."
+msgstr ""
+
+#: ../../batch.rst:37
+msgid ""
+"You also might like to do this kind of work in a process where interaction "
+"with the second-level cache is completely disabled:"
+msgstr ""
+
+#: ../../batch.rst:44
+msgid ""
+"However, this is not absolutely necessary, since we can explicitly set the "
+"``CacheMode`` to disable interaction with the second-level cache."
+msgstr ""
+
+#: ../../batch.rst:48
+msgid "Batch inserts"
+msgstr ""
+
+#: ../../batch.rst:50
+msgid ""
+"When making new objects persistent, you must ``Flush()`` and then "
+"``Clear()`` the session regularly, to control the size of the first-level "
+"cache."
+msgstr ""
+
+#: ../../batch.rst:73
+msgid "The StatelessSession interface"
+msgstr ""
+
+#: ../../batch.rst:75
+msgid ""
+"Alternatively, NHibernate provides a command-oriented API that may be used "
+"for streaming data to and from the database in the form of detached objects."
+" A ``IStatelessSession`` has no persistence context associated with it and "
+"does not provide many of the higher-level life cycle semantics. In "
+"particular, a stateless session does not implement a first-level cache nor "
+"interact with any second-level or query cache. It does not implement "
+"transactional write-behind or automatic dirty checking. Operations performed"
+" using a stateless session do not ever cascade to associated instances. "
+"Collections are ignored by a stateless session. Operations performed via a "
+"stateless session bypass NHibernate's event model and interceptors. "
+"Stateless sessions are vulnerable to data aliasing effects, due to the lack "
+"of a first-level cache. A stateless session is a lower-level abstraction, "
+"much closer to the underlying ADO."
+msgstr ""
+
+#: ../../batch.rst:104
+msgid ""
+"Note that in this code example, the ``Customer`` instances returned by the "
+"query are immediately detached. They are never associated with any "
+"persistence context."
+msgstr ""
+
+#: ../../batch.rst:108
+msgid ""
+"The ``insert(), update()`` and ``delete()`` operations defined by the "
+"``StatelessSession`` interface are considered to be direct database row-"
+"level operations, which result in immediate execution of a SQL ``INSERT, "
+"UPDATE`` or ``DELETE`` respectively. Thus, they have very different "
+"semantics to the ``Save(), SaveOrUpdate()`` and ``Delete()`` operations "
+"defined by the ``ISession`` interface."
+msgstr ""
+
+#: ../../batch.rst:117
+msgid "DML-style operations"
+msgstr ""
+
+#: ../../batch.rst:119
+msgid ""
+"As already discussed, automatic and transparent object/relational mapping is"
+" concerned with the management of object state. This implies that the object"
+" state is available in memory, hence manipulating (using the SQL ``Data "
+"Manipulation Language`` (DML) statements: ``INSERT``, ``UPDATE``, "
+"``DELETE``) data directly in the database will not affect in-memory state. "
+"However, NHibernate provides methods for bulk SQL-style DML statement "
+"execution which are performed through the Hibernate Query Language "
+"(:ref:`HQL <queryhql>`)."
+msgstr ""
+
+#: ../../batch.rst:127
+msgid ""
+"The pseudo-syntax for ``UPDATE`` and ``DELETE`` statements is: ``( UPDATE | "
+"DELETE ) FROM? EntityName (WHERE where_conditions)?``.  Some points to note:"
+msgstr ""
+
+#: ../../batch.rst:131
+msgid "In the from-clause, the FROM keyword is optional"
+msgstr ""
+
+#: ../../batch.rst:133
+msgid ""
+"There can only be a single entity named in the from-clause; it can "
+"optionally be aliased.  If the entity name is aliased, then any property "
+"references must be qualified using that alias; if the entity name is not "
+"aliased, then it is illegal for any property references to be qualified."
+msgstr ""
+
+#: ../../batch.rst:138
+msgid ""
+"No :ref:`joins <queryhql-joins-forms>` (either implicit or explicit) can be "
+"specified in a bulk HQL query.  Sub-queries may be used in the where-clause;"
+" the subqueries, themselves, may contain joins."
+msgstr ""
+
+#: ../../batch.rst:142
+msgid "The where-clause is also optional."
+msgstr ""
+
+#: ../../batch.rst:144
+msgid ""
+"As an example, to execute an HQL ``UPDATE``, use the "
+"``IQuery.ExecuteUpdate()`` method:"
+msgstr ""
+
+#: ../../batch.rst:161
+msgid ""
+"HQL ``UPDATE`` statements, by default do not effect the :ref:`version "
+"<mapping-declaration-version>` or the :ref:`timestamp <mapping-declaration-"
+"timestamp>` property values for the affected entities.  However, you can "
+"force NHibernate to properly reset the ``version`` or ``timestamp`` property"
+" values through the use of a ``versioned update``. This is achieved by "
+"adding the ``VERSIONED`` keyword after the ``UPDATE`` keyword."
+msgstr ""
+
+#: ../../batch.rst:182
+msgid ""
+"Note that custom version types (``NHibernate.Usertype.IUserVersionType``) "
+"are not allowed in conjunction with a ``update versioned`` statement."
+msgstr ""
+
+#: ../../batch.rst:185
+msgid ""
+"To execute an HQL ``DELETE``, use the same ``IQuery.ExecuteUpdate()`` "
+"method:"
+msgstr ""
+
+#: ../../batch.rst:201
+msgid ""
+"The ``int`` value returned by the ``IQuery.ExecuteUpdate()`` method indicate"
+" the number of entities effected by the operation.  Consider this may or may"
+" not correlate to the number of rows effected in the database.  An HQL bulk "
+"operation might result in multiple actual SQL statements being executed, for"
+" joined-subclass, for example.  The returned number indicates the number of "
+"actual entities affected by the statement.  Going back to the example of "
+"joined-subclass, a delete against one of the subclasses may actually result "
+"in deletes against not just the table to which that subclass is mapped, but "
+"also the \"root\" table and potentially joined-subclass tables further down "
+"the inheritence hierarchy."
+msgstr ""
+
+#: ../../batch.rst:210
+msgid ""
+"The pseudo-syntax for ``INSERT`` statements is: ``INSERT INTO EntityName "
+"properties_list select_statement``.  Some points to note:"
+msgstr ""
+
+#: ../../batch.rst:214
+msgid ""
+"Only the INSERT INTO ... SELECT ... form is supported; not the INSERT INTO "
+"... VALUES ... form. The properties_list is analogous to the ``column "
+"speficiation`` in the SQL ``INSERT`` statement.  For entities involved in "
+"mapped inheritence, only properties directly defined on that given class-"
+"level can be used in the properties_list.  Superclass properties are not "
+"allowed; and subclass properties do not make sense.  In other words, "
+"``INSERT`` statements are inherently non-polymorphic."
+msgstr ""
+
+#: ../../batch.rst:222
+msgid ""
+"select_statement can be any valid HQL select query, with the caveat that the"
+" return types must match the types expected by the insert.  Currently, this "
+"is checked during query compilation rather than allowing the check to "
+"relegate to the database.  Note however that this might cause problems "
+"between NHibernate ``Type``s which are *equivalent* as opposed to *equal*.  "
+"This might cause issues with mismatches between a property defined as a "
+"``NHibernate.Type.DateType`` and a property defined as a "
+"``NHibernate.Type.TimestampType``, even though the database might not make a"
+" distinction or might be able to handle the conversion."
+msgstr ""
+
+#: ../../batch.rst:231
+msgid ""
+"For the id property, the insert statement gives you two options.  You can "
+"either explicitly specify the id property in the properties_list (in which "
+"case its value is taken from the corresponding select expression) or omit it"
+" from the properties_list (in which case a generated value is used).  This "
+"later option is only available when using id generators that operate in the "
+"database; attempting to use this option with any \"in memory\" type "
+"generators will cause an exception during parsing.  Note that for the "
+"purposes of this discussion, in-database generators are considered to be "
+"``NHibernate.Id.SequenceGenerator`` (and its subclasses) and any "
+"implementors of ``NHibernate.Id.IPostInsertIdentifierGenerator``. The most "
+"notable exception here is ``NHibernate.Id.TableHiLoGenerator``, which cannot"
+" be used because it does not expose a selectable way to get its values."
+msgstr ""
+
+#: ../../batch.rst:243
+msgid ""
+"For properties mapped as either ``version`` or ``timestamp``, the insert "
+"statement gives you two options.  You can either specify the property in the"
+" properties_list (in which case its value is taken from the corresponding "
+"select expressions) or omit it from the properties_list (in which case the "
+"``seed value`` defined by the ``NHibernate.Type.IVersionType`` is used)."
+msgstr ""
+
+#: ../../batch.rst:249
+msgid "An example HQL ``INSERT`` statement execution:"
+msgstr ""

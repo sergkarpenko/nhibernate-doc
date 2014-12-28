@@ -1,0 +1,613 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../query-sql.rst:5
+msgid "Native SQL"
+msgstr ""
+
+#: ../../query-sql.rst:7
+msgid ""
+"You may also express queries in the native SQL dialect of your database. "
+"This is useful if you want to utilize database specific features such as "
+"query hints or the ``CONNECT`` keyword in Oracle. It also provides a clean "
+"migration path from a direct SQL/ADO.NET based application to NHibernate."
+msgstr ""
+
+#: ../../query-sql.rst:13
+msgid ""
+"NHibernate allows you to specify handwritten SQL (including stored "
+"procedures) for all create, update, delete, and load operations."
+msgstr ""
+
+#: ../../query-sql.rst:17
+msgid "Using an ``ISQLQuery``"
+msgstr ""
+
+#: ../../query-sql.rst:19
+msgid ""
+"Execution of native SQL queries is controlled via the ``ISQLQuery`` "
+"interface, which is obtained by calling ``ISession.CreateSQLQuery()``. The "
+"following describes how to use this API for querying."
+msgstr ""
+
+#: ../../query-sql.rst:25
+msgid "Scalar queries"
+msgstr ""
+
+#: ../../query-sql.rst:27
+msgid "The most basic SQL query is to get a list of scalars (values)."
+msgstr ""
+
+#: ../../query-sql.rst:37 ../../query-sql.rst:62 ../../query-sql.rst:153
+#: ../../query-sql.rst:219
+msgid "This query specified:"
+msgstr ""
+
+#: ../../query-sql.rst:39 ../../query-sql.rst:64 ../../query-sql.rst:221
+msgid "the SQL query string"
+msgstr ""
+
+#: ../../query-sql.rst:41
+msgid "the columns and types to return"
+msgstr ""
+
+#: ../../query-sql.rst:43
+msgid ""
+"This will return an IList of Object arrays (object[]) with scalar values for"
+" each column in the CATS table. Only these three columns will be returned, "
+"even though the query is using ``*`` and could return more than the three "
+"listed columns."
+msgstr ""
+
+#: ../../query-sql.rst:50
+msgid "Entity queries"
+msgstr ""
+
+#: ../../query-sql.rst:52
+msgid ""
+"The above query was about returning scalar values, basically returning the "
+"\"raw\" values from the result set. The following shows how to get entity "
+"objects from a native SQL query via ``AddEntity()``."
+msgstr ""
+
+#: ../../query-sql.rst:66
+msgid "the entity returned by the query"
+msgstr ""
+
+#: ../../query-sql.rst:68
+msgid ""
+"Assuming that Cat is mapped as a class with the columns ID, NAME and "
+"BIRTHDATE the above queries will both return an IList where each element is "
+"a Cat entity."
+msgstr ""
+
+#: ../../query-sql.rst:72
+msgid ""
+"If the entity is mapped with a ``many-to-one`` to another entity it is "
+"required to also return its identifier when performing the native query, "
+"otherwise a database specific \"column not found\" error will occur. The "
+"additional columns will automatically be returned when using the * notation,"
+" but we prefer to be explicit as in the following example for a ``many-to-"
+"one`` to a ``Dog``:"
+msgstr ""
+
+#: ../../query-sql.rst:84
+msgid "This will allow cat.Dog property access to function properly."
+msgstr ""
+
+#: ../../query-sql.rst:87
+msgid "Handling associations and collections"
+msgstr ""
+
+#: ../../query-sql.rst:89
+msgid ""
+"It is possible to eagerly join in the ``Dog`` to avoid the possible extra "
+"roundtrip for initializing the proxy. This is done via the ``AddJoin()`` "
+"method, which allows you to join in an association or collection."
+msgstr ""
+
+#: ../../query-sql.rst:100
+msgid ""
+"In this example the returned ``Cat``'s will have their ``Dog`` property "
+"fully initialized without any extra roundtrip to the database. Notice that "
+"we added a alias name (\"cat\") to be able to specify the target property "
+"path of the join. It is possible to do the same eager joining for "
+"collections, e.g. if the ``Cat`` had a one-to-many to ``Dog`` instead."
+msgstr ""
+
+#: ../../query-sql.rst:114
+msgid ""
+"At this stage we are reaching the limits of what is possible with native "
+"queries without starting to enhance the SQL queries to make them usable in "
+"NHibernate; the problems start to arise when returning multiple entities of "
+"the same type or when the default alias/column names are not enough."
+msgstr ""
+
+#: ../../query-sql.rst:121
+msgid "Returning multiple entities"
+msgstr ""
+
+#: ../../query-sql.rst:123
+msgid ""
+"Until now the result set column names are assumed to be the same as the "
+"column names specified in the mapping document. This can be problematic for "
+"SQL queries which join multiple tables, since the same column names may "
+"appear in more than one table."
+msgstr ""
+
+#: ../../query-sql.rst:128
+msgid ""
+"Column alias injection is needed in the following query (which most likely "
+"will fail):"
+msgstr ""
+
+#: ../../query-sql.rst:137
+msgid ""
+"The intention for this query is to return two Cat instances per row, a cat "
+"and its mother. This will fail since there is a conflict of names since they"
+" are mapped to the same column names and on some databases the returned "
+"column aliases will most likely be on the form \"c.ID\", \"c.NAME\", etc. "
+"which are not equal to the columns specificed in the mappings (\"ID\" and "
+"\"NAME\")."
+msgstr ""
+
+#: ../../query-sql.rst:144
+msgid "The following form is not vulnerable to column name duplication:"
+msgstr ""
+
+#: ../../query-sql.rst:155
+msgid ""
+"the SQL query string, with placeholders for NHibernate to inject column "
+"aliases"
+msgstr ""
+
+#: ../../query-sql.rst:158
+msgid "the entities returned by the query"
+msgstr ""
+
+#: ../../query-sql.rst:160
+msgid ""
+"The {cat.*} and {mother.*} notation used above is a shorthand for \"all "
+"properties\". Alternatively, you may list the columns explicity, but even in"
+" this case we let NHibernate inject the SQL column aliases for each "
+"property. The placeholder for a column alias is just the property name "
+"qualified by the table alias. In the following example, we retrieve Cats and"
+" their mothers from a different table (cat_log) to the one declared in the "
+"mapping metadata. Notice that we may even use the property aliases in the "
+"where clause if we like."
+msgstr ""
+
+#: ../../query-sql.rst:180
+msgid "Alias and property references"
+msgstr ""
+
+#: ../../query-sql.rst:182
+msgid ""
+"For most cases the above alias injection is needed, but for queries relating"
+" to more complex mappings like composite properties, inheritance "
+"discriminators, collections etc. there are some specific aliases to use to "
+"allow NHibernate to inject the proper aliases."
+msgstr ""
+
+#: ../../query-sql.rst:187
+msgid ""
+"The following table shows the different possibilities of using the alias "
+"injection. Note: the alias names in the result are examples, each alias will"
+" have a unique and probably different name when used."
+msgstr ""
+
+#: ../../query-sql.rst:192
+msgid "Alias injection names"
+msgstr ""
+
+#: ../../query-sql.rst:195
+msgid "Description"
+msgstr ""
+
+#: ../../query-sql.rst:195
+msgid "Syntax"
+msgstr ""
+
+#: ../../query-sql.rst:195
+msgid "Example"
+msgstr ""
+
+#: ../../query-sql.rst:197
+msgid "A simple property"
+msgstr ""
+
+#: ../../query-sql.rst:197
+msgid "``{\\[aliasname].[propertyname]}``"
+msgstr ""
+
+#: ../../query-sql.rst:197
+msgid "``A_NAME as {item.Name}``"
+msgstr ""
+
+#: ../../query-sql.rst:198
+msgid "A composite property"
+msgstr ""
+
+#: ../../query-sql.rst:198
+msgid "``{\\[aliasname].[componentname].[propertyname]}``"
+msgstr ""
+
+#: ../../query-sql.rst:198
+msgid "``CURRENCY as {item.Amount.Currency}, VALUE as {item.Amount.Value}``"
+msgstr ""
+
+#: ../../query-sql.rst:199
+msgid "Discriminator of an entity"
+msgstr ""
+
+#: ../../query-sql.rst:199
+msgid "``{\\[aliasname].class}``"
+msgstr ""
+
+#: ../../query-sql.rst:199
+msgid "``DISC as {item.class}``"
+msgstr ""
+
+#: ../../query-sql.rst:200
+msgid "All properties of an entity"
+msgstr ""
+
+#: ../../query-sql.rst:200 ../../query-sql.rst:206
+msgid "``{\\[aliasname].*}``"
+msgstr ""
+
+#: ../../query-sql.rst:200
+msgid "``{item.*}``"
+msgstr ""
+
+#: ../../query-sql.rst:201
+msgid "A collection key"
+msgstr ""
+
+#: ../../query-sql.rst:201
+msgid "``{\\[aliasname].key}``"
+msgstr ""
+
+#: ../../query-sql.rst:201
+msgid "``ORGID as {coll.key}``"
+msgstr ""
+
+#: ../../query-sql.rst:202
+msgid "The id of an collection"
+msgstr ""
+
+#: ../../query-sql.rst:202
+msgid "``{\\[aliasname].id}``"
+msgstr ""
+
+#: ../../query-sql.rst:202
+msgid "``EMPID as {coll.id}``"
+msgstr ""
+
+#: ../../query-sql.rst:203
+msgid "The element of an collection"
+msgstr ""
+
+#: ../../query-sql.rst:203
+msgid "``{\\[aliasname].element}``"
+msgstr ""
+
+#: ../../query-sql.rst:203
+msgid "``XID as {coll.element}``"
+msgstr ""
+
+#: ../../query-sql.rst:204
+msgid "property of the element in the collection"
+msgstr ""
+
+#: ../../query-sql.rst:204
+msgid "``{\\[aliasname].element.[propertyname]}``"
+msgstr ""
+
+#: ../../query-sql.rst:204
+msgid "``NAME as {coll.element.Name}``"
+msgstr ""
+
+#: ../../query-sql.rst:205
+msgid "All properties of the element in the collection"
+msgstr ""
+
+#: ../../query-sql.rst:205
+msgid "``{\\[aliasname].element.*}``"
+msgstr ""
+
+#: ../../query-sql.rst:205
+msgid "``{coll.element.*}``"
+msgstr ""
+
+#: ../../query-sql.rst:206
+msgid "All properties of the the collection"
+msgstr ""
+
+#: ../../query-sql.rst:206
+msgid "``{coll.*}``"
+msgstr ""
+
+#: ../../query-sql.rst:210
+msgid "Returning non-managed entities"
+msgstr ""
+
+#: ../../query-sql.rst:212
+msgid ""
+"It is possible to apply an ``IResultTransformer`` to native sql queries. "
+"Allowing it to e.g. return non-managed entities."
+msgstr ""
+
+#: ../../query-sql.rst:223
+msgid "a result transformer"
+msgstr ""
+
+#: ../../query-sql.rst:225
+msgid ""
+"The above query will return a list of ``CatDTO`` which has been instantiated"
+" and injected the values of NAME and BIRTHNAME into its corresponding "
+"properties or fields."
+msgstr ""
+
+#: ../../query-sql.rst:228
+msgid ""
+"IMPORTANT: The custom ``IResultTransformer`` should override ``Equals`` and "
+"``GetHashCode``, otherwise the query translation won't be cached. This also "
+"will result in memory leak."
+msgstr ""
+
+#: ../../query-sql.rst:232
+msgid "Handling inheritance"
+msgstr ""
+
+#: ../../query-sql.rst:234
+msgid ""
+"Native SQL queries which query for entities that are mapped as part of an "
+"inheritance hierarchy must include all properties for the base class and all"
+" its subclasses."
+msgstr ""
+
+#: ../../query-sql.rst:239
+msgid "Parameters"
+msgstr ""
+
+#: ../../query-sql.rst:241
+msgid "Native SQL queries support positional as well as named parameters:"
+msgstr ""
+
+#: ../../query-sql.rst:253
+msgid "Named SQL queries"
+msgstr ""
+
+#: ../../query-sql.rst:255
+msgid ""
+"Named SQL queries may be defined in the mapping document and called in "
+"exactly the same way as a named HQL query. In this case, we do *not* need to"
+" call ``AddEntity()``."
+msgstr ""
+
+#: ../../query-sql.rst:278
+msgid ""
+"The ``<return-join>`` and ``<load-collection>`` elements are used to join "
+"associations and define queries which initialize collections, respectively."
+msgstr ""
+
+#: ../../query-sql.rst:301
+msgid ""
+"A named SQL query may return a scalar value. You must declare the column "
+"alias and NHibernate type using the ``<return-scalar>`` element:"
+msgstr ""
+
+#: ../../query-sql.rst:315
+msgid ""
+"You can externalize the resultset mapping informations in a ``<resultset>`` "
+"element to either reuse them accross several named queries or through the "
+"``SetResultSetMapping()`` API."
+msgstr ""
+
+#: ../../query-sql.rst:341
+msgid ""
+"You can alternatively use the resultset mapping information in your .hbm.xml"
+" files directly in code."
+msgstr ""
+
+#: ../../query-sql.rst:353
+msgid "Using return-property to explicitly specify column/alias names"
+msgstr ""
+
+#: ../../query-sql.rst:355
+msgid ""
+"With ``<return-property>`` you can explicitly tell NHibernate what column "
+"aliases to use, instead of using the ``{}``-syntax to let NHibernate inject "
+"its own aliases."
+msgstr ""
+
+#: ../../query-sql.rst:374
+msgid ""
+"``<return-property>`` also works with multiple columns. This solves a "
+"limitation with the ``{}``-syntax which can not allow fine grained control "
+"of multi-column properties."
+msgstr ""
+
+#: ../../query-sql.rst:397
+msgid ""
+"Notice that in this example we used ``<return-property>`` in combination "
+"with the ``{}``-syntax for injection, allowing users to choose how they want"
+" to refer column and properties."
+msgstr ""
+
+#: ../../query-sql.rst:402
+msgid ""
+"If your mapping has a discriminator you must use ``<return-discriminator>`` "
+"to specify the discriminator column."
+msgstr ""
+
+#: ../../query-sql.rst:407
+msgid "Using stored procedures for querying"
+msgstr ""
+
+#: ../../query-sql.rst:409
+msgid ""
+"NHibernate introduces support for queries via stored procedures and "
+"functions. Most of the following documentation is equivalent for both. The "
+"stored procedure/function must return a resultset to be able to work with "
+"NHibernate. An example of such a stored function in MS SQL Server 2000 and "
+"higher is as follows:"
+msgstr ""
+
+#: ../../query-sql.rst:422
+msgid "To use this query in NHibernate you need to map it via a named query."
+msgstr ""
+
+#: ../../query-sql.rst:443
+msgid ""
+"Notice that stored procedures currently only return scalars and entities. "
+"``<return-join>`` and ``<load-collection>`` are not supported."
+msgstr ""
+
+#: ../../query-sql.rst:448
+msgid "Rules/limitations for using stored procedures"
+msgstr ""
+
+#: ../../query-sql.rst:450
+msgid ""
+"To use stored procedures with NHibernate the procedures/functions have to "
+"follow some rules. If they do not follow those rules they are not usable "
+"with NHibernate. If you still want to use these procedures you have to "
+"execute them via ``session.Connection``. The rules are different for each "
+"database, since database vendors have different stored procedure "
+"semantics/syntax."
+msgstr ""
+
+#: ../../query-sql.rst:457
+msgid ""
+"Stored procedure queries can't be paged with "
+"``SetFirstResult()/SetMaxResults()``."
+msgstr ""
+
+#: ../../query-sql.rst:460
+msgid ""
+"Recommended call form is dependent on your database. For MS SQL Server use "
+"``exec functionName <parameters>``."
+msgstr ""
+
+#: ../../query-sql.rst:463
+msgid "For Oracle the following rules apply:"
+msgstr ""
+
+#: ../../query-sql.rst:465
+msgid ""
+"A function must return a result set. The first parameter of a procedure must"
+" be an ``OUT`` that returns a result set. This is done by using a "
+"``SYS_REFCURSOR`` type in Oracle 9 or 10. In Oracle you need to define a "
+"``REF CURSOR`` type, see Oracle literature."
+msgstr ""
+
+#: ../../query-sql.rst:472
+msgid "For MS SQL server the following rules apply:"
+msgstr ""
+
+#: ../../query-sql.rst:474
+msgid ""
+"The procedure must return a result set. NHibernate will use "
+"``IDbCommand.ExecuteReader()`` to obtain the results."
+msgstr ""
+
+#: ../../query-sql.rst:478
+msgid ""
+"If you can enable ``SET NOCOUNT ON`` in your procedure it will probably be "
+"more efficient, but this is not a requirement."
+msgstr ""
+
+#: ../../query-sql.rst:483
+msgid "Custom SQL for create, update and delete"
+msgstr ""
+
+#: ../../query-sql.rst:485
+msgid ""
+"NHibernate can use custom SQL statements for create, update, and delete "
+"operations. The class and collection persisters in NHibernate already "
+"contain a set of configuration time generated strings (insertsql, deletesql,"
+" updatesql etc.). The mapping tags ``<sql-insert>``, ``<sql-delete>``, and "
+"``<sql-update>`` override these strings:"
+msgstr ""
+
+#: ../../query-sql.rst:505
+msgid ""
+"Note that the custom ``sql-insert`` will not be used if you use ``identity``"
+" to generate identifier values for the class."
+msgstr ""
+
+#: ../../query-sql.rst:509
+msgid ""
+"The SQL is directly executed in your database, so you are free to use any "
+"dialect you like. This will of course reduce the portability of your mapping"
+" if you use database specific SQL."
+msgstr ""
+
+#: ../../query-sql.rst:513
+msgid "Stored procedures are supported if the database-native syntax is used:"
+msgstr ""
+
+#: ../../query-sql.rst:527
+msgid ""
+"The order of the positional parameters is currently vital, as they must be "
+"in the same sequence as NHibernate expects them."
+msgstr ""
+
+#: ../../query-sql.rst:530
+msgid ""
+"You can see the expected order by enabling debug logging for the "
+"``NHibernate.Persister.Entity`` level. With this level enabled NHibernate "
+"will print out the static SQL that is used to create, update, delete etc. "
+"entities. (To see the expected sequence, remember to not include your custom"
+" SQL in the mapping files as that will override the NHibernate generated "
+"static sql.)"
+msgstr ""
+
+#: ../../query-sql.rst:537
+msgid ""
+"The stored procedures are by default required to affect the same number of "
+"rows as NHibernate-generated SQL would. NHibernate uses "
+"``IDbCommand.ExecuteNonQuery`` to retrieve the number of rows affected. This"
+" check can be disabled by using ``check=\"none\"`` attribute in ``sql-"
+"insert`` element."
+msgstr ""
+
+#: ../../query-sql.rst:544
+msgid "Custom SQL for loading"
+msgstr ""
+
+#: ../../query-sql.rst:546
+msgid "You may also declare your own SQL (or HQL) queries for entity loading:"
+msgstr ""
+
+#: ../../query-sql.rst:559
+msgid ""
+"This is just a named query declaration, as discussed earlier. You may "
+"reference this named query in a class mapping:"
+msgstr ""
+
+#: ../../query-sql.rst:572
+msgid "This even works with stored procedures."
+msgstr ""
+
+#: ../../query-sql.rst:574
+msgid "You may even define a query for collection loading:"
+msgstr ""
+
+#: ../../query-sql.rst:594
+msgid ""
+"You could even define an entity loader that loads a collection by join "
+"fetching:"
+msgstr ""

@@ -1,0 +1,520 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../transactions.rst:5
+msgid "Transactions And Concurrency"
+msgstr ""
+
+#: ../../transactions.rst:7
+msgid ""
+"NHibernate is not itself a database. It is a lightweight object-relational "
+"mapping tool. Transaction management is delegated to the underlying database"
+" connection. If the connection is enlisted with a distributed transaction, "
+"operations performed by the ``ISession`` are atomically part of the wider "
+"distributed transaction. NHibernate can be seen as a thin adapter to "
+"ADO.NET, adding object-oriented semantics."
+msgstr ""
+
+#: ../../transactions.rst:15
+msgid "Configurations, Sessions and Factories"
+msgstr ""
+
+#: ../../transactions.rst:17
+msgid ""
+"An ``ISessionFactory`` is an expensive-to-create, threadsafe object intended"
+" to be shared by all application threads. An ``ISession`` is an inexpensive,"
+" non-threadsafe object that should be used once, for a single business "
+"process, and then discarded. For example, when using NHibernate in an "
+"ASP.NET application, pages could obtain an ``ISessionFactory`` using:"
+msgstr ""
+
+#: ../../transactions.rst:28
+msgid ""
+"Each call to a service method could create a new ``ISession``, ``Flush()`` "
+"it, ``Commit()`` its transaction, ``Close()`` it and finally discard it. "
+"(The ``ISessionFactory`` may also be kept in  a static *Singleton* helper "
+"variable.)"
+msgstr ""
+
+#: ../../transactions.rst:33
+msgid ""
+"We use the NHibernate ``ITransaction`` API as discussed previously, a single"
+" ``Commit()`` of a NHibernate ``ITransaction`` flushes the state and commits"
+" any underlying database connection (with special handling of distributed "
+"transactions)."
+msgstr ""
+
+#: ../../transactions.rst:38
+msgid ""
+"Ensure you understand the semantics of ``Flush()``. Flushing synchronizes "
+"the persistent store with in-memory changes but *not* vice-versa. Note that "
+"for all NHibernate ADO.NET connections/transactions, the transaction "
+"isolation level for that connection applies to all operations executed by "
+"NHibernate!"
+msgstr ""
+
+#: ../../transactions.rst:44
+msgid ""
+"The next few sections will discuss alternative approaches that utilize "
+"versioning to ensure transaction atomicity. These are considered "
+"\"advanced\" approaches to be used with care."
+msgstr ""
+
+#: ../../transactions.rst:49
+msgid "Threads and connections"
+msgstr ""
+
+#: ../../transactions.rst:51
+msgid ""
+"You should observe the following practices when creating NHibernate "
+"Sessions:"
+msgstr ""
+
+#: ../../transactions.rst:53
+msgid ""
+"Never create more than one concurrent ``ISession`` or ``ITransaction`` "
+"instance per database connection."
+msgstr ""
+
+#: ../../transactions.rst:56
+msgid ""
+"Be extremely careful when creating more than one ``ISession`` per database "
+"per transaction. The ``ISession`` itself keeps track of updates made to "
+"loaded objects, so a different ``ISession`` might see stale data."
+msgstr ""
+
+#: ../../transactions.rst:61
+msgid ""
+"The ``ISession`` is *not* threadsafe! Never access the same ``ISession`` in "
+"two concurrent threads. An ``ISession`` is usually only a single unit-of-"
+"work!"
+msgstr ""
+
+#: ../../transactions.rst:66
+msgid "Considering object identity"
+msgstr ""
+
+#: ../../transactions.rst:68
+msgid ""
+"The application may concurrently access the same persistent state in two "
+"different units-of-work. However, an instance of a persistent class is never"
+" shared between two ``ISession`` instances. Hence there are two different "
+"notions of identity:"
+msgstr ""
+
+#: ../../transactions.rst:74
+msgid "Database Identity"
+msgstr ""
+
+#: ../../transactions.rst:74
+msgid "``foo.Id.Equals( bar.Id )``"
+msgstr ""
+
+#: ../../transactions.rst:77
+msgid "CLR Identity"
+msgstr ""
+
+#: ../../transactions.rst:77
+msgid "``foo == bar``"
+msgstr ""
+
+#: ../../transactions.rst:79
+msgid ""
+"Then for objects attached to a *particular* ``Session``, the two notions are"
+" equivalent. However, while the application might concurrently access the "
+"\"same\" (persistent identity) business object in two different sessions, "
+"the two instances will actually be \"different\" (CLR identity)."
+msgstr ""
+
+#: ../../transactions.rst:84
+msgid ""
+"This approach leaves NHibernate and the database to worry about concurrency."
+" The application never needs to synchronize on any business object, as long "
+"as it sticks to a single thread per ``ISession`` or object identity (within "
+"an ``ISession`` the application may safely use ``==`` to compare objects)."
+msgstr ""
+
+#: ../../transactions.rst:91
+msgid "Optimistic concurrency control"
+msgstr ""
+
+#: ../../transactions.rst:93
+msgid ""
+"Many business processes require a whole series of interactions with the user"
+" interleaved with database accesses. In web and enterprise applications it "
+"is not acceptable for a database transaction to span a user interaction."
+msgstr ""
+
+#: ../../transactions.rst:97
+msgid ""
+"Maintaining isolation of business processes becomes the partial "
+"responsibility of the application tier, hence we call this process a long "
+"running *application transaction*. A single application transaction usually "
+"spans several database transactions. It will be atomic if only one of these "
+"database transactions (the last one) stores the updated data, all others "
+"simply read data."
+msgstr ""
+
+#: ../../transactions.rst:104
+msgid ""
+"The only approach that is consistent with high concurrency and high "
+"scalability is optimistic concurrency control with versioning. NHibernate "
+"provides for three possible approaches to writing application code that uses"
+" optimistic concurrency."
+msgstr ""
+
+#: ../../transactions.rst:110
+msgid "Long session with automatic versioning"
+msgstr ""
+
+#: ../../transactions.rst:112
+msgid ""
+"A single ``ISession`` instance and its persistent instances are used for the"
+" whole application transaction."
+msgstr ""
+
+#: ../../transactions.rst:115
+msgid ""
+"The ``ISession`` uses optimistic locking with versioning to ensure that many"
+" database transactions appear to the application as a single logical "
+"application transaction. The ``ISession`` is disconnected from any "
+"underlying ADO.NET connection when waiting for user interaction. This "
+"approach is the most efficient in terms of database access. The application "
+"need not concern itself with version checking or with reattaching detached "
+"instances."
+msgstr ""
+
+#: ../../transactions.rst:133
+msgid ""
+"The ``foo`` object still knows which ``ISession`` it was loaded it. As soon "
+"as the ``ISession`` has an ADO.NET connection, we commit the changes to the "
+"object."
+msgstr ""
+
+#: ../../transactions.rst:137
+msgid ""
+"This pattern is problematic if our ``ISession`` is too big to be stored "
+"during user think time, e.g. an ``HttpSession`` should be kept as small as "
+"possible. As the ``ISession`` is also the (mandatory) first-level cache and "
+"contains all loaded objects, we can propably use this strategy only for a "
+"few request/response cycles. This is indeed recommended, as the ``ISession``"
+" will soon also have stale data."
+msgstr ""
+
+#: ../../transactions.rst:145
+msgid "Many sessions with automatic versioning"
+msgstr ""
+
+#: ../../transactions.rst:147
+msgid ""
+"Each interaction with the persistent store occurs in a new ``ISession``. "
+"However, the same persistent instances are reused for each interaction with "
+"the database. The application manipulates the state of detached instances "
+"originally loaded in another ``ISession`` and then \"reassociates\" them "
+"using ``ISession.Update()`` or ``ISession.SaveOrUpdate()``."
+msgstr ""
+
+#: ../../transactions.rst:164
+msgid ""
+"You may also call ``Lock()`` instead of ``Update()`` and use "
+"``LockMode.Read`` (performing a version check, bypassing all caches) if you "
+"are sure that the object has not been modified."
+msgstr ""
+
+#: ../../transactions.rst:169
+msgid "Customizing automatic versioning"
+msgstr ""
+
+#: ../../transactions.rst:171
+msgid ""
+"You may disable NHibernate's automatic version increment for particular "
+"properties and collections by setting the ``optimistic-lock`` mapping "
+"attribute to ``false``. NHibernate will then no longer increment versions if"
+" the property is dirty."
+msgstr ""
+
+#: ../../transactions.rst:176
+msgid ""
+"Legacy database schemas are often static and can't be modified. Or, other "
+"applications might also access the same database and don't know how to "
+"handle version numbers or even timestamps. In both cases, versioning can't "
+"rely on a particular column in a table. To force a version check without a "
+"version or timestamp property mapping, with a comparison of the state of all"
+" fields in a row, turn on ``optimistic-lock=\"all\"`` in the ``<class>`` "
+"mapping. Note that this concepetually only works if NHibernate can compare "
+"the old and new state, i.e. if you use a single long ``ISession`` and not "
+"session-per-request-with-detached-objects."
+msgstr ""
+
+#: ../../transactions.rst:185
+msgid ""
+"Sometimes concurrent modification can be permitted as long as the changes "
+"that have been made don't overlap. If you set ``optimistic-lock=\"dirty\"`` "
+"when mapping the ``<class>``, NHibernate will only compare dirty fields "
+"during flush."
+msgstr ""
+
+#: ../../transactions.rst:189
+msgid ""
+"In both cases, with dedicated version/timestamp columns or with full/dirty "
+"field comparison, NHibernate uses a single ``UPDATE`` statement (with an "
+"appropriate ``WHERE`` clause) per entity to execute the version check and "
+"update the information. If you use transitive persistence to cascade "
+"reattachment to associated entities, NHibernate might execute uneccessary "
+"updates. This is usually not a problem, but *on update* triggers in the "
+"database might be executed even when no changes have been made to detached "
+"instances. You can customize this behavior by setting  ``select-before-"
+"update=\"true\"`` in the ``<class>`` mapping, forcing NHibernate to "
+"``SELECT`` the instance to ensure that changes did actually occur, before "
+"updating the row."
+msgstr ""
+
+#: ../../transactions.rst:201
+msgid "Application version checking"
+msgstr ""
+
+#: ../../transactions.rst:203
+msgid ""
+"Each interaction with the database occurs in a new ``ISession`` that reloads"
+" all persistent instances from the database before manipulating them. This "
+"approach forces the application to carry out its own version checking to "
+"ensure application transaction isolation. (Of course, NHibernate will still "
+"*update* version numbers for you.) This approach is the least efficient in "
+"terms of database access."
+msgstr ""
+
+#: ../../transactions.rst:222
+msgid ""
+"Of course, if you are operating in a low-data-concurrency environment and "
+"don't require version checking, you may use this approach and just skip the "
+"version check."
+msgstr ""
+
+#: ../../transactions.rst:227
+msgid "Session disconnection"
+msgstr ""
+
+#: ../../transactions.rst:229
+msgid ""
+"The first approach described above is to maintain a single ``ISession`` for "
+"a whole business process thats spans user think time. (For example, a "
+"servlet might keep an ``ISession`` in the user's ``HttpSession``.) For "
+"performance reasons you should"
+msgstr ""
+
+#: ../../transactions.rst:234
+msgid "commit the ``ITransaction`` and then"
+msgstr ""
+
+#: ../../transactions.rst:236
+msgid "disconnect the ``ISession`` from the ADO.NET connection"
+msgstr ""
+
+#: ../../transactions.rst:238
+msgid ""
+"before waiting for user activity. The method ``ISession.Disconnect()`` will "
+"disconnect the session from the ADO.NET connection and return the connection"
+" to the pool (unless you provided the connection)."
+msgstr ""
+
+#: ../../transactions.rst:242
+msgid ""
+"``ISession.Reconnect()`` obtains a new connection (or you may supply one) "
+"and restarts the session. After reconnection, to force a version check on "
+"data you aren't updating, you may call ``ISession.Lock()`` on any objects "
+"that might have been updated by another transaction. You don't need to lock "
+"any data that you *are* updating."
+msgstr ""
+
+#: ../../transactions.rst:248
+msgid "Heres an example:"
+msgstr ""
+
+#: ../../transactions.rst:281
+msgid "Later on:"
+msgstr ""
+
+#: ../../transactions.rst:310
+msgid ""
+"You can see from this how the relationship between ``ITransaction``s and "
+"``ISession``s is many-to-one, An ``ISession`` represents a conversation "
+"between the application and the database. The ``ITransaction`` breaks that "
+"conversation up into atomic units of work at the database level."
+msgstr ""
+
+#: ../../transactions.rst:317
+msgid "Pessimistic Locking"
+msgstr ""
+
+#: ../../transactions.rst:319
+msgid ""
+"It is not intended that users spend much time worring about locking "
+"strategies. It's usually enough to specify an isolation level for the "
+"ADO.NET connections and then simply let the database do all the work. "
+"However, advanced users may sometimes wish to obtain exclusive pessimistic "
+"locks, or re-obtain locks at the start of a new transaction."
+msgstr ""
+
+#: ../../transactions.rst:324
+msgid ""
+"NHibernate will always use the locking mechanism of the database, never lock"
+" objects in memory!"
+msgstr ""
+
+#: ../../transactions.rst:327
+msgid ""
+"The ``LockMode`` class defines the different lock levels that may be "
+"acquired by NHibernate. A lock is obtained by the following mechanisms:"
+msgstr ""
+
+#: ../../transactions.rst:330
+msgid ""
+"``LockMode.Write`` is acquired automatically when NHibernate updates or "
+"inserts a row."
+msgstr ""
+
+#: ../../transactions.rst:333
+msgid ""
+"``LockMode.Upgrade`` may be acquired upon explicit user request using "
+"``SELECT ... FOR UPDATE`` on databases which support that syntax."
+msgstr ""
+
+#: ../../transactions.rst:336
+msgid ""
+"``LockMode.UpgradeNoWait`` may be acquired upon explicit user request using "
+"a ``SELECT ... FOR UPDATE NOWAIT`` under Oracle."
+msgstr ""
+
+#: ../../transactions.rst:339
+msgid ""
+"``LockMode.Read`` is acquired automatically when NHibernate reads data under"
+" Repeatable Read or Serializable isolation level. May be re-acquired by "
+"explicit user request."
+msgstr ""
+
+#: ../../transactions.rst:343
+msgid ""
+"``LockMode.None`` represents the absence of a lock. All objects switch to "
+"this lock mode at the end of an ``ITransaction``. Objects associated with "
+"the session via a call to ``Update()`` or ``SaveOrUpdate()`` also start out "
+"in this lock mode."
+msgstr ""
+
+#: ../../transactions.rst:348
+msgid "The \"explicit user request\" is expressed in one of the following ways:"
+msgstr ""
+
+#: ../../transactions.rst:350
+msgid "A call to ``ISession.Load()``, specifying a ``LockMode``."
+msgstr ""
+
+#: ../../transactions.rst:352
+msgid "A call to ``ISession.Lock()``."
+msgstr ""
+
+#: ../../transactions.rst:354
+msgid "A call to ``IQuery.SetLockMode()``."
+msgstr ""
+
+#: ../../transactions.rst:356
+msgid ""
+"If ``ISession.Load()`` is called with ``Upgrade`` or ``UpgradeNoWait``, and "
+"the requested object was not yet loaded by the session, the object is loaded"
+" using ``SELECT ... FOR UPDATE``. If ``Load()`` is called for an object that"
+" is already loaded with a less restrictive lock than the one requested, "
+"NHibernate calls ``Lock()`` for that object."
+msgstr ""
+
+#: ../../transactions.rst:363
+msgid ""
+"``ISession.Lock()`` performs a version number check if the specified lock "
+"mode is ``Read``, ``Upgrade`` or ``UpgradeNoWait``. (In the case of "
+"``Upgrade`` or ``UpgradeNoWait``, ``SELECT ... FOR UPDATE`` is used.)"
+msgstr ""
+
+#: ../../transactions.rst:368
+msgid ""
+"If the database does not support the requested lock mode, NHibernate will "
+"use an appropriate alternate mode (instead of throwing an exception). This "
+"ensures that applications will be portable."
+msgstr ""
+
+#: ../../transactions.rst:373
+msgid "Connection Release Modes"
+msgstr ""
+
+#: ../../transactions.rst:375
+msgid ""
+"The legacy (1.0.x) behavior of NHibernate in regards to ADO.NET connection "
+"management was that a ``ISession`` would obtain a connection when it was "
+"first needed and then hold unto that connection until the session was "
+"closed. NHibernate introduced the notion of connection release modes to tell"
+" a session how to handle its ADO.NET connections.  Note that the following "
+"discussion is pertinent only to connections provided through a configured "
+"``IConnectionProvider``; user-supplied connections are outside the breadth "
+"of this discussion.  The different release modes are identified by the "
+"enumerated values of ``NHibernate.ConnectionReleaseMode``:"
+msgstr ""
+
+#: ../../transactions.rst:385
+msgid ""
+"``OnClose`` - is essentially the legacy behavior described above. The "
+"NHibernate session obtains a connection when it first needs to perform some "
+"database access and holds unto that connection until the session is closed."
+msgstr ""
+
+#: ../../transactions.rst:389
+msgid ""
+"``AfterTransaction`` - says to release connections after a "
+"``NHibernate.ITransaction`` has completed."
+msgstr ""
+
+#: ../../transactions.rst:392
+msgid ""
+"The configuration parameter ``hibernate.connection.release_mode`` is used to"
+" specify which release mode to use.  The possible values:"
+msgstr ""
+
+#: ../../transactions.rst:395
+msgid ""
+"``auto`` (the default) - equivalent to ``after_transaction`` in the current "
+"release. It is rarely a good idea to change this default behavior as "
+"failures due to the value of this setting tend to indicate bugs and/or "
+"invalid assumptions in user code."
+msgstr ""
+
+#: ../../transactions.rst:399
+msgid ""
+"``on_close`` - says to use ``ConnectionReleaseMode.OnClose``. This setting "
+"is left for backwards compatibility, but its use is highly discouraged."
+msgstr ""
+
+#: ../../transactions.rst:402
+msgid ""
+"``after_transaction`` - says to use "
+"``ConnectionReleaseMode.AfterTransaction``. Note that with "
+"``ConnectionReleaseMode.AfterTransaction``, if a session is considered to be"
+" in auto-commit mode (i.e. no transaction was started) connections will be "
+"released after every operation."
+msgstr ""
+
+#: ../../transactions.rst:406
+msgid ""
+"As of NHibernate, if your application manages transactions through .NET APIs"
+" such as ``System.Transactions`` library, "
+"``ConnectionReleaseMode.AfterTransaction`` may cause NHibernate to open and "
+"close several connections during one transaction, leading to unnecessary "
+"overhead and transaction promotion from local to distributed. Specifying "
+"``ConnectionReleaseMode.OnClose`` will revert to the legacy behavior and "
+"prevent this problem from occuring."
+msgstr ""

@@ -1,0 +1,413 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../toolset-guide.rst:7
+msgid "Toolset Guide"
+msgstr ""
+
+#: ../../toolset-guide.rst:9
+msgid ""
+"Roundtrip engineering with NHibernate is possible using a set of commandline"
+" tools maintained as part of the NHibernate project, along with NHibernate "
+"support built into various code generation tools (MyGeneration, CodeSmith, "
+"ObjectMapper, AndroMDA)."
+msgstr ""
+
+#: ../../toolset-guide.rst:13
+msgid ""
+"The NHibernate main package comes bundled with the most important tool (it "
+"can even be used from \"inside\" NHibernate on-the-fly):"
+msgstr ""
+
+#: ../../toolset-guide.rst:16
+msgid ""
+"DDL schema generation from a mapping file (aka ``SchemaExport``, "
+"``hbm2ddl``)"
+msgstr ""
+
+#: ../../toolset-guide.rst:19
+msgid ""
+"Other tools directly provided by the NHibernate project are delivered with a"
+" separate package, *NHibernateContrib*. This package includes tools for the "
+"following tasks:"
+msgstr ""
+
+#: ../../toolset-guide.rst:23
+msgid "C# source generation from a mapping file (aka ``hbm2net``)"
+msgstr ""
+
+#: ../../toolset-guide.rst:25
+msgid ""
+"mapping file generation from .NET classes marked with attributes "
+"(``NHibernate.Mapping.Attributes``, or NHMA for short)"
+msgstr ""
+
+#: ../../toolset-guide.rst:28
+msgid "Third party tools with NHibernate support are:"
+msgstr ""
+
+#: ../../toolset-guide.rst:30
+msgid ""
+"CodeSmith, MyGeneration, and ObjectMapper (mapping file generation from an "
+"existing database schema)"
+msgstr ""
+
+#: ../../toolset-guide.rst:33
+msgid ""
+"AndroMDA (MDA (Model-Driven Architecture) approach generating code for "
+"persistent classes from UML diagrams and their XML/XMI representation)"
+msgstr ""
+
+#: ../../toolset-guide.rst:36
+msgid ""
+"These 3rd party tools are not documented in this reference. Please refer to "
+"the NHibernate website for up-to-date information."
+msgstr ""
+
+#: ../../toolset-guide.rst:40
+msgid "Schema Generation"
+msgstr ""
+
+#: ../../toolset-guide.rst:42
+msgid ""
+"The generated schema includes referential integrity constraints (primary and"
+" foreign keys) for entity and collection tables. Tables and sequences are "
+"also created for mapped identifier generators."
+msgstr ""
+
+#: ../../toolset-guide.rst:45
+msgid ""
+"You *must* specify a SQL ``Dialect`` via the ``hibernate.dialect`` property "
+"when using this tool."
+msgstr ""
+
+#: ../../toolset-guide.rst:49
+msgid "Customizing the schema"
+msgstr ""
+
+#: ../../toolset-guide.rst:51
+msgid ""
+"Many NHibernate mapping elements define an optional attribute named "
+"``length``. You may set the length of a column with this attribute. (Or, for"
+" numeric/decimal data types, the precision.)"
+msgstr ""
+
+#: ../../toolset-guide.rst:54
+msgid ""
+"Some tags also accept a ``not-null`` attribute (for generating a ``NOT "
+"NULL`` constraint on table columns) and a ``unique`` attribute (for "
+"generating ``UNIQUE`` constraint on table columns)."
+msgstr ""
+
+#: ../../toolset-guide.rst:58
+msgid ""
+"Some tags accept an ``index`` attribute for specifying the name of an index "
+"for that column. A ``unique-key`` attribute can be used to group columns in "
+"a single unit key constraint. Currently, the specified value of the "
+"``unique-key`` attribute is *not* used to name the constraint, only to group"
+" the columns in the mapping file."
+msgstr ""
+
+#: ../../toolset-guide.rst:65
+msgid "Examples:"
+msgstr ""
+
+#: ../../toolset-guide.rst:75
+msgid ""
+"Alternatively, these elements also accept a child ``<column>`` element. This"
+" is particularly useful for multi-column types:"
+msgstr ""
+
+#: ../../toolset-guide.rst:90
+msgid ""
+"The ``sql-type`` attribute allows the user to override the default mapping "
+"of NHibernate type to SQL datatype."
+msgstr ""
+
+#: ../../toolset-guide.rst:93
+msgid "The ``check`` attribute allows you to specify a check constraint."
+msgstr ""
+
+#: ../../toolset-guide.rst:106
+msgid "Summary"
+msgstr ""
+
+#: ../../toolset-guide.rst:109
+msgid "Attribute"
+msgstr ""
+
+#: ../../toolset-guide.rst:109
+msgid "Values"
+msgstr ""
+
+#: ../../toolset-guide.rst:109
+msgid "Interpretation"
+msgstr ""
+
+#: ../../toolset-guide.rst:111
+msgid "``length``"
+msgstr ""
+
+#: ../../toolset-guide.rst:111
+msgid "number"
+msgstr ""
+
+#: ../../toolset-guide.rst:111
+msgid "column length/decimal precision"
+msgstr ""
+
+#: ../../toolset-guide.rst:112
+msgid "``not-null``"
+msgstr ""
+
+#: ../../toolset-guide.rst:112 ../../toolset-guide.rst:113
+msgid "``true|false``"
+msgstr ""
+
+#: ../../toolset-guide.rst:112
+msgid "specfies that the column should be non-nullable"
+msgstr ""
+
+#: ../../toolset-guide.rst:113
+msgid "``unique``"
+msgstr ""
+
+#: ../../toolset-guide.rst:113
+msgid "specifies that the column should have a unique constraint"
+msgstr ""
+
+#: ../../toolset-guide.rst:114
+msgid "``index``"
+msgstr ""
+
+#: ../../toolset-guide.rst:114
+msgid "``index_name``"
+msgstr ""
+
+#: ../../toolset-guide.rst:114
+msgid "specifies the name of a (multi-column) index"
+msgstr ""
+
+#: ../../toolset-guide.rst:115
+msgid "``unique-key``"
+msgstr ""
+
+#: ../../toolset-guide.rst:115
+msgid "``unique_key_name``"
+msgstr ""
+
+#: ../../toolset-guide.rst:115
+msgid "specifies the name of a multi-column unique constraint"
+msgstr ""
+
+#: ../../toolset-guide.rst:116
+msgid "``foreign-key``"
+msgstr ""
+
+#: ../../toolset-guide.rst:116
+msgid "``foreign_key_name``"
+msgstr ""
+
+#: ../../toolset-guide.rst:116
+msgid ""
+"specifies the name of the foreign key constraint generated for an "
+"association, use it on <one-to-one>, <many-to-one>, <key>, and <many-to-"
+"many> mapping elements. Note that ``inverse=\"true\"`` sides will not be "
+"considered by ``SchemaExport``."
+msgstr ""
+
+#: ../../toolset-guide.rst:117
+msgid "``sql-type``"
+msgstr ""
+
+#: ../../toolset-guide.rst:117
+msgid "``column_type``"
+msgstr ""
+
+#: ../../toolset-guide.rst:117
+msgid ""
+"overrides the default column type (attribute of  ``<column>`` element only)"
+msgstr ""
+
+#: ../../toolset-guide.rst:118
+msgid "``check``"
+msgstr ""
+
+#: ../../toolset-guide.rst:118
+msgid "SQL expression"
+msgstr ""
+
+#: ../../toolset-guide.rst:118
+msgid "create an SQL check constraint on either column or table"
+msgstr ""
+
+#: ../../toolset-guide.rst:122
+msgid "Running the tool"
+msgstr ""
+
+#: ../../toolset-guide.rst:124
+msgid ""
+"The ``SchemaExport`` tool writes a DDL script to standard out and/or "
+"executes the DDL statements."
+msgstr ""
+
+#: ../../toolset-guide.rst:127
+msgid "You may embed ``SchemaExport`` in your application:"
+msgstr ""
+
+#: ../../toolset-guide.rst:135
+msgid "Properties"
+msgstr ""
+
+#: ../../toolset-guide.rst:137
+msgid "Database properties may be specified"
+msgstr ""
+
+#: ../../toolset-guide.rst:139
+msgid "as system properties with ``-D`` *<property>*"
+msgstr ""
+
+#: ../../toolset-guide.rst:141
+msgid "in ``hibernate.properties``"
+msgstr ""
+
+#: ../../toolset-guide.rst:143
+msgid "in a named properties file with ``--properties``"
+msgstr ""
+
+#: ../../toolset-guide.rst:145
+msgid "The needed properties are:"
+msgstr ""
+
+#: ../../toolset-guide.rst:147
+msgid "SchemaExport Connection Properties"
+msgstr ""
+
+#: ../../toolset-guide.rst:150
+msgid "Property Name"
+msgstr ""
+
+#: ../../toolset-guide.rst:150 ../../toolset-guide.rst:207
+msgid "Description"
+msgstr ""
+
+#: ../../toolset-guide.rst:152
+msgid "``hibernate.connection.driver_class``"
+msgstr ""
+
+#: ../../toolset-guide.rst:152
+msgid "jdbc driver class"
+msgstr ""
+
+#: ../../toolset-guide.rst:153
+msgid "``hibernate.connection.url``"
+msgstr ""
+
+#: ../../toolset-guide.rst:153
+msgid "jdbc url"
+msgstr ""
+
+#: ../../toolset-guide.rst:154
+msgid "``hibernate.connection.username``"
+msgstr ""
+
+#: ../../toolset-guide.rst:154
+msgid "database user"
+msgstr ""
+
+#: ../../toolset-guide.rst:155
+msgid "``hibernate.connection.password``"
+msgstr ""
+
+#: ../../toolset-guide.rst:155
+msgid "user password"
+msgstr ""
+
+#: ../../toolset-guide.rst:156
+msgid "``hibernate.dialect``"
+msgstr ""
+
+#: ../../toolset-guide.rst:156
+msgid "dialect"
+msgstr ""
+
+#: ../../toolset-guide.rst:160
+msgid "Using Ant"
+msgstr ""
+
+#: ../../toolset-guide.rst:162
+msgid "You can call ``SchemaExport`` from your Ant build script:"
+msgstr ""
+
+#: ../../toolset-guide.rst:184
+msgid ""
+"If you don't specify ``properties`` or a ``config`` file, the "
+"``SchemaExportTask`` will try to use normal Ant project properties instead. "
+"In other words, if you don't want or need an external configuration or "
+"properties file, you may put ``hibernate.*`` configuration properties in "
+"your build.xml or build.properties."
+msgstr ""
+
+#: ../../toolset-guide.rst:191
+msgid "Code Generation"
+msgstr ""
+
+#: ../../toolset-guide.rst:193
+msgid ""
+"The NHibernate code generator may be used to generate skeletal C# "
+"implementation classes from a NHibernate mapping file. This tool is included"
+" in the NHibernate Contrib package (a seperate download in "
+"http://sourceforge.net/projects/nhcontrib/)."
+msgstr ""
+
+#: ../../toolset-guide.rst:197
+msgid ""
+"``hbm2net`` parses the mapping files and generates fully working C# source "
+"files from these. Thus with ``hbm2net`` one could \"just\" provide the "
+"``.hbm`` files, and then don't worry about hand-writing/coding the C# files."
+msgstr ""
+
+#: ../../toolset-guide.rst:201
+msgid "``hbm2net`` *options mapping_files*"
+msgstr ""
+
+#: ../../toolset-guide.rst:204
+msgid "Code Generator Command Line Options"
+msgstr ""
+
+#: ../../toolset-guide.rst:207
+msgid "Option"
+msgstr ""
+
+#: ../../toolset-guide.rst:209
+msgid "``-output:`` *output_dir*"
+msgstr ""
+
+#: ../../toolset-guide.rst:209
+msgid "root directory for generated code"
+msgstr ""
+
+#: ../../toolset-guide.rst:210
+msgid "``-config:`` *config_file*"
+msgstr ""
+
+#: ../../toolset-guide.rst:210
+msgid "optional file for configuring hbm2net"
+msgstr ""
+
+#: ../../toolset-guide.rst:213
+msgid ""
+"A more detailed guide of ``hbm2net`` is available in "
+"http://nhforge.org/blogs/nhibernate/archive/2009/12/12/t4-hbm2net-"
+"alpha-2.aspx"
+msgstr ""

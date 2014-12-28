@@ -1,0 +1,193 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../query-criteria.rst:5
+msgid "Criteria Queries"
+msgstr ""
+
+#: ../../query-criteria.rst:7
+msgid "NHibernate features an intuitive, extensible criteria query API."
+msgstr ""
+
+#: ../../query-criteria.rst:10
+msgid "Creating an ``ICriteria`` instance"
+msgstr ""
+
+#: ../../query-criteria.rst:12
+msgid ""
+"The interface ``NHibernate.ICriteria`` represents a query against a "
+"particular persistent class. The ``ISession`` is a factory for ``ICriteria``"
+" instances."
+msgstr ""
+
+#: ../../query-criteria.rst:23
+msgid "Narrowing the result set"
+msgstr ""
+
+#: ../../query-criteria.rst:25
+msgid ""
+"An individual query criterion is an instance of the interface "
+"``NHibernate.Expression.ICriterion``. The class "
+"``NHibernate.Expression.Expression`` defines factory methods for obtaining "
+"certain built-in ``ICriterion`` types."
+msgstr ""
+
+#: ../../query-criteria.rst:38
+msgid "Expressions may be grouped logically."
+msgstr ""
+
+#: ../../query-criteria.rst:62
+msgid ""
+"There are quite a range of built-in criterion types (``Expression`` "
+"subclasses), but one that is especially useful lets you specify SQL "
+"directly."
+msgstr ""
+
+#: ../../query-criteria.rst:72
+msgid ""
+"The ``{alias}`` placeholder with be replaced by the row alias of the queried"
+" entity."
+msgstr ""
+
+#: ../../query-criteria.rst:76
+msgid "Ordering the results"
+msgstr ""
+
+#: ../../query-criteria.rst:78
+msgid "You may order the results using ``NHibernate.Expression.Order``."
+msgstr ""
+
+#: ../../query-criteria.rst:90
+msgid "Associations"
+msgstr ""
+
+#: ../../query-criteria.rst:92
+msgid ""
+"You may easily specify constraints upon related entities by navigating "
+"associations using ``CreateCriteria()``."
+msgstr ""
+
+#: ../../query-criteria.rst:103
+msgid ""
+"note that the second ``CreateCriteria()`` returns a new instance of "
+"``ICriteria``, which refers to the elements of the ``Kittens`` collection."
+msgstr ""
+
+#: ../../query-criteria.rst:107
+msgid "The following, alternate form is useful in certain circumstances."
+msgstr ""
+
+#: ../../query-criteria.rst:117
+msgid "(``CreateAlias()`` does not create a new instance of ``ICriteria``.)"
+msgstr ""
+
+#: ../../query-criteria.rst:120
+msgid ""
+"Note that the kittens collections held by the ``Cat`` instances returned by "
+"the previous two queries are *not* pre-filtered by the criteria! If you wish"
+" to retrieve just the kittens that match the criteria, you must use "
+"``SetResultTransformer(Transformers.AliasToEntityMap)``."
+msgstr ""
+
+#: ../../query-criteria.rst:139
+msgid "Dynamic association fetching"
+msgstr ""
+
+#: ../../query-criteria.rst:141
+msgid ""
+"You may specify association fetching semantics at runtime using "
+"``SetFetchMode()``."
+msgstr ""
+
+#: ../../query-criteria.rst:152
+msgid ""
+"This query will fetch both ``Mate`` and ``Kittens`` by outer join. See :ref"
+":`performance-fetching` for more information."
+msgstr ""
+
+#: ../../query-criteria.rst:156
+msgid "Example queries"
+msgstr ""
+
+#: ../../query-criteria.rst:158
+msgid ""
+"The class ``NHibernate.Expression.Example`` allows you to construct a query "
+"criterion from a given instance."
+msgstr ""
+
+#: ../../query-criteria.rst:170
+msgid ""
+"Version properties, identifiers and associations are ignored. By default, "
+"null-valued properties and properties which return an empty string from the "
+"call to ``ToString()`` are excluded."
+msgstr ""
+
+#: ../../query-criteria.rst:174
+msgid "You can adjust how the ``Example`` is applied."
+msgstr ""
+
+#: ../../query-criteria.rst:187
+msgid "You can even use examples to place criteria upon associated objects."
+msgstr ""
+
+#: ../../query-criteria.rst:198
+msgid "Projections, aggregation and grouping"
+msgstr ""
+
+#: ../../query-criteria.rst:200
+msgid ""
+"The class ``NHibernate.Expression.Projections`` is a factory for "
+"``IProjection`` instances. We apply a projection to a query by calling "
+"``SetProjection()``."
+msgstr ""
+
+#: ../../query-criteria.rst:222
+msgid ""
+"There is no explicit \"group by\" necessary in a criteria query. Certain "
+"projection types are defined to be *grouping projections*, which also appear"
+" in the SQL ``group by`` clause."
+msgstr ""
+
+#: ../../query-criteria.rst:226
+msgid ""
+"An alias may optionally be assigned to a projection, so that the projected "
+"value may be referred to in restrictions or orderings. Here are two "
+"different ways to do this:"
+msgstr ""
+
+#: ../../query-criteria.rst:244
+msgid ""
+"The ``Alias()`` and ``As()`` methods simply wrap a projection instance in "
+"another, aliased, instance of ``IProjection``. As a shortcut, you can assign"
+" an alias when you add the projection to a projection list:"
+msgstr ""
+
+#: ../../query-criteria.rst:275
+msgid "Detached queries and subqueries"
+msgstr ""
+
+#: ../../query-criteria.rst:277
+msgid ""
+"The ``DetachedCriteria`` class lets you create a query outside the scope of "
+"a session, and then later execute it using some arbitrary ``ISession``."
+msgstr ""
+
+#: ../../query-criteria.rst:291
+msgid ""
+"A ``DetachedCriteria`` may also be used to express a subquery. ICriterion "
+"instances involving subqueries may be obtained via ``Subqueries`` ."
+msgstr ""
+
+#: ../../query-criteria.rst:311
+msgid "Even correlated subqueries are possible:"
+msgstr ""

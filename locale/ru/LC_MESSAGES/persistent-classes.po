@@ -1,0 +1,400 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../persistent-classes.rst:5
+msgid "Persistent Classes"
+msgstr ""
+
+#: ../../persistent-classes.rst:7
+msgid ""
+"Persistent classes are classes in an application that implement the entities"
+" of the business problem (e.g. Customer and Order in an E-commerce "
+"application). Persistent classes have, as the name implies, transient and "
+"also persistent instance stored in the database."
+msgstr ""
+
+#: ../../persistent-classes.rst:12
+msgid ""
+"NHibernate works best if these classes follow some simple rules, also known "
+"as the Plain Old CLR Object (POCO) programming model."
+msgstr ""
+
+#: ../../persistent-classes.rst:16
+msgid "A simple POCO example"
+msgstr ""
+
+#: ../../persistent-classes.rst:18
+msgid ""
+"Most .NET applications require a persistent class representing felines."
+msgstr ""
+
+#: ../../persistent-classes.rst:53
+msgid "There are four main rules to follow here:"
+msgstr ""
+
+#: ../../persistent-classes.rst:56
+msgid "Declare properties for persistent fields"
+msgstr ""
+
+#: ../../persistent-classes.rst:58
+msgid ""
+"``Cat`` declares properties for all the persistent fields. Many other ORM "
+"tools directly persist instance variables. We believe it is far better to "
+"decouple this implementation detail from the persistence mechanism. "
+"NHibernate persists properties, using their getter and setter methods."
+msgstr ""
+
+#: ../../persistent-classes.rst:63
+msgid ""
+"Properties need *not* be declared public - NHibernate can persist a property"
+" with an ``internal``, ``protected``, ``protected internal`` or ``private`` "
+"visibility."
+msgstr ""
+
+#: ../../persistent-classes.rst:67
+msgid ""
+"As shown in the example, both automatic properties and properties with a "
+"backing field are supported."
+msgstr ""
+
+#: ../../persistent-classes.rst:71
+msgid "Implement a default constructor"
+msgstr ""
+
+#: ../../persistent-classes.rst:73
+msgid ""
+"``Cat`` has an implicit default (no-argument) constructor. All persistent "
+"classes must have a default constructor (which may be non-public) so "
+"NHibernate can instantiate them using ``Activator.CreateInstance()``."
+msgstr ""
+
+#: ../../persistent-classes.rst:78
+msgid "Provide an identifier property (optional)"
+msgstr ""
+
+#: ../../persistent-classes.rst:80
+msgid ""
+"``Cat`` has a property called ``Id``. This property holds the primary key "
+"column of a database table. The property might have been called anything, "
+"and its type might have been any primitive type, ``string`` or "
+"``System.DateTime``. (If your legacy database table has composite keys, you "
+"can even use a user-defined class with properties of these types - see the "
+"section on composite identifiers below.)"
+msgstr ""
+
+#: ../../persistent-classes.rst:87
+msgid ""
+"The identifier property is optional. You can leave it off and let NHibernate"
+" keep track of object identifiers internally. However, for many applications"
+" it is still a good (and very popular) design decision."
+msgstr ""
+
+#: ../../persistent-classes.rst:91
+msgid ""
+"What's more, some functionality is available only to classes which declare "
+"an identifier property:"
+msgstr ""
+
+#: ../../persistent-classes.rst:94
+msgid "Cascaded updates (see \"Lifecycle Objects\")"
+msgstr ""
+
+#: ../../persistent-classes.rst:96
+msgid "``ISession.SaveOrUpdate()``"
+msgstr ""
+
+#: ../../persistent-classes.rst:98
+msgid ""
+"We recommend you declare consistently-named identifier properties on "
+"persistent classes."
+msgstr ""
+
+#: ../../persistent-classes.rst:102
+msgid "Prefer non-sealed classes and virtual methods (optional)"
+msgstr ""
+
+#: ../../persistent-classes.rst:104
+msgid ""
+"A central feature of NHibernate, *proxies*, depends upon the persistent "
+"class being non-sealed and all its public methods, properties and events "
+"declared as virtual. Another possibility is for the class to implement an "
+"interface that declares all public members."
+msgstr ""
+
+#: ../../persistent-classes.rst:109
+msgid ""
+"You can persist ``sealed`` classes that do not implement an interface and "
+"don't have virtual members with NHibernate, but you won't be able to use "
+"proxies - which will limit your options for performance tuning."
+msgstr ""
+
+#: ../../persistent-classes.rst:114
+msgid "Implementing inheritance"
+msgstr ""
+
+#: ../../persistent-classes.rst:116
+msgid ""
+"A subclass must also observe the first and second rules. It inherits its "
+"identifier property from ``Cat``."
+msgstr ""
+
+#: ../../persistent-classes.rst:131
+msgid "Implementing ``Equals()`` and ``GetHashCode()``"
+msgstr ""
+
+#: ../../persistent-classes.rst:133
+msgid ""
+"You have to override the ``Equals()`` and ``GetHashCode()`` methods if you "
+"intend to mix objects of persistent classes (e.g. in an ``ISet``)."
+msgstr ""
+
+#: ../../persistent-classes.rst:136
+msgid ""
+"This only applies if these objects are loaded in two different ``ISession``,"
+" as NHibernate only guarantees identity (``a == b``, the default "
+"implementation of ``Equals()``) inside a single ``ISession``!"
+msgstr ""
+
+#: ../../persistent-classes.rst:141
+msgid ""
+"Even if both objects ``a`` and ``b`` are the same database row (they have "
+"the same primary key value as their identifier), we can't guarantee that "
+"they are the same object instance outside of a particular ``ISession`` "
+"context."
+msgstr ""
+
+#: ../../persistent-classes.rst:145
+msgid ""
+"The most obvious way is to implement ``Equals()``/``GetHashCode()`` by "
+"comparing the identifier value of both objects. If the value is the same, "
+"both must be the same database row, they are therefore equal (if both are "
+"added to an ``ISet``, we will only have one element in the ``ISet``). "
+"Unfortunately, we can't use that approach. NHibernate will only assign "
+"identifier values to objects that are persistent, a newly created instance "
+"will not have any identifier value! We recommend implementing ``Equals()`` "
+"and ``GetHashCode()`` using *Business key equality*."
+msgstr ""
+
+#: ../../persistent-classes.rst:154
+msgid ""
+"Business key equality means that the ``Equals()`` method compares only the "
+"properties that form the business key, a key that would identify our "
+"instance in the real world (a *natural* candidate key):"
+msgstr ""
+
+#: ../../persistent-classes.rst:190
+msgid ""
+"Keep in mind that our candidate key (in this case a composite of name and "
+"birthday) has to be only valid for a particular comparison operation (maybe "
+"even only in a single use case). We don't need the stability criteria we "
+"usually apply to a real primary key!"
+msgstr ""
+
+#: ../../persistent-classes.rst:196
+msgid "Dynamic models"
+msgstr ""
+
+#: ../../persistent-classes.rst:198
+msgid ""
+"*Note that the following features are currently considered experimental and "
+"may change in the near future.*"
+msgstr ""
+
+#: ../../persistent-classes.rst:201
+msgid ""
+"Persistent entities don't necessarily have to be represented as POCO classes"
+" at runtime. NHibernate also supports dynamic models (using ``Dictionaries``"
+" of ``Dictionary`` at runtime) . With this approach, you don't write "
+"persistent classes, only mapping files."
+msgstr ""
+
+#: ../../persistent-classes.rst:206
+msgid ""
+"By default, NHibernate works in normal POCO mode. You may set a default "
+"entity representation mode for a particular ``ISessionFactory`` using the "
+"``default_entity_mode`` configuration option (see :ref:`configuration-"
+"optional-properties`."
+msgstr ""
+
+#: ../../persistent-classes.rst:211
+msgid ""
+"The following examples demonstrates the representation using ``Map`` "
+"(Dictionary). First, in the mapping file, an ``entity-name`` has to be "
+"declared instead of (or in addition to) a class name:"
+msgstr ""
+
+#: ../../persistent-classes.rst:251
+msgid ""
+"Note that even though associations are declared using target class names, "
+"the target type of an associations may also be a dynamic entity instead of a"
+" POCO."
+msgstr ""
+
+#: ../../persistent-classes.rst:255
+msgid ""
+"After setting the default entity mode to ``dynamic-map`` for the "
+"``ISessionFactory``, we can at runtime work with ``Dictionaries`` of "
+"``Dictionaries``:"
+msgstr ""
+
+#: ../../persistent-classes.rst:282
+msgid ""
+"The advantages of a dynamic mapping are quick turnaround time for "
+"prototyping without the need for entity class implementation. However, you "
+"lose compile-time type checking and will very likely deal with many "
+"exceptions at runtime. Thanks to the NHibernate mapping, the database schema"
+" can easily be normalized and sound, allowing to add a proper domain model "
+"implementation on top later on."
+msgstr ""
+
+#: ../../persistent-classes.rst:288
+msgid ""
+"Entity representation modes can also be set on a per ``ISession`` basis:"
+msgstr ""
+
+#: ../../persistent-classes.rst:303
+msgid ""
+"Please note that the call to ``GetSession()`` using an ``EntityMode`` is on "
+"the ``ISession`` API, not the ``ISessionFactory``. That way, the new "
+"``ISession`` shares the underlying ADO connection, transaction, and other "
+"context information. This means you don't have tocall ``Flush()`` and "
+"``Close()`` on the secondary ``ISession``, and also leave the transaction "
+"and connection handling to the primary unit of work."
+msgstr ""
+
+#: ../../persistent-classes.rst:312
+msgid "Tuplizers"
+msgstr ""
+
+#: ../../persistent-classes.rst:314
+msgid ""
+"``NHibernate.Tuple.Tuplizer``, and its sub-interfaces, are responsible for "
+"managing a particular representation of a piece of data, given that "
+"representation's ``NHibernate.EntityMode``.  If a given piece of data is "
+"thought of as a data structure, then a tuplizer is the thing which knows how"
+" to create such a data structure and how to extract values from and inject "
+"values into such a data structure.  For example, for the POCO entity mode, "
+"the correpsonding tuplizer knows how create the POCO through its constructor"
+" and how to access the POCO properties using the defined property accessors."
+" There are two high-level types of Tuplizers, represented by the "
+"``NHibernate.Tuple.Entity.IEntityTuplizer`` and "
+"``NHibernate.Tuple.Component.IComponentTuplizer`` interfaces.  "
+"``IEntityTuplizer`` are responsible for managing the above mentioned "
+"contracts in regards to entities, while ``IComponentTuplizer`` do the same "
+"for components."
+msgstr ""
+
+#: ../../persistent-classes.rst:327
+msgid ""
+"Users may also plug in their own tuplizers.  Perhaps you require that a "
+"``System.Collections.IDictionary`` implementation other than "
+"``System.Collections.Hashtable`` be used while in the dynamic-map entity-"
+"mode; or perhaps you need to define a different proxy generation strategy "
+"than the one used by default.  Both would be achieved by defining a custom "
+"tuplizer implementation.  Tuplizers definitions are attached to the entity "
+"or component mapping they are meant to manage.  Going back to the example of"
+" our customer entity:"
+msgstr ""
+
+#: ../../persistent-classes.rst:373
+msgid "Lifecycle Callbacks"
+msgstr ""
+
+#: ../../persistent-classes.rst:375
+msgid ""
+"Optionally, a persistent class might implement the interface ``ILifecycle`` "
+"which provides some callbacks that allow the persistent object to perform "
+"necessary initialization/cleanup after save or load and before deletion or "
+"update."
+msgstr ""
+
+#: ../../persistent-classes.rst:380
+msgid ""
+"The NHibernate ``IInterceptor`` offers a less intrusive alternative, "
+"however."
+msgstr ""
+
+#: ../../persistent-classes.rst:393
+msgid "``OnSave`` - called just before the object is saved or inserted"
+msgstr ""
+
+#: ../../persistent-classes.rst:396
+msgid ""
+"``OnUpdate`` - called just before an object is updated (when the object is "
+"passed to ``ISession.Update()``)"
+msgstr ""
+
+#: ../../persistent-classes.rst:399
+msgid "``OnDelete`` - called just before an object is deleted"
+msgstr ""
+
+#: ../../persistent-classes.rst:401
+msgid "``OnLoad`` - called just after an object is loaded"
+msgstr ""
+
+#: ../../persistent-classes.rst:403
+msgid ""
+"``OnSave()``, ``OnDelete()`` and ``OnUpdate()`` may be used to cascade saves"
+" and deletions of dependent objects. This is an alternative to declaring "
+"cascaded operations in the mapping file. ``OnLoad()`` may be used to "
+"initialize transient properties of the object from its persistent state. It "
+"may not be used to load dependent objects since the ``ISession`` interface "
+"may not be invoked from inside this method. A further intended usage of "
+"``OnLoad()``, ``OnSave()`` and ``OnUpdate()`` is to store a reference to the"
+" current ``ISession`` for later use."
+msgstr ""
+
+#: ../../persistent-classes.rst:414
+msgid ""
+"Note that ``OnUpdate()`` is not called every time the object's persistent "
+"state is updated. It is called only when a transient object is passed to "
+"``ISession.Update()``."
+msgstr ""
+
+#: ../../persistent-classes.rst:418
+msgid ""
+"If ``OnSave()``, ``OnUpdate()`` or ``OnDelete()`` return "
+"``LifecycleVeto.Veto``, the operation is silently vetoed. If a "
+"``CallbackException`` is thrown, the operation is vetoed and the exception "
+"is passed back to the application."
+msgstr ""
+
+#: ../../persistent-classes.rst:423
+msgid ""
+"Note that ``OnSave()`` is called after an identifier is assigned to the "
+"object, except when native key generation is used."
+msgstr ""
+
+#: ../../persistent-classes.rst:427
+msgid "IValidatable callback"
+msgstr ""
+
+#: ../../persistent-classes.rst:429
+msgid ""
+"If the persistent class needs to check invariants before its state is "
+"persisted, it may implement the following interface:"
+msgstr ""
+
+#: ../../persistent-classes.rst:439
+msgid ""
+"The object should throw a ``ValidationFailure`` if an invariant was "
+"violated. An instance of ``Validatable`` should not change its state from "
+"inside ``Validate()``."
+msgstr ""
+
+#: ../../persistent-classes.rst:443
+msgid ""
+"Unlike the callback methods of the ``ILifecycle`` interface, ``Validate()`` "
+"might be called at unpredictable times. The application should not rely upon"
+" calls to ``Validate()`` for business functionality."
+msgstr ""

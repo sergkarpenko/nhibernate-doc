@@ -1,0 +1,673 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../read-only.rst:5
+msgid "Read-only entities"
+msgstr ""
+
+#: ../../read-only.rst:7
+msgid ""
+"NHibernate's treatment of *read-only* entities may differ from what you may "
+"have encountered elsewhere. Incorrect usage may cause unexpected results."
+msgstr ""
+
+#: ../../read-only.rst:11
+msgid "When an entity is read-only:"
+msgstr ""
+
+#: ../../read-only.rst:13
+msgid ""
+"NHibernate does not dirty-check the entity's simple properties or single-"
+"ended associations;"
+msgstr ""
+
+#: ../../read-only.rst:16
+msgid ""
+"NHibernate will not update simple properties or updatable single-ended "
+"associations;"
+msgstr ""
+
+#: ../../read-only.rst:19
+msgid ""
+"NHibernate will not update the version of the read-only entity if only "
+"simple properties or single-ended updatable associations are changed;"
+msgstr ""
+
+#: ../../read-only.rst:23
+msgid ""
+"In some ways, NHibernate treats read-only entities the same as entities that"
+" are not read-only:"
+msgstr ""
+
+#: ../../read-only.rst:26
+msgid ""
+"NHibernate cascades operations to associations as defined in the entity "
+"mapping."
+msgstr ""
+
+#: ../../read-only.rst:29
+msgid ""
+"NHibernate updates the version if the entity has a collection with changes "
+"that dirties the entity;"
+msgstr ""
+
+#: ../../read-only.rst:32
+msgid "A read-only entity can be deleted."
+msgstr ""
+
+#: ../../read-only.rst:34
+msgid ""
+"Even if an entity is not read-only, its collection association can be "
+"affected if it contains a read-only entity."
+msgstr ""
+
+#: ../../read-only.rst:37
+msgid ""
+"For details about the affect of read-only entities on different property and"
+" association types, see :ref:`readonly-proptypes`."
+msgstr ""
+
+#: ../../read-only.rst:41
+msgid ""
+"For details about how to make entities read-only, see :ref:`readonly-api`"
+msgstr ""
+
+#: ../../read-only.rst:44
+msgid "NHibernate does some optimizing for read-only entities:"
+msgstr ""
+
+#: ../../read-only.rst:46
+msgid ""
+"It saves execution time by not dirty-checking simple properties or single-"
+"ended associations."
+msgstr ""
+
+#: ../../read-only.rst:49
+msgid "It saves memory by deleting database snapshots."
+msgstr ""
+
+#: ../../read-only.rst:54
+msgid "Making persistent entities read-only"
+msgstr ""
+
+#: ../../read-only.rst:56
+msgid ""
+"Only persistent entities can be made read-only. Transient and detached "
+"entities must be put in persistent state before they can be made read-only."
+msgstr ""
+
+#: ../../read-only.rst:60
+msgid ""
+"NHibernate provides the following ways to make persistent entities read-"
+"only:"
+msgstr ""
+
+#: ../../read-only.rst:62
+msgid ""
+"you can map an entity class as *immutable*; when an entity of an immutable "
+"class is made persistent, NHibernate automatically makes it read-only. see "
+":ref:`readonly-api-immutable` for details"
+msgstr ""
+
+#: ../../read-only.rst:67
+msgid ""
+"you can change a default so that entities loaded into the session by "
+"NHibernate are automatically made read-only; see :ref:`readonly-api-"
+"loaddefault` for details"
+msgstr ""
+
+#: ../../read-only.rst:71
+msgid ""
+"you can make an HQL query or criteria read-only so that entities loaded when"
+" the query or criteria executes, or iterates, are automatically made read-"
+"only; see :ref:`readonly-api-querycriteria` for details"
+msgstr ""
+
+#: ../../read-only.rst:76
+msgid ""
+"you can make a persistent entity that is already in the in the session read-"
+"only; see :ref:`readonly-api-entity` for details"
+msgstr ""
+
+#: ../../read-only.rst:83
+msgid "Entities of immutable classes"
+msgstr ""
+
+#: ../../read-only.rst:85
+msgid ""
+"When an entity instance of an immutable class is made persistent, NHibernate"
+" automatically makes it read-only."
+msgstr ""
+
+#: ../../read-only.rst:88
+msgid ""
+"An entity of an immutable class can created and deleted the same as an "
+"entity of a mutable class."
+msgstr ""
+
+#: ../../read-only.rst:91
+msgid ""
+"NHibernate treats a persistent entity of an immutable class the same way as "
+"a read-only persistent entity of a mutable class. The only exception is that"
+" NHibernate will not allow an entity of an immutable class to be changed so "
+"it is not read-only."
+msgstr ""
+
+#: ../../read-only.rst:100
+msgid "Loading persistent entities as read-only"
+msgstr ""
+
+#: ../../read-only.rst:102 ../../read-only.rst:159
+msgid "Entities of immutable classes are automatically loaded as read-only."
+msgstr ""
+
+#: ../../read-only.rst:105
+msgid ""
+"To change the default behavior so NHibernate loads entity instances of "
+"mutable classes into the session and automatically makes them read-only, "
+"call:"
+msgstr ""
+
+#: ../../read-only.rst:113
+msgid ""
+"To change the default back so entities loaded by NHibernate are not made "
+"read-only, call:"
+msgstr ""
+
+#: ../../read-only.rst:120
+msgid "You can determine the current setting by using the property:"
+msgstr ""
+
+#: ../../read-only.rst:126
+msgid ""
+"If Session.DefaultReadOnly property returns true, entities loaded by the "
+"following are automatically made read-only:"
+msgstr ""
+
+#: ../../read-only.rst:129
+msgid "Session.Load() and Session.Load<T>"
+msgstr ""
+
+#: ../../read-only.rst:131
+msgid "Session.Get() and Session.Get<T>"
+msgstr ""
+
+#: ../../read-only.rst:133
+msgid "Session.Merge()"
+msgstr ""
+
+#: ../../read-only.rst:135
+msgid ""
+"executing, or iterating HQL queries and criteria; to override this setting "
+"for a particular HQL query or criteria see :ref:`readonly-api-querycriteria`"
+msgstr ""
+
+#: ../../read-only.rst:140
+msgid "Changing this default has no effect on:"
+msgstr ""
+
+#: ../../read-only.rst:142
+msgid ""
+"persistent entities already in the session when the default was changed"
+msgstr ""
+
+#: ../../read-only.rst:145
+msgid ""
+"persistent entities that are refreshed via Session.Refresh(); a refreshed "
+"persistent entity will only be read-only if it was read-only before "
+"refreshing"
+msgstr ""
+
+#: ../../read-only.rst:150
+msgid ""
+"persistent entities added by the application via Session.Persist(), "
+"Session.Save(), and Session.Update() Session.SaveOrUpdate()"
+msgstr ""
+
+#: ../../read-only.rst:157
+msgid "Loading read-only entities from an HQL query/criteria"
+msgstr ""
+
+#: ../../read-only.rst:162
+msgid ""
+"If Session.DefaultReadOnly returns false (the default) when an HQL query or "
+"criteria executes, then entities and proxies of mutable classes loaded by "
+"the query will not be read-only."
+msgstr ""
+
+#: ../../read-only.rst:167
+msgid ""
+"You can override this behavior so that entities and proxies loaded by an HQL"
+" query or criteria are automatically made read-only."
+msgstr ""
+
+#: ../../read-only.rst:170
+msgid "For an HQL query, call:"
+msgstr ""
+
+#: ../../read-only.rst:176
+msgid ""
+"``Query.SetReadOnly(true)`` must be called before ``Query.List()``, "
+"``Query.UniqueResult()``, or ``Query.Iterate()``"
+msgstr ""
+
+#: ../../read-only.rst:179
+msgid "For an HQL criteria, call:"
+msgstr ""
+
+#: ../../read-only.rst:185
+msgid ""
+"``Criteria.SetReadOnly(true)`` must be called before ``Criteria.List()``, or"
+" ``Criteria.UniqueResult()``"
+msgstr ""
+
+#: ../../read-only.rst:188
+msgid ""
+"Entities and proxies that exist in the session before being returned by an "
+"HQL query or criteria are not affected."
+msgstr ""
+
+#: ../../read-only.rst:191
+msgid ""
+"Uninitialized persistent collections returned by the query are not affected."
+" Later, when the collection is initialized, entities loaded into the session"
+" will be read-only if Session.DefaultReadOnly returns true."
+msgstr ""
+
+#: ../../read-only.rst:196
+msgid ""
+"Using ``Query.SetReadOnly(true)`` or ``Criteria.SetReadOnly(true)`` works "
+"well when a single HQL query or criteria loads all the entities and "
+"intializes all the proxies and collections that the application needs to be "
+"read-only."
+msgstr ""
+
+#: ../../read-only.rst:202
+msgid ""
+"When it is not possible to load and initialize all necessary entities in a "
+"single query or criteria, you can temporarily change the session default to "
+"load entities as read-only before the query is executed. Then you can "
+"explicitly initialize proxies and collections before restoring the session "
+"default."
+msgstr ""
+
+#: ../../read-only.rst:224
+msgid ""
+"If Session.DefaultReadOnly returns true, then you can use "
+"Query.SetReadOnly(false) and Criteria.SetReadOnly(false) to override this "
+"session setting and load entities that are not read-only."
+msgstr ""
+
+#: ../../read-only.rst:232
+msgid "Making a persistent entity read-only"
+msgstr ""
+
+#: ../../read-only.rst:234
+msgid ""
+"Persistent entities of immutable classes are automatically made read-only."
+msgstr ""
+
+#: ../../read-only.rst:237
+msgid "To make a persistent entity or proxy read-only, call:"
+msgstr ""
+
+#: ../../read-only.rst:243
+msgid ""
+"To change a read-only entity or proxy of a mutable class so it is no longer "
+"read-only, call:"
+msgstr ""
+
+#: ../../read-only.rst:250
+msgid ""
+"When a read-only entity or proxy is changed so it is no longer read-only, "
+"NHibernate assumes that the current state of the read-only entity is "
+"consistent with its database representation. If this is not true, then any "
+"non-flushed changes made before or while the entity was read-only, will be "
+"ignored."
+msgstr ""
+
+#: ../../read-only.rst:256
+msgid ""
+"To throw away non-flushed changes and make the persistent entity consistent "
+"with its database representation, call:"
+msgstr ""
+
+#: ../../read-only.rst:263
+msgid ""
+"To flush changes made before or while the entity was read-only and make the "
+"database representation consistent with the current state of the persistent "
+"entity:"
+msgstr ""
+
+#: ../../read-only.rst:282
+msgid "Read-only affect on property type"
+msgstr ""
+
+#: ../../read-only.rst:284
+msgid ""
+"The following table summarizes how different property types are affected by "
+"making an entity read-only."
+msgstr ""
+
+#: ../../read-only.rst:287
+msgid "Affect of read-only entity on property types"
+msgstr ""
+
+#: ../../read-only.rst:290
+msgid "Property/Association Type"
+msgstr ""
+
+#: ../../read-only.rst:290
+msgid "Changes flushed to DB?"
+msgstr ""
+
+#: ../../read-only.rst:292
+msgid "Simple    (:ref:`readonly-proptypes-simple`)"
+msgstr ""
+
+#: ../../read-only.rst:292
+msgid "no*"
+msgstr ""
+
+#: ../../read-only.rst:293
+msgid ""
+"Unidirectional one-to-one    Unidirectional many-to-one     (:ref:`readonly-"
+"proptypes-singleended-unidir`)"
+msgstr ""
+
+#: ../../read-only.rst:293
+msgid "no*   no*"
+msgstr ""
+
+#: ../../read-only.rst:294
+msgid ""
+"Unidirectional one-to-many   Unidirectional many-to-many    (:ref:`readonly-"
+"proptypes-manyended-unidir`)"
+msgstr ""
+
+#: ../../read-only.rst:294
+msgid "yes   yes"
+msgstr ""
+
+#: ../../read-only.rst:295
+msgid "Bidirectional one-to-one    (:ref:`readonly-proptypes-onetoone-bidir`)"
+msgstr ""
+
+#: ../../read-only.rst:295
+msgid "only if the owning entity is not read-only*"
+msgstr ""
+
+#: ../../read-only.rst:296
+msgid ""
+"Bidirectional one-to-many/many-to-one   inverse collection   non-inverse "
+"collection    (:ref:`readonly-proptypes-onetomany-manytoone`)"
+msgstr ""
+
+#: ../../read-only.rst:296
+msgid "only added/removed entities that are not read-only*   yes"
+msgstr ""
+
+#: ../../read-only.rst:297
+msgid ""
+"Bidirectional many-to-many    (:ref:`readonly-proptypes-manytomany-bidir`)"
+msgstr ""
+
+#: ../../read-only.rst:297
+msgid "yes"
+msgstr ""
+
+#: ../../read-only.rst:300
+msgid ""
+"Behavior is different when the entity having the property/association is "
+"read-only, compared to when it is not read-only."
+msgstr ""
+
+#: ../../read-only.rst:306
+msgid "Simple properties"
+msgstr ""
+
+#: ../../read-only.rst:308
+msgid ""
+"When a persistent object is read-only, NHibernate does not dirty-check "
+"simple properties."
+msgstr ""
+
+#: ../../read-only.rst:311
+msgid ""
+"NHibernate will not synchronize simple property state changes to the "
+"database. If you have automatic versioning, NHibernate will not increment "
+"the version if any simple properties change."
+msgstr ""
+
+#: ../../read-only.rst:337
+msgid "Unidirectional associations"
+msgstr ""
+
+#: ../../read-only.rst:342
+msgid "Unidirectional one-to-one and many-to-one"
+msgstr ""
+
+#: ../../read-only.rst:344
+msgid ""
+"NHibernate treats unidirectional one-to-one and many-to-one associations in "
+"the same way when the owning entity is read-only."
+msgstr ""
+
+#: ../../read-only.rst:348
+msgid ""
+"We use the term *unidirectional single-ended association* when referring to "
+"functionality that is common to unidirectional one-to-one and many-to-one "
+"associations."
+msgstr ""
+
+#: ../../read-only.rst:353
+msgid ""
+"NHibernate does not dirty-check unidirectional single-ended associations "
+"when the owning entity is read-only."
+msgstr ""
+
+#: ../../read-only.rst:356
+msgid ""
+"If you change a read-only entity's reference to a unidirectional single-"
+"ended association to null, or to refer to a different entity, that change "
+"will not be flushed to the database."
+msgstr ""
+
+#: ../../read-only.rst:361
+msgid ""
+"If an entity is of an immutable class, then its references to unidirectional"
+" single-ended associations must be assigned when that entity is first "
+"created. Because the entity is automatically made read-only, these "
+"references can not be updated."
+msgstr ""
+
+#: ../../read-only.rst:368
+msgid ""
+"If automatic versioning is used, NHibernate will not increment the version "
+"due to local changes to unidirectional single-ended associations."
+msgstr ""
+
+#: ../../read-only.rst:372
+msgid ""
+"In the following examples, Contract has a unidirectional many-to-one "
+"association with Plan. Contract cascades save and update operations to the "
+"association."
+msgstr ""
+
+#: ../../read-only.rst:376
+msgid ""
+"The following shows that changing a read-only entity's many-to-one "
+"association reference to null has no effect on the entity's database "
+"representation."
+msgstr ""
+
+#: ../../read-only.rst:399
+msgid ""
+"The following shows that, even though an update to a read-only entity's "
+"many-to-one association has no affect on the entity's database "
+"representation, flush still cascades the save-update operation to the "
+"locally changed association."
+msgstr ""
+
+#: ../../read-only.rst:432
+msgid "Unidirectional one-to-many and many-to-many"
+msgstr ""
+
+#: ../../read-only.rst:434
+msgid ""
+"NHibernate treats unidirectional one-to-many and many-to-many associations "
+"owned by a read-only entity the same as when owned by an entity that is not "
+"read-only."
+msgstr ""
+
+#: ../../read-only.rst:439
+msgid ""
+"NHibernate dirty-checks unidirectional one-to-many and many-to-many "
+"associations;"
+msgstr ""
+
+#: ../../read-only.rst:442
+msgid ""
+"The collection can contain entities that are read-only, as well as entities "
+"that are not read-only."
+msgstr ""
+
+#: ../../read-only.rst:446
+msgid ""
+"Entities can be added and removed from the collection; changes are flushed "
+"to the database."
+msgstr ""
+
+#: ../../read-only.rst:449
+msgid ""
+"If automatic versioning is used, NHibernate will update the version due to "
+"changes in the collection if they dirty the owning entity."
+msgstr ""
+
+#: ../../read-only.rst:454
+msgid "Bidirectional associations"
+msgstr ""
+
+#: ../../read-only.rst:459
+msgid "Bidirectional one-to-one"
+msgstr ""
+
+#: ../../read-only.rst:461
+msgid "If a read-only entity owns a bidirectional one-to-one association:"
+msgstr ""
+
+#: ../../read-only.rst:464
+msgid "NHibernate does not dirty-check the association."
+msgstr ""
+
+#: ../../read-only.rst:466
+msgid ""
+"updates that change the association reference to null or to refer to a "
+"different entity will not be flushed to the database."
+msgstr ""
+
+#: ../../read-only.rst:470
+msgid ""
+"If automatic versioning is used, NHibernate will not increment the version "
+"due to local changes to the association."
+msgstr ""
+
+#: ../../read-only.rst:474
+msgid ""
+"If an entity is of an immutable class, and it owns a bidirectional one-to-"
+"one association, then its reference must be assigned when that entity is "
+"first created. Because the entity is automatically made read-only, these "
+"references cannot be updated."
+msgstr ""
+
+#: ../../read-only.rst:481
+msgid ""
+"When the owner is not read-only, NHibernate treats an association with a "
+"read-only entity the same as when the association is with an entity that is "
+"not read-only."
+msgstr ""
+
+#: ../../read-only.rst:489
+msgid "Bidirectional one-to-many/many-to-one"
+msgstr ""
+
+#: ../../read-only.rst:491
+msgid ""
+"A read-only entity has no impact on a bidirectional one-to-many/many-to-one "
+"association if:"
+msgstr ""
+
+#: ../../read-only.rst:494
+msgid ""
+"the read-only entity is on the one-to-many side using an inverse collection;"
+msgstr ""
+
+#: ../../read-only.rst:497
+msgid ""
+"the read-only entity is on the one-to-many side using a non-inverse "
+"collection;"
+msgstr ""
+
+#: ../../read-only.rst:500
+msgid ""
+"the one-to-many side uses a non-inverse collection that contains the read-"
+"only entity"
+msgstr ""
+
+#: ../../read-only.rst:503
+msgid "When the one-to-many side uses an inverse collection:"
+msgstr ""
+
+#: ../../read-only.rst:505
+msgid ""
+"a read-only entity can only be added to the collection when it is created;"
+msgstr ""
+
+#: ../../read-only.rst:508
+msgid ""
+"a read-only entity can only be removed from the collection by an orphan "
+"delete or by explicitly deleting the entity."
+msgstr ""
+
+#: ../../read-only.rst:515
+msgid "Bidirectional many-to-many"
+msgstr ""
+
+#: ../../read-only.rst:517
+msgid ""
+"NHibernate treats bidirectional many-to-many associations owned by a read-"
+"only entity the same as when owned by an entity that is not read-only."
+msgstr ""
+
+#: ../../read-only.rst:522
+msgid "NHibernate dirty-checks bidirectional many-to-many associations."
+msgstr ""
+
+#: ../../read-only.rst:525
+msgid ""
+"The collection on either side of the association can contain entities that "
+"are read-only, as well as entities that are not read-only."
+msgstr ""
+
+#: ../../read-only.rst:529
+msgid ""
+"Entities are added and removed from both sides of the collection; changes "
+"are flushed to the database."
+msgstr ""
+
+#: ../../read-only.rst:533
+msgid ""
+"If automatic versioning is used, NHibernate will update the version due to "
+"changes in both sides of the collection if they dirty the entity owning the "
+"respective collections."
+msgstr ""

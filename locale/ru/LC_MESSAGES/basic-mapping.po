@@ -1,0 +1,2641 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../basic-mapping.rst:5
+msgid "Basic O/R Mapping"
+msgstr ""
+
+#: ../../basic-mapping.rst:8
+msgid "Mapping declaration"
+msgstr ""
+
+#: ../../basic-mapping.rst:10
+msgid ""
+"Object/relational mappings are defined in an XML document. The mapping "
+"document is designed to be readable and hand-editable. The mapping language "
+"is object-centric, meaning that mappings are constructed around persistent "
+"class declarations, not table declarations."
+msgstr ""
+
+#: ../../basic-mapping.rst:15
+msgid ""
+"Note that, even though many NHibernate users choose to define XML mappings "
+"by hand, a number of tools exist to generate the mapping document, including"
+" NHibernate.Mapping.Attributes library and various template-based code "
+"generators (CodeSmith, MyGeneration)."
+msgstr ""
+
+#: ../../basic-mapping.rst:20
+msgid "Let's kick off with an example mapping:"
+msgstr ""
+
+#: ../../basic-mapping.rst:53
+msgid ""
+"We will now discuss the content of the mapping document. We will only "
+"describe the document elements and attributes that are used by NHibernate at"
+" runtime. The mapping document also contains some extra optional attributes "
+"and elements that affect the database schemas exported by the schema export "
+"tool. (For example the ``not-null`` attribute.)"
+msgstr ""
+
+#: ../../basic-mapping.rst:59
+msgid "XML Namespace"
+msgstr ""
+
+#: ../../basic-mapping.rst:61
+msgid ""
+"All XML mappings should declare the XML namespace shown. The actual schema "
+"definition may be found in the ``src\\\\nhibernate-mapping.xsd`` file in the"
+" NHibernate distribution."
+msgstr ""
+
+#: ../../basic-mapping.rst:65
+msgid ""
+"Tip: to enable IntelliSense for mapping and configuration files, copy the "
+"appropriate ``.xsd`` files as part of any project in your solution, (``Build"
+" Action`` can be \"None\") or as \"Solution Files\" or in your ``\"Lib\"`` "
+"folder and then add it to the ``Schemas`` property of the xml file. You can "
+"copy it in ``<VS installation directory>\\\\Xml\\\\Schemas``, take care "
+"because you will have to deal with different version of the xsd for "
+"different versions of NHibernate."
+msgstr ""
+
+#: ../../basic-mapping.rst:73
+msgid "hibernate-mapping"
+msgstr ""
+
+#: ../../basic-mapping.rst:75
+msgid ""
+"This element has several optional attributes. The ``schema`` attribute "
+"specifies that tables referred to by this mapping belong to the named "
+"schema. If specified, tablenames will be qualified by the given schema name."
+" If missing, tablenames will be unqualified. The ``default-cascade`` "
+"attribute specifies what cascade style should be assumed for properties and "
+"collections which do not specify a ``cascade`` attribute. The ``auto-"
+"import`` attribute lets us use unqualified class names in the query "
+"language, by default. The ``assembly`` and ``namespace`` attributes specify "
+"the assembly where persistent classes are located and the namespace they are"
+" declared in."
+msgstr ""
+
+#: ../../basic-mapping.rst:97
+msgid "``schema`` (optional): The name of a database schema."
+msgstr ""
+
+#: ../../basic-mapping.rst:99
+msgid ""
+"``default-cascade`` (optional - defaults to ``none``): A default cascade "
+"style."
+msgstr ""
+
+#: ../../basic-mapping.rst:102
+msgid ""
+"``auto-import`` (optional - defaults to ``true``): Specifies whether we can "
+"use unqualified class names (of classes in this mapping) in the query "
+"language."
+msgstr ""
+
+#: ../../basic-mapping.rst:106
+msgid ""
+"``assembly`` and ``namespace`` (optional): Specify assembly and namespace to"
+" assume for unqualified class names in the mapping document."
+msgstr ""
+
+#: ../../basic-mapping.rst:110
+msgid ""
+"``default-access`` (optional - defaults to property): The strategy "
+"NHibernate should use for accessing a property value"
+msgstr ""
+
+#: ../../basic-mapping.rst:113
+msgid ""
+"``default-lazy`` (optional - defaults to ``true``): Lazy fetching may be "
+"completely disabled by setting default-lazy=\"false\"."
+msgstr ""
+
+#: ../../basic-mapping.rst:116
+msgid ""
+"If you are not using ``assembly`` and ``namespace`` attributes, you have to "
+"specify fully-qualified class names, including the name of the assembly that"
+" classes are declared in."
+msgstr ""
+
+#: ../../basic-mapping.rst:120
+msgid ""
+"If you have two persistent classes with the same (unqualified) name, you "
+"should set ``auto-import=\"false\"``. NHibernate will throw an exception if "
+"you attempt to assign two classes to the same \"imported\" name."
+msgstr ""
+
+#: ../../basic-mapping.rst:125
+msgid "class"
+msgstr ""
+
+#: ../../basic-mapping.rst:127
+msgid "You may declare a persistent class using the ``class`` element:"
+msgstr ""
+
+#: ../../basic-mapping.rst:150
+msgid ""
+"``name``: The fully qualified .NET class name of the persistent class (or "
+"interface), including its assembly name."
+msgstr ""
+
+#: ../../basic-mapping.rst:153
+msgid ""
+"``table`` (optional - defaults to the unqualified class name): The name of "
+"its database table."
+msgstr ""
+
+#: ../../basic-mapping.rst:155
+msgid ""
+"``discriminator-value`` (optional - defaults to the class name): A value "
+"that distiguishes individual subclasses, used for polymorphic behaviour. "
+"Acceptable values include ``null`` and ``not null``."
+msgstr ""
+
+#: ../../basic-mapping.rst:159
+msgid ""
+"``mutable`` (optional, defaults to ``true``): Specifies that instances of "
+"the class are (not) mutable."
+msgstr ""
+
+#: ../../basic-mapping.rst:162 ../../basic-mapping.rst:1514
+msgid ""
+"``schema`` (optional): Override the schema name specified by the root "
+"``<hibernate-mapping>`` element."
+msgstr ""
+
+#: ../../basic-mapping.rst:165
+msgid ""
+"``proxy`` (optional): Specifies an interface to use for lazy initializing "
+"proxies. You may specify the name of the class itself."
+msgstr ""
+
+#: ../../basic-mapping.rst:168
+msgid ""
+"``dynamic-update`` (optional, defaults to ``false``): Specifies that "
+"``UPDATE`` SQL should be generated at runtime and contain only those columns"
+" whose values have changed."
+msgstr ""
+
+#: ../../basic-mapping.rst:172
+msgid ""
+"``dynamic-insert`` (optional, defaults to ``false``): Specifies that "
+"``INSERT`` SQL should be generated at runtime and contain only the columns "
+"whose values are not null."
+msgstr ""
+
+#: ../../basic-mapping.rst:176
+msgid ""
+"``select-before-update`` (optional, defaults to ``false``): Specifies that "
+"NHibernate should *never* perform an SQL ``UPDATE`` unless it is certain "
+"that an object is actually modified. In certain cases (actually, only when a"
+" transient object has been associated with a new session using "
+"``update()``), this means that NHibernate will perform an extra SQL "
+"``SELECT`` to determine if an ``UPDATE`` is actually required."
+msgstr ""
+
+#: ../../basic-mapping.rst:183
+msgid ""
+"``polymorphism`` (optional, defaults to ``implicit``): Determines whether "
+"implicit or explicit query polymorphism is used."
+msgstr ""
+
+#: ../../basic-mapping.rst:186
+msgid ""
+"``where`` (optional) specify an arbitrary SQL ``WHERE`` condition to be used"
+" when retrieving objects of this class"
+msgstr ""
+
+#: ../../basic-mapping.rst:189
+msgid "``persister`` (optional): Specifies a custom ``IClassPersister``."
+msgstr ""
+
+#: ../../basic-mapping.rst:191
+msgid ""
+"``batch-size`` (optional, defaults to ``1``) specify a \"batch size\" for "
+"fetching instances of this class by identifier."
+msgstr ""
+
+#: ../../basic-mapping.rst:194
+msgid ""
+"``optimistic-lock`` (optional, defaults to ``version``): Determines the "
+"optimistic locking strategy."
+msgstr ""
+
+#: ../../basic-mapping.rst:197
+msgid ""
+"``lazy`` (optional): Lazy fetching may be completely disabled by setting "
+"``lazy=\"false\"``."
+msgstr ""
+
+#: ../../basic-mapping.rst:200
+msgid ""
+"``abstract`` (optional): Used to mark abstract superclasses in ``<union-"
+"subclass>`` hierarchies."
+msgstr ""
+
+#: ../../basic-mapping.rst:203
+msgid ""
+"It is perfectly acceptable for the named persistent class to be an "
+"interface. You would then declare implementing classes of that interface "
+"using the ``<subclass>`` element. You may persist any inner class. You "
+"should specify the class name using the standard form ie. ``Eg.Foo+Bar, "
+"Eg``. Due to an HQL parser limitation inner classes can not be used in "
+"queries in NHibernate 1.0."
+msgstr ""
+
+#: ../../basic-mapping.rst:209
+msgid ""
+"Changes to immutable classes, ``mutable=\"false\"``, will not be persisted. "
+"This allows NHibernate to make some minor performance optimizations."
+msgstr ""
+
+#: ../../basic-mapping.rst:212
+msgid ""
+"The optional ``proxy`` attribute enables lazy initialization of persistent "
+"instances of the class. NHibernate will initially return proxies which "
+"implement the named interface. The actual persistent object will be loaded "
+"when a method of the proxy is invoked. See \"Proxies for Lazy "
+"Initialization\" below."
+msgstr ""
+
+#: ../../basic-mapping.rst:217
+msgid ""
+"*Implicit* polymorphism means that instances of the class will be returned "
+"by a query that names any superclass or implemented interface or the class "
+"and that instances of any subclass of the class will be returned by a query "
+"that names the class itself. *Explicit* polymorphism means that class "
+"instances will be returned only be queries that explicitly name that class "
+"and that queries that name the class will return only instances of "
+"subclasses mapped inside this ``<class>`` declaration as a ``<subclass>`` or"
+" ``<joined-subclass>``. For most purposes the default, "
+"``polymorphism=\"implicit\"``, is appropriate. Explicit polymorphism is "
+"useful when two different classes are mapped to the same table (this allows "
+"a \"lightweight\" class that contains a subset of the table columns)."
+msgstr ""
+
+#: ../../basic-mapping.rst:228
+msgid ""
+"The ``persister`` attribute lets you customize the persistence strategy used"
+" for the class. You may, for example, specify your own subclass of "
+"``NHibernate.Persister.EntityPersister`` or you might even provide a "
+"completely new implementation of the interface "
+"``NHibernate.Persister.IClassPersister`` that implements persistence via, "
+"for example, stored procedure calls, serialization to flat files or LDAP. "
+"See ``NHibernate.DomainModel.CustomPersister`` for a simple example (of "
+"\"persistence\" to a ``Hashtable``)."
+msgstr ""
+
+#: ../../basic-mapping.rst:237
+msgid ""
+"Note that the ``dynamic-update`` and ``dynamic-insert`` settings are not "
+"inherited by subclasses and so may also be specified on the ``<subclass>`` "
+"or ``<joined-subclass>`` elements. These settings may increase performance "
+"in some cases, but might actually decrease performance in others. Use "
+"judiciously."
+msgstr ""
+
+#: ../../basic-mapping.rst:243
+msgid ""
+"Use of ``select-before-update`` will usually decrease performance. It is "
+"very useful to prevent a database update trigger being called unnecessarily."
+msgstr ""
+
+#: ../../basic-mapping.rst:246
+msgid ""
+"If you enable ``dynamic-update``, you will have a choice of optimistic "
+"locking strategies:"
+msgstr ""
+
+#: ../../basic-mapping.rst:249
+msgid "``version`` check the version/timestamp columns"
+msgstr ""
+
+#: ../../basic-mapping.rst:251
+msgid "``all`` check all columns"
+msgstr ""
+
+#: ../../basic-mapping.rst:253
+msgid "``dirty`` check the changed columns"
+msgstr ""
+
+#: ../../basic-mapping.rst:255
+msgid "``none`` do not use optimistic locking"
+msgstr ""
+
+#: ../../basic-mapping.rst:257
+msgid ""
+"We *very* strongly recommend that you use version/timestamp columns for "
+"optimistic locking with NHibernate. This is the optimal strategy with "
+"respect to performance and is the only strategy that correctly handles "
+"modifications made outside of the session (ie. when ``ISession.Update()`` is"
+" used). Keep in mind that a version or timestamp property should never be "
+"null, no matter what ``unsaved-value`` strategy, or an instance will be "
+"detected as transient."
+msgstr ""
+
+#: ../../basic-mapping.rst:265
+msgid ""
+"Beginning with NHibernate 1.2.0, version numbers start with 1, not 0 as in "
+"previous versions. This was done to allow using 0 as ``unsaved-value`` for "
+"the version property."
+msgstr ""
+
+#: ../../basic-mapping.rst:270
+msgid "id"
+msgstr ""
+
+#: ../../basic-mapping.rst:272
+msgid ""
+"Mapped classes *must* declare the primary key column of the database table. "
+"Most classes will also have a property holding the unique identifier of an "
+"instance. The ``<id>`` element defines the mapping from that property to the"
+" primary key column."
+msgstr ""
+
+#: ../../basic-mapping.rst:289
+msgid "``name`` (optional): The name of the identifier property."
+msgstr ""
+
+#: ../../basic-mapping.rst:291
+msgid "``type`` (optional): A name that indicates the NHibernate type."
+msgstr ""
+
+#: ../../basic-mapping.rst:293
+msgid ""
+"``column`` (optional - defaults to the property name): The name of the "
+"primary key column."
+msgstr ""
+
+#: ../../basic-mapping.rst:296
+msgid ""
+"``unsaved-value`` (optional - defaults to a \"sensible\" value): An "
+"identifier property value that indicates that an instance is newly "
+"instantiated (unsaved), distinguishing it from transient instances that were"
+" saved or loaded in a previous session."
+msgstr ""
+
+#: ../../basic-mapping.rst:301 ../../basic-mapping.rst:713
+#: ../../basic-mapping.rst:802 ../../basic-mapping.rst:845
+#: ../../basic-mapping.rst:901 ../../basic-mapping.rst:1028
+#: ../../basic-mapping.rst:1119 ../../basic-mapping.rst:1240
+#: ../../basic-mapping.rst:1835
+msgid ""
+"``access`` (optional - defaults to ``property``): The strategy NHibernate "
+"should use for accessing the property value."
+msgstr ""
+
+#: ../../basic-mapping.rst:304
+msgid ""
+"If the ``name`` attribute is missing, it is assumed that the class has no "
+"identifier property."
+msgstr ""
+
+#: ../../basic-mapping.rst:307
+msgid ""
+"The ``unsaved-value`` attribute is almost never needed in NHibernate 1.0."
+msgstr ""
+
+#: ../../basic-mapping.rst:309
+msgid ""
+"There is an alternative ``<composite-id>`` declaration to allow access to "
+"legacy data with composite keys. We strongly discourage its use for anything"
+" else."
+msgstr ""
+
+#: ../../basic-mapping.rst:313
+msgid "generator"
+msgstr ""
+
+#: ../../basic-mapping.rst:315
+msgid ""
+"The required ``generator`` names a .NET class used to generate unique "
+"identifiers for instances of the persistent class."
+msgstr ""
+
+#: ../../basic-mapping.rst:318
+msgid ""
+"The generator can be declared using the ``<generator>`` child element. If "
+"any parameters are required to configure or initialize the generator "
+"instance, they are passed using ``<param>`` elements."
+msgstr ""
+
+#: ../../basic-mapping.rst:331
+msgid ""
+"If no parameters are required, the generator can be declared using a "
+"``generator`` attribute directly on the ``<id>`` element, as follows:"
+msgstr ""
+
+#: ../../basic-mapping.rst:338
+msgid ""
+"All generators implement the interface "
+"``NHibernate.Id.IIdentifierGenerator``. This is a very simple interface; "
+"some applications may choose to provide their own specialized "
+"implementations. However, NHibernate provides a range of built-in "
+"implementations. There are shortcut names for the built-in generators:"
+msgstr ""
+
+#: ../../basic-mapping.rst:346
+msgid "``increment``"
+msgstr ""
+
+#: ../../basic-mapping.rst:344
+msgid ""
+"generates identifiers of any integral type that are unique only when no "
+"other process is inserting data into the same table. *Do not use in a "
+"cluster.*"
+msgstr ""
+
+#: ../../basic-mapping.rst:350
+msgid "``identity``"
+msgstr ""
+
+#: ../../basic-mapping.rst:349
+msgid ""
+"supports identity columns in DB2, MySQL, MS SQL Server and Sybase. The "
+"identifier returned by the database is converted to the property type using "
+"``Convert.ChangeType``. Any integral property type is thus supported."
+msgstr ""
+
+#: ../../basic-mapping.rst:356
+msgid "``sequence``"
+msgstr ""
+
+#: ../../basic-mapping.rst:353
+msgid ""
+"uses a sequence in DB2, PostgreSQL, Oracle or a generator in Firebird. The "
+"identifier returned by the database is converted to the property type using "
+"``Convert.ChangeType``. Any integral property type is thus supported."
+msgstr ""
+
+#: ../../basic-mapping.rst:365
+msgid "``hilo``"
+msgstr ""
+
+#: ../../basic-mapping.rst:359
+msgid ""
+"uses a hi/lo algorithm to efficiently generate identifiers of any integral "
+"type, given a table and column (by default ``hibernate_unique_key`` and "
+"``next_hi`` respectively) as a source of hi values. The hi/lo algorithm "
+"generates identifiers that are unique only for a particular database. *Do "
+"not use this generator with a user-supplied connection.* You can use the "
+"\"where\" parameter to specify the row to use in a table. This is useful if "
+"you want to use a single tabel for your identifiers, with different rows for"
+" each table."
+msgstr ""
+
+#: ../../basic-mapping.rst:369
+msgid "``seqhilo``"
+msgstr ""
+
+#: ../../basic-mapping.rst:368
+msgid ""
+"uses a hi/lo algorithm to efficiently generate identifiers of any integral "
+"type, given a named database sequence."
+msgstr ""
+
+#: ../../basic-mapping.rst:374
+msgid "``uuid.hex``"
+msgstr ""
+
+#: ../../basic-mapping.rst:372
+msgid ""
+"uses ``System.Guid`` and its ``ToString(string format)`` method to generate "
+"identifiers of type string.  The length of the string returned depends on "
+"the configured ``format``."
+msgstr ""
+
+#: ../../basic-mapping.rst:378
+msgid "``uuid.string``"
+msgstr ""
+
+#: ../../basic-mapping.rst:377
+msgid ""
+"uses a new ``System.Guid`` to create a ``byte[]`` that is converted to a "
+"string."
+msgstr ""
+
+#: ../../basic-mapping.rst:381
+msgid "``guid``"
+msgstr ""
+
+#: ../../basic-mapping.rst:381
+msgid "uses a new ``System.Guid`` as the identifier."
+msgstr ""
+
+#: ../../basic-mapping.rst:386
+msgid "``guid.comb``"
+msgstr ""
+
+#: ../../basic-mapping.rst:384
+msgid ""
+"uses the algorithm to generate a new ``System.Guid`` described by Jimmy "
+"Nilsson in the article http://www.informit.com/articles/article.asp?p=25862."
+msgstr ""
+
+#: ../../basic-mapping.rst:391
+msgid "``native``"
+msgstr ""
+
+#: ../../basic-mapping.rst:389
+msgid ""
+"picks ``identity``, ``sequence`` or ``hilo`` depending upon the capabilities"
+" of the underlying database."
+msgstr ""
+
+#: ../../basic-mapping.rst:395
+msgid "``assigned``"
+msgstr ""
+
+#: ../../basic-mapping.rst:394
+msgid ""
+"lets the application to assign an identifier to the object before ``Save()``"
+" is called."
+msgstr ""
+
+#: ../../basic-mapping.rst:399
+msgid "``foreign``"
+msgstr ""
+
+#: ../../basic-mapping.rst:398
+msgid ""
+"uses the identifier of another associated object. Usually used in "
+"conjunction with a ``<one-to-one>`` primary key association."
+msgstr ""
+
+#: ../../basic-mapping.rst:402
+msgid "Hi/Lo Algorithm"
+msgstr ""
+
+#: ../../basic-mapping.rst:404
+msgid ""
+"The ``hilo`` and ``seqhilo`` generators provide two alternate "
+"implementations of the hi/lo algorithm, a favorite approach to identifier "
+"generation. The first implementation requires a \"special\" database table "
+"to hold the next available \"hi\" value. The second uses an Oracle-style "
+"sequence (where supported)."
+msgstr ""
+
+#: ../../basic-mapping.rst:428
+msgid ""
+"Unfortunately, you can't use ``hilo`` when supplying your own "
+"``IDbConnection`` to NHibernate. NHibernate must be able to fetch the \"hi\""
+" value in a new transaction."
+msgstr ""
+
+#: ../../basic-mapping.rst:433
+msgid "UUID Hex Algorithm"
+msgstr ""
+
+#: ../../basic-mapping.rst:444
+msgid ""
+"The UUID is generated by calling ``Guid.NewGuid().ToString(format)``. The "
+"valid values for ``format`` are described in the MSDN documentation. The "
+"default ``seperator`` is ``-`` and should rarely be modified.  The "
+"``format`` determines if the configured ``seperator`` can replace the "
+"default seperator used by the ``format``."
+msgstr ""
+
+#: ../../basic-mapping.rst:452
+msgid "UUID String Algorithm"
+msgstr ""
+
+#: ../../basic-mapping.rst:454
+msgid ""
+"The UUID is generated by calling ``Guid.NewGuid().ToByteArray()`` and then "
+"converting the ``byte[]`` into a ``char[]``.  The ``char[]`` is returned as "
+"a ``String`` consisting of 16 characters."
+msgstr ""
+
+#: ../../basic-mapping.rst:460
+msgid "GUID Algorithms"
+msgstr ""
+
+#: ../../basic-mapping.rst:462
+msgid ""
+"The ``guid`` identifier is generated by calling ``Guid.NewGuid()``. To "
+"address some of the performance concerns with using Guids as primary keys, "
+"foreign keys, and as part of indexes with MS SQL the ``guid.comb`` can be "
+"used.  The benefit of using the ``guid.comb`` with other databases that "
+"support GUIDs has not been measured."
+msgstr ""
+
+#: ../../basic-mapping.rst:468
+msgid "Identity columns and Sequences"
+msgstr ""
+
+#: ../../basic-mapping.rst:470
+msgid ""
+"For databases which support identity columns (DB2, MySQL, Sybase, MS SQL), "
+"you may use ``identity`` key generation. For databases that support "
+"sequences (DB2, Oracle, PostgreSQL, Interbase, McKoi, SAP DB) you may use "
+"``sequence`` style key generation. Both these strategies require two SQL "
+"queries to insert a new object."
+msgstr ""
+
+#: ../../basic-mapping.rst:490
+msgid ""
+"For cross-platform development, the ``native`` strategy will choose from the"
+" ``identity``, ``sequence`` and ``hilo`` strategies, dependent upon the "
+"capabilities of the underlying database."
+msgstr ""
+
+#: ../../basic-mapping.rst:496
+msgid "Assigned Identifiers"
+msgstr ""
+
+#: ../../basic-mapping.rst:498
+msgid ""
+"If you want the application to assign identifiers (as opposed to having "
+"NHibernate generate them), you may use the ``assigned`` generator. This "
+"special generator will use the identifier value already assigned to the "
+"object's identifier property. Be very careful when using this feature to "
+"assign keys with business meaning (almost always a terrible design "
+"decision)."
+msgstr ""
+
+#: ../../basic-mapping.rst:504
+msgid ""
+"Due to its inherent nature, entities that use this generator cannot be saved"
+" via the ISession's SaveOrUpdate() method. Instead you have to explicitly "
+"specify to NHibernate if the object should be saved or updated by calling "
+"either the ``Save()`` or ``Update()`` method of the ISession."
+msgstr ""
+
+#: ../../basic-mapping.rst:512
+msgid "Enhanced identifier generators"
+msgstr ""
+
+#: ../../basic-mapping.rst:514
+msgid ""
+"Starting with NHibernate release 3.3.0, there are 2 new generators which "
+"represent a re-thinking of 2 different aspects of identifier generation. The"
+" first aspect is database portability; the second is optimization "
+"Optimization means that you do not have to query the database for every "
+"request for a new identifier value. These two new generators are intended to"
+" take the place of some of the named generators described above, starting in"
+" 3.3.x. However, they are included in the current releases and can be "
+"referenced by FQN."
+msgstr ""
+
+#: ../../basic-mapping.rst:523
+msgid ""
+"The first of these new generators is "
+"``NHibernate.Id.Enhanced.SequenceStyleGenerator`` (short name ``enhanced-"
+"sequence``) which is intended, firstly, as a replacement for the "
+"``sequence`` generator and, secondly, as a better portability generator than"
+" ``native``. This is because ``native`` generally chooses between "
+"``identity`` and ``sequence`` which have largely different semantics that "
+"can cause subtle issues in applications eyeing portability. "
+"``NHibernate.Id.Enhanced.SequenceStyleGenerator``, however, achieves "
+"portability in a different manner. It chooses between a table or a sequence "
+"in the database to store its incrementing values, depending on the "
+"capabilities of the dialect being used. The difference between this and "
+"``native`` is that table-based and sequence-based storage have the same "
+"exact semantic. In fact, sequences are exactly what NHibernate tries to "
+"emulate with its table-based generators. This generator has a number of "
+"configuration parameters:"
+msgstr ""
+
+#: ../../basic-mapping.rst:543
+msgid ""
+"``sequence_name`` (optional, defaults to ``hibernate_sequence``): the name "
+"of the sequence or table to be used."
+msgstr ""
+
+#: ../../basic-mapping.rst:547
+msgid ""
+"``initial_value`` (optional, defaults to ``1``): the initial value to be "
+"retrieved from the sequence/table. In sequence creation terms, this is "
+"analogous to the clause typically named \"STARTS WITH\"."
+msgstr ""
+
+#: ../../basic-mapping.rst:552
+msgid ""
+"``increment_size`` (optional - defaults to ``1``): the value by which "
+"subsequent calls to the sequence/table should differ. In sequence creation "
+"terms, this is analogous to the clause typically named \"INCREMENT BY\"."
+msgstr ""
+
+#: ../../basic-mapping.rst:558
+msgid ""
+"``force_table_use`` (optional - defaults to ``false``): should we force the "
+"use of a table as the backing structure even though the dialect might "
+"support sequence?"
+msgstr ""
+
+#: ../../basic-mapping.rst:563
+msgid ""
+"``value_column`` (optional - defaults to ``next_val``): only relevant for "
+"table structures, it is the name of the column on the table which is used to"
+" hold the value."
+msgstr ""
+
+#: ../../basic-mapping.rst:568
+msgid ""
+"``prefer_sequence_per_entity`` (optional - defaults to ``false``): should we"
+" create separate sequence for each entity that share current generator based"
+" on its name?"
+msgstr ""
+
+#: ../../basic-mapping.rst:573
+msgid ""
+"``sequence_per_entity_suffix`` (optional - defaults to ``_SEQ``): suffix "
+"added to the name of a dedicated sequence."
+msgstr ""
+
+#: ../../basic-mapping.rst:577
+msgid ""
+"``optimizer`` (optional - defaults to ``none``): See :ref:`mapping-"
+"declaration-id-enhanced-optimizers`"
+msgstr ""
+
+#: ../../basic-mapping.rst:580
+msgid ""
+"The second of these new generators is "
+"``NHibernate.Id.Enhanced.TableGenerator`` (short name ``enhanced-table``), "
+"which is intended, firstly, as a replacement for the ``table`` generator, "
+"even though it actually functions much more like "
+"``org.hibernate.id.MultipleHiLoPerTableGenerator`` (not available in "
+"NHibernate), and secondly, as a re-implementation of "
+"``org.hibernate.id.MultipleHiLoPerTableGenerator`` (not available in "
+"NHibernate) that utilizes the notion of pluggable optimizers. Essentially "
+"this generator defines a table capable of holding a number of different "
+"increment values simultaneously by using multiple distinctly keyed rows. "
+"This generator has a number of configuration parameters:"
+msgstr ""
+
+#: ../../basic-mapping.rst:592
+msgid ""
+"``table_name`` (optional - defaults to ``hibernate_sequences``): the name of"
+" the table to be used."
+msgstr ""
+
+#: ../../basic-mapping.rst:596
+msgid ""
+"``value_column_name`` (optional - defaults to ``next_val``): the name of the"
+" column on the table that is used to hold the value."
+msgstr ""
+
+#: ../../basic-mapping.rst:600
+msgid ""
+"``segment_column_name`` (optional - defaults to ``sequence_name``): the name"
+" of the column on the table that is used to hold the \"segment key\". This "
+"is the value which identifies which increment value to use."
+msgstr ""
+
+#: ../../basic-mapping.rst:606
+msgid ""
+"``segment_value`` (optional - defaults to ``default``): The \"segment key\" "
+"value for the segment from which we want to pull increment values for this "
+"generator."
+msgstr ""
+
+#: ../../basic-mapping.rst:611
+msgid ""
+"``segment_value_length`` (optional - defaults to ``255``): Used for schema "
+"generation; the column size to create this segment key column."
+msgstr ""
+
+#: ../../basic-mapping.rst:615
+msgid ""
+"``initial_value`` (optional - defaults to ``1``): The initial value to be "
+"retrieved from the table."
+msgstr ""
+
+#: ../../basic-mapping.rst:619
+msgid ""
+"``increment_size`` (optional - defaults to ``1``): The value by which "
+"subsequent calls to the table should differ."
+msgstr ""
+
+#: ../../basic-mapping.rst:623
+msgid ""
+"``optimizer`` (optional - defaults to ``??``): See :ref:`mapping-"
+"declaration-id-enhanced-optimizers`."
+msgstr ""
+
+#: ../../basic-mapping.rst:629
+msgid "Identifier generator optimization"
+msgstr ""
+
+#: ../../basic-mapping.rst:631
+msgid ""
+"For identifier generators that store values in the database, it is "
+"inefficient for them to hit the database on each and every call to generate "
+"a new identifier value. Instead, you can group a bunch of them in memory and"
+" only hit the database when you have exhausted your in-memory value group. "
+"This is the role of the pluggable optimizers. Currently only the two "
+"enhanced generators (:ref:`mapping-declaration-id-enhanced` support this "
+"operation."
+msgstr ""
+
+#: ../../basic-mapping.rst:640
+msgid ""
+"``none`` (generally this is the default if no optimizer was specified): this"
+" will not perform any optimizations and hit the database for each and every "
+"request."
+msgstr ""
+
+#: ../../basic-mapping.rst:645
+msgid ""
+"``hilo``: applies a hi/lo algorithm around the database retrieved values. "
+"The values from the database for this optimizer are expected to be "
+"sequential. The values retrieved from the database structure for this "
+"optimizer indicates the \"group number\". The ``increment_size`` is "
+"multiplied by that value in memory to define a group \"hi value\"."
+msgstr ""
+
+#: ../../basic-mapping.rst:653
+msgid ""
+"``pooled``: as with the case of ``hilo``, this optimizer attempts to "
+"minimize the number of hits to the database. Here, however, we simply store "
+"the starting value for the \"next group\" into the database structure rather"
+" than a sequential value in combination with an in-memory grouping "
+"algorithm. Here, ``increment_size`` refers to the values coming from the "
+"database."
+msgstr ""
+
+#: ../../basic-mapping.rst:662
+msgid ""
+"``pooled-lo``: similar to ``pooled``, except that it's the starting value of"
+" the \"current group\" that is stored into the database structure. Here, "
+"``increment_size`` refers to the values coming from the database."
+msgstr ""
+
+#: ../../basic-mapping.rst:670
+msgid "composite-id"
+msgstr ""
+
+#: ../../basic-mapping.rst:685
+msgid ""
+"For a table with a composite key, you may map multiple properties of the "
+"class as identifier properties. The ``<composite-id>`` element accepts "
+"``<key-property>`` property mappings and ``<key-many-to-one>`` mappings as "
+"child elements."
+msgstr ""
+
+#: ../../basic-mapping.rst:697
+msgid ""
+"Your persistent class *must* override ``Equals()`` and ``GetHashCode()`` to "
+"implement composite identifier equality. It must also be ``Serializable``."
+msgstr ""
+
+#: ../../basic-mapping.rst:701
+msgid ""
+"Unfortunately, this approach to composite identifiers means that a "
+"persistent object is its own identifier. There is no convenient \"handle\" "
+"other than the object itself. You must instantiate an instance of the "
+"persistent class itself and populate its identifier properties before you "
+"can ``load()`` the persistent state associated with a composite key. We will"
+" describe a much more convenient approach where the composite identifier is "
+"implemented as a seperate class in :ref:`components-compositeid`. The "
+"attributes described below apply only to this alternative approach:"
+msgstr ""
+
+#: ../../basic-mapping.rst:710
+msgid ""
+"``name`` (optional, required for this approach): A property of component "
+"type that holds the composite identifier (see next section)."
+msgstr ""
+
+#: ../../basic-mapping.rst:716
+msgid ""
+"``class`` (optional - defaults to the property type determined by "
+"reflection): The component class used as a composite identifier (see next "
+"section)."
+msgstr ""
+
+#: ../../basic-mapping.rst:720
+msgid "discriminator"
+msgstr ""
+
+#: ../../basic-mapping.rst:722
+msgid ""
+"The ``<discriminator>`` element is required for polymorphic persistence "
+"using the table-per-class-hierarchy mapping strategy and declares a "
+"discriminator column of the table. The discriminator column contains marker "
+"values that tell the persistence layer what subclass to instantiate for a "
+"particular row. A restricted set of types may be used: ``String``, ``Char``,"
+" ``Int32``, ``Byte``, ``Short``, ``Boolean``, ``YesNo``, ``TrueFalse``."
+msgstr ""
+
+#: ../../basic-mapping.rst:740
+msgid ""
+"``column`` (optional - defaults to ``class``) the name of the discriminator "
+"column."
+msgstr ""
+
+#: ../../basic-mapping.rst:743
+msgid ""
+"``type`` (optional - defaults to ``String``) a name that indicates the "
+"NHibernate type"
+msgstr ""
+
+#: ../../basic-mapping.rst:746
+msgid ""
+"``force`` (optional - defaults to ``false``) \"force\" NHibernate to specify"
+" allowed discriminator values even when retrieving all instances of the root"
+" class."
+msgstr ""
+
+#: ../../basic-mapping.rst:750
+msgid ""
+"``insert`` (optional - defaults to ``true``) set this to ``false`` if your "
+"discriminator column is also part of a mapped composite identifier."
+msgstr ""
+
+#: ../../basic-mapping.rst:754
+msgid ""
+"``formula`` (optional) an arbitrary SQL expression that is executed when a "
+"type has to be evaluated. Allows content-based discrimination."
+msgstr ""
+
+#: ../../basic-mapping.rst:757
+msgid ""
+"Actual values of the discriminator column are specified by the "
+"``discriminator-value`` attribute of the ``<class>`` and ``<subclass>`` "
+"elements."
+msgstr ""
+
+#: ../../basic-mapping.rst:761
+msgid ""
+"The ``force`` attribute is (only) useful if the table contains rows with "
+"\"extra\" discriminator values that are not mapped to a persistent class. "
+"This will not usually be the case."
+msgstr ""
+
+#: ../../basic-mapping.rst:765
+msgid ""
+"Using the ``formula`` attribute you can declare an arbitrary SQL expression "
+"that will be used to evaluate the type of a row:"
+msgstr ""
+
+#: ../../basic-mapping.rst:777
+msgid "version (optional)"
+msgstr ""
+
+#: ../../basic-mapping.rst:779
+msgid ""
+"The ``<version>`` element is optional and indicates that the table contains "
+"versioned data. This is particularly useful if you plan to use *long "
+"transactions* (see below)."
+msgstr ""
+
+#: ../../basic-mapping.rst:794
+msgid ""
+"``column`` (optional - defaults to the property name): The name of the "
+"column holding the version number."
+msgstr ""
+
+#: ../../basic-mapping.rst:797
+msgid "``name``: The name of a property  of the persistent class."
+msgstr ""
+
+#: ../../basic-mapping.rst:799
+msgid ""
+"``type`` (optional - defaults to ``Int32``): The type of the version number."
+msgstr ""
+
+#: ../../basic-mapping.rst:805
+msgid ""
+"``unsaved-value`` (optional - defaults to a \"sensible\" value): A version "
+"property value that indicates that an instance is newly instantiated "
+"(unsaved), distinguishing it from transient instances that were saved or "
+"loaded in a previous session. (``undefined`` specifies that the identifier "
+"property value should be used.)"
+msgstr ""
+
+#: ../../basic-mapping.rst:811
+msgid ""
+"``generated`` (optional - defaults to ``never``): Specifies that this "
+"version property value is actually generated by the database. See the "
+"discussion of :ref:`mapping-generated`."
+msgstr ""
+
+#: ../../basic-mapping.rst:815
+msgid ""
+"Version numbers may be of type ``Int64``, ``Int32``, ``Int16``, ``Ticks``, "
+"``Timestamp``, or ``TimeSpan`` (or their nullable counterparts in .NET 2.0)."
+msgstr ""
+
+#: ../../basic-mapping.rst:822
+msgid "timestamp (optional)"
+msgstr ""
+
+#: ../../basic-mapping.rst:824
+msgid ""
+"The optional ``<timestamp>`` element indicates that the table contains "
+"timestamped data. This is intended as an alternative to versioning. "
+"Timestamps are by nature a less safe implementation of optimistic locking. "
+"However, sometimes the application might use the timestamps in other ways."
+msgstr ""
+
+#: ../../basic-mapping.rst:839
+msgid ""
+"``column`` (optional - defaults to the property name): The name of a column "
+"holding the timestamp."
+msgstr ""
+
+#: ../../basic-mapping.rst:842
+msgid ""
+"``name``: The name of a property of .NET type ``DateTime`` of the persistent"
+" class."
+msgstr ""
+
+#: ../../basic-mapping.rst:848
+msgid ""
+"``unsaved-value`` (optional - defaults to ``null``): A timestamp property "
+"value that indicates that an instance is newly instantiated (unsaved), "
+"distinguishing it from transient instances that were saved or loaded in a "
+"previous session. (``undefined`` specifies that the identifier property "
+"value should be used.)"
+msgstr ""
+
+#: ../../basic-mapping.rst:854
+msgid ""
+"``generated`` (optional - defaults to ``never``): Specifies that this "
+"timestamp property value is actually generated by the database. See the "
+"discussion of :ref:`mapping-generated`."
+msgstr ""
+
+#: ../../basic-mapping.rst:858
+msgid ""
+"Note that ``<timestamp>`` is equivalent to ``<version type=\"timestamp\">``."
+msgstr ""
+
+#: ../../basic-mapping.rst:864
+msgid "property"
+msgstr ""
+
+#: ../../basic-mapping.rst:866
+msgid ""
+"The ``<property>`` element declares a persistent property of the class."
+msgstr ""
+
+#: ../../basic-mapping.rst:884
+msgid "``name``: the name of the property of your class."
+msgstr ""
+
+#: ../../basic-mapping.rst:886
+msgid ""
+"``column`` (optional - defaults to the property name): the name of the "
+"mapped database table column."
+msgstr ""
+
+#: ../../basic-mapping.rst:889
+msgid "``type`` (optional): a name that indicates the NHibernate type."
+msgstr ""
+
+#: ../../basic-mapping.rst:891
+msgid ""
+"``update, insert`` (optional - defaults to ``true``) : specifies that the "
+"mapped columns should be included in SQL ``UPDATE`` and/or ``INSERT`` "
+"statements. Setting both to ``false`` allows a pure \"derived\" property "
+"whose value is initialized from some other property that maps to the same "
+"column(s) or by a trigger or other application."
+msgstr ""
+
+#: ../../basic-mapping.rst:897
+msgid ""
+"``formula`` (optional): an SQL expression that defines the value for a "
+"*computed* property. Computed properties do not have a column mapping of "
+"their own."
+msgstr ""
+
+#: ../../basic-mapping.rst:904
+msgid ""
+"``optimistic-lock`` (optional - defaults to ``true``): Specifies that "
+"updates to this property do or do not require acquisition of the optimistic "
+"lock. In other words, determines if a version increment should occur when "
+"this property is dirty."
+msgstr ""
+
+#: ../../basic-mapping.rst:909
+msgid ""
+"``generated`` (optional - defaults to ``never``): Specifies that this "
+"property value is actually generated by the database. See the discussion of "
+":ref:`mapping-generated`."
+msgstr ""
+
+#: ../../basic-mapping.rst:913
+msgid ""
+"``lazy`` (optional - defaults to ``false``): Specifies that this property is"
+" lazy. A lazy property is not loaded when the object is initially loaded, "
+"unless the fetch mode has been overriden in a specific query. Values for "
+"lazy properties are loaded when any lazy property of the object is accessed."
+msgstr ""
+
+#: ../../basic-mapping.rst:919
+msgid "*typename* could be:"
+msgstr ""
+
+#: ../../basic-mapping.rst:921
+msgid ""
+"The name of a NHibernate basic type (eg. ``Int32, String, Char, DateTime, "
+"Timestamp, Single, Byte[], Object, ...``)."
+msgstr ""
+
+#: ../../basic-mapping.rst:924
+msgid ""
+"The name of a .NET type with a default basic type (eg. ``System.Int16, "
+"System.Single, System.Char, System.String, System.DateTime, System.Byte[], "
+"...``)."
+msgstr ""
+
+#: ../../basic-mapping.rst:927
+msgid "The name of an enumeration type (eg. ``Eg.Color, Eg``)."
+msgstr ""
+
+#: ../../basic-mapping.rst:929
+msgid "The name of a serializable .NET type."
+msgstr ""
+
+#: ../../basic-mapping.rst:931
+msgid "The class name of a custom type (eg. ``Illflow.Type.MyCustomType``)."
+msgstr ""
+
+#: ../../basic-mapping.rst:933
+msgid ""
+"Note that you have to specify full *assembly-qualified* names for all except"
+" basic NHibernate types (unless you set ``assembly`` and/or ``namespace`` "
+"attributes of the ``<hibernate-mapping>`` element)."
+msgstr ""
+
+#: ../../basic-mapping.rst:938
+msgid ""
+"NHibernate supports .NET 2.0 ``Nullable`` types. These types are mostly "
+"treated the same as plain non-``Nullable`` types internally. For example, a "
+"property of type ``Nullable<Int32>`` can be mapped using ``type=\"Int32\"`` "
+"or ``type=\"System.Int32\"``."
+msgstr ""
+
+#: ../../basic-mapping.rst:943
+msgid ""
+"If you do not specify a type, NHibernate will use reflection upon the named "
+"property to take a guess at the correct NHibernate type. NHibernate will try"
+" to interpret the name of the return class of the property getter using "
+"rules 2, 3, 4 in that order. However, this is not always enough. In certain "
+"cases you will still need the ``type`` attribute. (For example, to "
+"distinguish between ``NHibernateUtil.DateTime`` and "
+"``NHibernateUtil.Timestamp``, or to specify a custom type.)"
+msgstr ""
+
+#: ../../basic-mapping.rst:951
+msgid ""
+"The ``access`` attribute lets you control how NHibernate will access the "
+"value of the property at runtime.  The value of the ``access`` attribute "
+"should be text formatted as ``access-strategy.naming-strategy``.  The "
+"``.naming-strategy`` is not always required. Access Strategies"
+msgstr ""
+
+#: ../../basic-mapping.rst:958
+msgid "Access Strategy Name"
+msgstr ""
+
+#: ../../basic-mapping.rst:958 ../../basic-mapping.rst:969
+msgid "Description"
+msgstr ""
+
+#: ../../basic-mapping.rst:960
+msgid "``property``"
+msgstr ""
+
+#: ../../basic-mapping.rst:960
+msgid ""
+"The default implementation.  NHibernate uses the get/set accessors of the "
+"property.  No naming strategy should be used with this access strategy "
+"because the value of the ``name`` attribute is the name of the property."
+msgstr ""
+
+#: ../../basic-mapping.rst:961
+msgid "``field``"
+msgstr ""
+
+#: ../../basic-mapping.rst:961
+msgid ""
+"NHibernate will access the field directly.  NHibernate uses the value of the"
+" ``name`` attribute as the name of the field. This can be used when a "
+"property's getter and setter contain extra actions that you don't want to "
+"occur when NHibernate is populating or reading the object. If you want the "
+"name of the property and not the field to be what the consumers of your API "
+"use with HQL, then a naming strategy is needed."
+msgstr ""
+
+#: ../../basic-mapping.rst:962
+msgid "``nosetter``"
+msgstr ""
+
+#: ../../basic-mapping.rst:962
+msgid ""
+"NHibernate will access the field directly when setting the value and will "
+"use the Property when getting the value.  This can be used when a property "
+"only exposes a get accessor because the consumers of your API can't change "
+"the value directly. A naming strategy is required because NHibernate uses "
+"the value of the ``name`` attribute as the property name and needs to  be "
+"told what the name of the field is."
+msgstr ""
+
+#: ../../basic-mapping.rst:963
+msgid "``ClassName``"
+msgstr ""
+
+#: ../../basic-mapping.rst:963
+msgid ""
+"If NHibernate's built in access strategies are not what is needed for your "
+"situation then you can build your own by implementing the interface  "
+"``NHibernate.Property.IPropertyAccessor``.  The value of the  ``access`` "
+"attribute should be an assembly-qualified name that can be  loaded with "
+"``Activator.CreateInstance(string assemblyQualifiedName)``."
+msgstr ""
+
+#: ../../basic-mapping.rst:966
+msgid "Naming Strategies"
+msgstr ""
+
+#: ../../basic-mapping.rst:969
+msgid "Naming Strategy Name"
+msgstr ""
+
+#: ../../basic-mapping.rst:971
+msgid "``camelcase``"
+msgstr ""
+
+#: ../../basic-mapping.rst:971
+msgid ""
+"The ``name`` attribute is converted to camel case to find the field. "
+"``<property name=\"FooBar\" ... >`` uses the field ``fooBar``."
+msgstr ""
+
+#: ../../basic-mapping.rst:972
+msgid "``camelcase-underscore``"
+msgstr ""
+
+#: ../../basic-mapping.rst:972
+msgid ""
+"The ``name`` attribute is converted to camel case and prefixed with an "
+"underscore to find the field. ``<property name=\"FooBar\" ... >`` uses the "
+"field ``_fooBar``."
+msgstr ""
+
+#: ../../basic-mapping.rst:973
+msgid "``camelcase-m-underscore``"
+msgstr ""
+
+#: ../../basic-mapping.rst:973
+msgid ""
+"The ``name`` attribute is converted to camel case and prefixed with the "
+"character ``m`` and an underscore to find the field. ``<property "
+"name=\"FooBar\" ... >`` uses the field ``m_fooBar``."
+msgstr ""
+
+#: ../../basic-mapping.rst:974
+msgid "``lowercase``"
+msgstr ""
+
+#: ../../basic-mapping.rst:974
+msgid ""
+"The ``name`` attribute is converted to lower case to find the Field. "
+"``<property name=\"FooBar\" ... >`` uses the field ``foobar``."
+msgstr ""
+
+#: ../../basic-mapping.rst:975
+msgid "``lowercase-underscore``"
+msgstr ""
+
+#: ../../basic-mapping.rst:975
+msgid ""
+"The ``name`` attribute is converted to lower case and prefixed with an "
+"underscore to find the Field. ``<property name=\"FooBar\" ... >`` uses the "
+"field ``_foobar``."
+msgstr ""
+
+#: ../../basic-mapping.rst:976
+msgid "``pascalcase-underscore``"
+msgstr ""
+
+#: ../../basic-mapping.rst:976
+msgid ""
+"The ``name`` attribute is prefixed with an underscore to find the field. "
+"``<property name=\"FooBar\" ... >`` uses the field ``_FooBar``."
+msgstr ""
+
+#: ../../basic-mapping.rst:977
+msgid "``pascalcase-m``"
+msgstr ""
+
+#: ../../basic-mapping.rst:977
+msgid ""
+"The ``name`` attribute is prefixed with the character ``m`` to find the "
+"field. ``<property name=\"FooBar\" ... >`` uses the field ``mFooBar``."
+msgstr ""
+
+#: ../../basic-mapping.rst:978
+msgid "``pascalcase-m-underscore``"
+msgstr ""
+
+#: ../../basic-mapping.rst:978
+msgid ""
+"The ``name`` attribute is prefixed with the character ``m`` and an "
+"underscore to find the field. ``<property name=\"FooBar\" ... >`` uses the "
+"field ``m_FooBar``."
+msgstr ""
+
+#: ../../basic-mapping.rst:982
+msgid "many-to-one"
+msgstr ""
+
+#: ../../basic-mapping.rst:984
+msgid ""
+"An ordinary association to another persistent class is declared using a "
+"``many-to-one`` element. The relational model is a many-to-one association. "
+"(It's really just an object reference.)"
+msgstr ""
+
+#: ../../basic-mapping.rst:1005 ../../basic-mapping.rst:1098
+#: ../../basic-mapping.rst:1229
+msgid "``name``: The name of the property."
+msgstr ""
+
+#: ../../basic-mapping.rst:1007
+msgid "``column`` (optional): The name of the column."
+msgstr ""
+
+#: ../../basic-mapping.rst:1009 ../../basic-mapping.rst:1100
+msgid ""
+"``class`` (optional - defaults to the property type determined by "
+"reflection): The name of the associated class."
+msgstr ""
+
+#: ../../basic-mapping.rst:1012
+msgid ""
+"``cascade`` (optional): Specifies which operations should be cascaded from "
+"the parent object to the associated object."
+msgstr ""
+
+#: ../../basic-mapping.rst:1015 ../../basic-mapping.rst:1112
+msgid ""
+"``fetch`` (optional - defaults to ``select``): Chooses between outer-join "
+"fetching or sequential select fetching."
+msgstr ""
+
+#: ../../basic-mapping.rst:1018
+msgid ""
+"``update, insert`` (optional - defaults to ``true``) specifies that the "
+"mapped columns should be included in SQL ``UPDATE`` and/or ``INSERT`` "
+"statements. Setting both to ``false`` allows a pure \"derived\" association "
+"whose value is initialized from some other property that maps to the same "
+"colum(s) or by a trigger or other application."
+msgstr ""
+
+#: ../../basic-mapping.rst:1024
+msgid ""
+"``property-ref``: (optional) The name of a property of the associated class "
+"that is joined to this foreign key. If not specified, the primary key of the"
+" associated class is used."
+msgstr ""
+
+#: ../../basic-mapping.rst:1031
+msgid ""
+"``unique`` (optional): Enable the DDL generation of a unique constraint for "
+"the foreign-key column."
+msgstr ""
+
+#: ../../basic-mapping.rst:1034
+msgid ""
+"``optimistic-lock`` (optional - defaults to ``true``): Specifies that "
+"updates to this property do or do not require acquisition of the optimistic "
+"lock. In other words, dertermines if a version increment should occur when "
+"this property is dirty."
+msgstr ""
+
+#: ../../basic-mapping.rst:1039
+msgid ""
+"``not-found`` (optional - defaults to ``exception``): Specifies how foreign "
+"keys that reference missing rows will be handled: ``ignore`` will treat a "
+"missing row as a null association."
+msgstr ""
+
+#: ../../basic-mapping.rst:1043
+msgid ""
+"The ``cascade`` attribute permits the following values: ``all``, ``save-"
+"update``, ``delete``, ``none``. Setting a value other than ``none`` will "
+"propagate certain operations to the associated (child) object. See "
+"\"Lifecycle Objects\" below."
+msgstr ""
+
+#: ../../basic-mapping.rst:1049
+msgid "The ``fetch`` attribute accepts two different values:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1051
+msgid "``join`` Fetch the association using an outer join"
+msgstr ""
+
+#: ../../basic-mapping.rst:1053
+msgid "``select`` Fetch the association using a separate query"
+msgstr ""
+
+#: ../../basic-mapping.rst:1055
+msgid "A typical ``many-to-one`` declaration looks as simple as"
+msgstr ""
+
+#: ../../basic-mapping.rst:1061
+msgid ""
+"The ``property-ref`` attribute should only be used for mapping legacy data "
+"where a foreign key refers to a unique key of the associated table other "
+"than the primary key. This is an ugly relational model. For example, suppose"
+" the ``Product`` class had a unique serial number, that is not the primary "
+"key. (The ``unique`` attribute controls NHibernate's DDL generation with the"
+" SchemaExport tool.)"
+msgstr ""
+
+#: ../../basic-mapping.rst:1072
+msgid "Then the mapping for ``OrderItem`` might use:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1078
+msgid "This is certainly not encouraged, however."
+msgstr ""
+
+#: ../../basic-mapping.rst:1081
+msgid "one-to-one"
+msgstr ""
+
+#: ../../basic-mapping.rst:1083
+msgid ""
+"A one-to-one association to another persistent class is declared using a "
+"``one-to-one`` element."
+msgstr ""
+
+#: ../../basic-mapping.rst:1103
+msgid ""
+"``cascade`` (optional) specifies which operations should be cascaded from "
+"the parent object to the associated object."
+msgstr ""
+
+#: ../../basic-mapping.rst:1106
+msgid ""
+"``constrained`` (optional) specifies that a foreign key constraint on the "
+"primary key of the mapped table references the table of the associated "
+"class. This option affects the order in which ``Save()`` and ``Delete()`` "
+"are cascaded (and is also used by the schema export tool)."
+msgstr ""
+
+#: ../../basic-mapping.rst:1115
+msgid ""
+"``property-ref``: (optional) The name of a property of the associated class "
+"that is joined to the primary key of this class. If not specified, the "
+"primary key of the associated class is used."
+msgstr ""
+
+#: ../../basic-mapping.rst:1122
+msgid "There are two varieties of one-to-one association:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1124
+msgid "primary key associations"
+msgstr ""
+
+#: ../../basic-mapping.rst:1126
+msgid "unique foreign key associations"
+msgstr ""
+
+#: ../../basic-mapping.rst:1128
+msgid ""
+"Primary key associations don't need an extra table column; if two rows are "
+"related by the association then the two table rows share the same primary "
+"key value. So if you want two objects to be related by a primary key "
+"association, you must make sure that they are assigned the same identifier "
+"value!"
+msgstr ""
+
+#: ../../basic-mapping.rst:1133
+msgid ""
+"For a primary key association, add the following mappings to ``Employee`` "
+"and ``Person``, respectively."
+msgstr ""
+
+#: ../../basic-mapping.rst:1144
+msgid ""
+"Now we must ensure that the primary keys of related rows in the PERSON and "
+"EMPLOYEE tables are equal. We use a special NHibernate identifier generation"
+" strategy called ``foreign``:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1162
+msgid ""
+"A newly saved instance of ``Person`` is then assigned the same primar key "
+"value as the ``Employee`` instance refered with the ``Employee`` property of"
+" that ``Person``."
+msgstr ""
+
+#: ../../basic-mapping.rst:1166
+msgid ""
+"Alternatively, a foreign key with a unique constraint, from ``Employee`` to "
+"``Person``, may be expressed as:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1173
+msgid ""
+"And this association may be made bidirectional by adding the following to "
+"the ``Person`` mapping:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1181
+msgid "natural-id"
+msgstr ""
+
+#: ../../basic-mapping.rst:1191
+msgid ""
+"Even though we recommend the use of surrogate keys as primary keys, you "
+"should still try to identify natural keys for all entities. A natural key is"
+" a property or combination of properties that is unique and non-null. If it "
+"is also immutable, even better. Map the properties of the natural key inside"
+" the ``<natural-id>`` element. NHibernate will generate the necessary unique"
+" key and nullability constraints, and your mapping will be more self-"
+"documenting."
+msgstr ""
+
+#: ../../basic-mapping.rst:1198
+msgid ""
+"We strongly recommend that you implement ``Equals()`` and ``GetHashCode()`` "
+"to compare the natural key properties of the entity."
+msgstr ""
+
+#: ../../basic-mapping.rst:1201
+msgid ""
+"This mapping is not intended for use with entities with natural primary "
+"keys."
+msgstr ""
+
+#: ../../basic-mapping.rst:1203
+msgid ""
+"``mutable`` (optional, defaults to ``false``): By default, natural "
+"identifier properties as assumed to be immutable (constant)."
+msgstr ""
+
+#: ../../basic-mapping.rst:1207
+msgid "component, dynamic-component"
+msgstr ""
+
+#: ../../basic-mapping.rst:1209
+msgid ""
+"The ``<component>`` element maps properties of a child object to columns of "
+"the table of a parent class. Components may, in turn, declare their own "
+"properties, components or collections. See \"Components\" below."
+msgstr ""
+
+#: ../../basic-mapping.rst:1231
+msgid ""
+"``class`` (optional - defaults to the property type determined by "
+"reflection): The name of the component (child) class."
+msgstr ""
+
+#: ../../basic-mapping.rst:1234
+msgid "``insert``: Do the mapped columns appear in SQL ``INSERT``?"
+msgstr ""
+
+#: ../../basic-mapping.rst:1237
+msgid "``update``: Do the mapped columns appear in SQL ``UPDATE``?"
+msgstr ""
+
+#: ../../basic-mapping.rst:1243
+msgid ""
+"``optimistic-lock`` (optional - defaults to ``true``): Specifies that "
+"updates to this component do or do not require acquisition of the optimistic"
+" lock. In other words, determines if a version increment should occur when "
+"this property is dirty."
+msgstr ""
+
+#: ../../basic-mapping.rst:1248
+msgid ""
+"The child ``<property>`` tags map properties of the child class to table "
+"columns."
+msgstr ""
+
+#: ../../basic-mapping.rst:1251
+msgid ""
+"The ``<component>`` element allows a ``<parent>`` subelement that maps a "
+"property of the component class as a reference back to the containing "
+"entity."
+msgstr ""
+
+#: ../../basic-mapping.rst:1255
+msgid ""
+"The ``<dynamic-component>`` element allows an ``IDictionary`` to be mapped "
+"as a component, where the property names refer to keys of the dictionary."
+msgstr ""
+
+#: ../../basic-mapping.rst:1259
+msgid "properties"
+msgstr ""
+
+#: ../../basic-mapping.rst:1261
+msgid ""
+"The ``<properties>`` element allows the definition of a named, logical "
+"grouping of the properties of a class. The most important use of the "
+"construct is that it allows a combination of properties to be the target of "
+"a ``property-ref``. It is also a convenient way to define a multi-column "
+"unique constraint. For example:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1282
+msgid ""
+"``name``: the logical name of the grouping. It is *not* an actual property "
+"name."
+msgstr ""
+
+#: ../../basic-mapping.rst:1285
+msgid "``insert``: do the mapped columns appear in SQL ``INSERTs``?"
+msgstr ""
+
+#: ../../basic-mapping.rst:1288
+msgid "``update``: do the mapped columns appear in SQL ``UPDATEs``?"
+msgstr ""
+
+#: ../../basic-mapping.rst:1291
+msgid ""
+"``optimistic-lock`` (optional - defaults to ``true``): specifies that "
+"updates to these properties either do or do not require acquisition of the "
+"optimistic lock. It determines if a version increment should occur when "
+"these properties are dirty."
+msgstr ""
+
+#: ../../basic-mapping.rst:1297
+msgid ""
+"``unique`` (optional - defaults to ``false``): specifies that a unique "
+"constraint exists upon all mapped columns of the component."
+msgstr ""
+
+#: ../../basic-mapping.rst:1301
+msgid "For example, if we have the following ``<properties>`` mapping:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1315
+msgid ""
+"You might have some legacy data association that refers to this unique key "
+"of the ``Person`` table, instead of to the primary key:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1327
+msgid ""
+"The use of this outside the context of mapping legacy data is not "
+"recommended."
+msgstr ""
+
+#: ../../basic-mapping.rst:1331
+msgid "subclass"
+msgstr ""
+
+#: ../../basic-mapping.rst:1333
+msgid ""
+"Finally, polymorphic persistence requires the declaration of each subclass "
+"of the root persistent class. For the (recommended) table-per-class-"
+"hierarchy mapping strategy, the ``<subclass>`` declaration is used."
+msgstr ""
+
+#: ../../basic-mapping.rst:1352
+msgid ""
+"``name``: The fully qualified .NET class name of the subclass, including its"
+" assembly name."
+msgstr ""
+
+#: ../../basic-mapping.rst:1355
+msgid ""
+"``discriminator-value`` (optional - defaults to the class name): A value "
+"that distiguishes individual subclasses."
+msgstr ""
+
+#: ../../basic-mapping.rst:1358 ../../basic-mapping.rst:1397
+#: ../../basic-mapping.rst:1481
+msgid ""
+"``proxy`` (optional): Specifies a class or interface to use for lazy "
+"initializing proxies."
+msgstr ""
+
+#: ../../basic-mapping.rst:1361 ../../basic-mapping.rst:1484
+msgid ""
+"``lazy`` (optional, defaults to ``true``): Setting ``lazy=\"false\"`` "
+"disables the use of lazy fetching."
+msgstr ""
+
+#: ../../basic-mapping.rst:1364
+msgid ""
+"Each subclass should declare its own persistent properties and subclasses. "
+"``<version>`` and ``<id>`` properties are assumed to be inherited from the "
+"root class. Each subclass in a hierarchy must define a unique "
+"``discriminator-value``. If none is specified, the fully qualified .NET "
+"class name is used."
+msgstr ""
+
+#: ../../basic-mapping.rst:1370 ../../basic-mapping.rst:1440
+#: ../../basic-mapping.rst:1489
+msgid "For information about inheritance mappings, see :ref:`inheritance`."
+msgstr ""
+
+#: ../../basic-mapping.rst:1373
+msgid "joined-subclass"
+msgstr ""
+
+#: ../../basic-mapping.rst:1375
+msgid ""
+"Alternatively, a subclass that is persisted to its own table (table-per-"
+"subclass mapping strategy) is declared using a ``<joined-subclass>`` "
+"element."
+msgstr ""
+
+#: ../../basic-mapping.rst:1395 ../../basic-mapping.rst:1477
+msgid "``name``: The fully qualified class name of the subclass."
+msgstr ""
+
+#: ../../basic-mapping.rst:1400
+msgid ""
+"``lazy`` (optional): Setting ``lazy=\"true\"`` is a shortcut equalivalent to"
+" specifying the name of the class itself as the ``proxy`` interface."
+msgstr ""
+
+#: ../../basic-mapping.rst:1404
+msgid ""
+"No discriminator column is required for this mapping strategy. Each subclass"
+" must, however, declare a table column holding the object identifier using "
+"the ``<key>`` element. The mapping at the start of the chapter would be re-"
+"written as:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1443
+msgid "union-subclass"
+msgstr ""
+
+#: ../../basic-mapping.rst:1445
+msgid ""
+"A third option is to map only the concrete classes of an inheritance "
+"hierarchy to tables, (the table-per-concrete-class strategy) where each "
+"table defines all persistent state of the class, including inherited state. "
+"In NHibernate, it is not absolutely necessary to explicitly map such "
+"inheritance hierarchies. You can simply map each class with a separate "
+"``<class>`` declaration. However, if you wish use polymorphic associations "
+"(e.g. an association to the superclass of your hierarchy), you need to use "
+"the ``<union-subclass>`` mapping."
+msgstr ""
+
+#: ../../basic-mapping.rst:1479
+msgid "``table``: The name of the subclass table."
+msgstr ""
+
+#: ../../basic-mapping.rst:1487
+msgid ""
+"No discriminator column or key column is required for this mapping strategy."
+msgstr ""
+
+#: ../../basic-mapping.rst:1492
+msgid "join"
+msgstr ""
+
+#: ../../basic-mapping.rst:1494
+msgid ""
+"Using the ``<join>`` element, it is possible to map properties of one class "
+"to several tables, when there's a 1-to-1 relationship between the tables."
+msgstr ""
+
+#: ../../basic-mapping.rst:1512
+msgid "``table``: The name of the joined table."
+msgstr ""
+
+#: ../../basic-mapping.rst:1517
+msgid ""
+"``fetch`` (optional - defaults to ``join``): If set to ``join``, the "
+"default, NHibernate will use an inner join to retrieve a ``<join>`` defined "
+"by a class or its superclasses and an outer join for a ``<join>`` defined by"
+" a subclass. If set to ``select`` then NHibernate will use a sequential "
+"select for a ``<join>`` defined on a subclass, which will be issued only if "
+"a row turns out to represent an instance of the subclass. Inner joins will "
+"still be used to retrieve a ``<join>`` defined by the class and its "
+"superclasses."
+msgstr ""
+
+#: ../../basic-mapping.rst:1527
+msgid ""
+"``inverse`` (optional - defaults to ``false``): If enabled, NHibernate will "
+"not try to insert or update the properties defined by this join."
+msgstr ""
+
+#: ../../basic-mapping.rst:1531
+msgid ""
+"``optional`` (optional - defaults to ``false``): If enabled, NHibernate will"
+" insert a row only if the properties defined by this join are non-null and "
+"will always use an outer join to retrieve the properties."
+msgstr ""
+
+#: ../../basic-mapping.rst:1535
+msgid ""
+"For example, the address information for a person can be mapped to a "
+"separate table (while preserving value type semantics for all properties):"
+msgstr ""
+
+#: ../../basic-mapping.rst:1553
+msgid ""
+"This feature is often only useful for legacy data models, we recommend fewer"
+" tables than classes and a fine-grained domain model. However, it is useful "
+"for switching between inheritance mapping strategies in a single hierarchy, "
+"as explained later."
+msgstr ""
+
+#: ../../basic-mapping.rst:1559
+msgid "map, set, list, bag"
+msgstr ""
+
+#: ../../basic-mapping.rst:1561
+msgid "Collections are discussed later."
+msgstr ""
+
+#: ../../basic-mapping.rst:1566
+msgid "import"
+msgstr ""
+
+#: ../../basic-mapping.rst:1568
+msgid ""
+"Suppose your application has two persistent classes with the same name, and "
+"you don't want to specify the fully qualified name in NHibernate queries. "
+"Classes may be \"imported\" explicitly, rather than relying upon ``auto-"
+"import=\"true\"``. You may even import classes and interfaces that are not "
+"explicitly mapped."
+msgstr ""
+
+#: ../../basic-mapping.rst:1584
+msgid ""
+"``class``: The fully qualified class name of any .NET class, including its "
+"assembly name."
+msgstr ""
+
+#: ../../basic-mapping.rst:1587
+msgid ""
+"``rename`` (optional - defaults to the unqualified class name): A name that "
+"may be used in the query language."
+msgstr ""
+
+#: ../../basic-mapping.rst:1591
+msgid "NHibernate Types"
+msgstr ""
+
+#: ../../basic-mapping.rst:1594
+msgid "Entities and values"
+msgstr ""
+
+#: ../../basic-mapping.rst:1596
+msgid ""
+"To understand the behaviour of various .NET language-level objects with "
+"respect to the persistence service, we need to classify them into two "
+"groups:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1599
+msgid ""
+"An *entity* exists independently of any other objects holding references to "
+"the entity. Contrast this with the usual .NET model where an unreferenced "
+"object is garbage collected. Entities must be explicitly saved and deleted "
+"(except that saves and deletions may be *cascaded* from a parent entity to "
+"its children). This is different from the ODMG model of object persistence "
+"by reachability - and corresponds more closely to how application objects "
+"are usually used in large systems. Entities support circular and shared "
+"references. They may also be versioned."
+msgstr ""
+
+#: ../../basic-mapping.rst:1608
+msgid ""
+"An entity's persistent state consists of references to other entities and "
+"instances of *value* types. Values are primitives, collections, components "
+"and certain immutable objects. Unlike entities, values (in particular "
+"collections and components) *are* persisted and deleted by reachability. "
+"Since value objects (and primitives) are persisted and deleted along with "
+"their containing entity they may not be independently versioned. Values have"
+" no independent identity, so they cannot be shared by two entities or "
+"collections."
+msgstr ""
+
+#: ../../basic-mapping.rst:1617
+msgid ""
+"All NHibernate types except collections support null semantics if the .NET "
+"type is nullable (i.e. not derived from ``System.ValueType``)."
+msgstr ""
+
+#: ../../basic-mapping.rst:1620
+msgid ""
+"Up until now, we've been using the term \"persistent class\" to refer to "
+"entities. We will continue to do that. Strictly speaking, however, not all "
+"user-defined classes with persistent state are entities. A *component* is a "
+"user defined class with value semantics."
+msgstr ""
+
+#: ../../basic-mapping.rst:1626
+msgid "Basic value types"
+msgstr ""
+
+#: ../../basic-mapping.rst:1628
+msgid ""
+"The *basic types* may be roughly categorized into three groups - "
+"``System.ValueType`` types, ``System.Object`` types, and ``System.Object`` "
+"types for large objects.  Just like the .NET Types, columns for "
+"System.ValueType types *can not* store ``null`` values and System.Object "
+"types *can* store ``null`` values."
+msgstr ""
+
+#: ../../basic-mapping.rst:1633
+msgid "System.ValueType Mapping Types"
+msgstr ""
+
+#: ../../basic-mapping.rst:1636 ../../basic-mapping.rst:1668
+#: ../../basic-mapping.rst:1680
+msgid "NHibernate Type"
+msgstr ""
+
+#: ../../basic-mapping.rst:1636 ../../basic-mapping.rst:1668
+#: ../../basic-mapping.rst:1680
+msgid ".NET Type"
+msgstr ""
+
+#: ../../basic-mapping.rst:1636 ../../basic-mapping.rst:1668
+#: ../../basic-mapping.rst:1680
+msgid "Database Type"
+msgstr ""
+
+#: ../../basic-mapping.rst:1636 ../../basic-mapping.rst:1668
+#: ../../basic-mapping.rst:1680
+msgid "Remarks"
+msgstr ""
+
+#: ../../basic-mapping.rst:1638
+msgid "``AnsiChar``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1638 ../../basic-mapping.rst:1641
+msgid "``System.Char``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1638
+msgid "``DbType.AnsiStringFixedLength - 1 char``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1639
+msgid "``Boolean``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1639 ../../basic-mapping.rst:1661
+#: ../../basic-mapping.rst:1662
+msgid "``System.Boolean``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1639
+msgid "``DbType.Boolean``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1639 ../../basic-mapping.rst:1640
+#: ../../basic-mapping.rst:1641 ../../basic-mapping.rst:1643
+#: ../../basic-mapping.rst:1648 ../../basic-mapping.rst:1649
+#: ../../basic-mapping.rst:1650 ../../basic-mapping.rst:1651
+#: ../../basic-mapping.rst:1652 ../../basic-mapping.rst:1653
+#: ../../basic-mapping.rst:1655 ../../basic-mapping.rst:1659
+#: ../../basic-mapping.rst:1671 ../../basic-mapping.rst:1672
+#: ../../basic-mapping.rst:1673 ../../basic-mapping.rst:1674
+msgid "Default when no ``type`` attribute specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1640
+msgid "``Byte``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1640
+msgid "``System.Byte``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1640
+msgid "``DbType.Byte``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1641
+msgid "``Char``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1641
+msgid "``DbType.StringFixedLength - 1 char``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1642
+msgid "``Date``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1642 ../../basic-mapping.rst:1643
+#: ../../basic-mapping.rst:1644 ../../basic-mapping.rst:1645
+#: ../../basic-mapping.rst:1646 ../../basic-mapping.rst:1647
+#: ../../basic-mapping.rst:1656 ../../basic-mapping.rst:1657
+#: ../../basic-mapping.rst:1660
+msgid "``System.DateTime``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1642
+msgid "``DbType.Date``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1642
+msgid "``type=\"Date\"`` must be specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1643
+msgid "``DateTime``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1643 ../../basic-mapping.rst:1646
+#: ../../basic-mapping.rst:1647
+msgid "``DbType.DateTime`` - ignores the milliseconds"
+msgstr ""
+
+#: ../../basic-mapping.rst:1644
+msgid "``DateTime2``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1644
+msgid "``DbType.DateTime2``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1644
+msgid "``type=\"DateTime2\"`` must be specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1645
+msgid "``DbTimestamp``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1645 ../../basic-mapping.rst:1660
+msgid "``DbType.DateTime`` - as specific as database supports."
+msgstr ""
+
+#: ../../basic-mapping.rst:1645
+msgid ""
+"``type=\"DbTimestamp\"`` must be specified.  When used as a ``version`` "
+"field, uses the database's current time rather than the client's current "
+"time."
+msgstr ""
+
+#: ../../basic-mapping.rst:1646
+msgid "``LocalDateTime``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1646
+msgid "Ensures the ``DateTimeKind`` is set to ``DateTimeKind.Local``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1647
+msgid "``UtcDateTime``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1647
+msgid "Ensures the ``DateTimeKind`` is set to ``DateTimeKind.Utc``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1648
+msgid "``Decimal``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1648
+msgid "``System.Decimal``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1648
+msgid "``DbType.Decimal``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1649
+msgid "``Double``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1649
+msgid "``System.Double``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1649
+msgid "``DbType.Double``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1650
+msgid "``Guid``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1650
+msgid "``System.Guid``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1650
+msgid "``DbType.Guid``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1651
+msgid "``Int16``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1651
+msgid "``System.Int16``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1651
+msgid "``DbType.Int16``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1652
+msgid "``Int32``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1652
+msgid "``System.Int32``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1652
+msgid "``DbType.Int32``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1653
+msgid "``Int64``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1653
+msgid "``System.Int64``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1653 ../../basic-mapping.rst:1656
+#: ../../basic-mapping.rst:1659
+msgid "``DbType.Int64``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1654
+msgid "``PersistentEnum``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1654
+msgid "A ``System.Enum``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1654
+msgid "The ``DbType`` for the underlying value."
+msgstr ""
+
+#: ../../basic-mapping.rst:1654
+msgid ""
+"Do not specify ``type=\"PersistentEnum\"`` in the mapping.  Instead  specify"
+" the Assembly Qualified Name of the Enum or let NHibernate use Reflection to"
+" \"guess\" the Type.   The UnderlyingType of the Enum is used to determine "
+"the correct ``DbType``."
+msgstr ""
+
+#: ../../basic-mapping.rst:1655
+msgid "``Single``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1655
+msgid "``System.Single``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1655
+msgid "``DbType.Single``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1656
+msgid "``Ticks``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1656
+msgid "``type=\"Ticks\"`` must be specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1657
+msgid "``Time``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1657 ../../basic-mapping.rst:1658
+msgid "``DbType.Time``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1657
+msgid "``type=\"Time\"`` must be specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1658
+msgid "``TimeAsTimeSpan``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1658 ../../basic-mapping.rst:1659
+msgid "``System.TimeSpan``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1658
+msgid "``type=\"TimeAsTimeSpan\"`` must be specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1659
+msgid "``TimeSpan``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1660
+msgid "``Timestamp``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1660
+msgid "``type=\"Timestamp\"`` must be specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1661
+msgid "``TrueFalse``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1661
+msgid "``DbType.AnsiStringFixedLength`` - 1 char either 'T' or 'F'"
+msgstr ""
+
+#: ../../basic-mapping.rst:1661
+msgid "``type=\"TrueFalse\"`` must be specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1662
+msgid "``YesNo``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1662
+msgid "``DbType.AnsiStringFixedLength`` - 1 char either 'Y' or 'N'"
+msgstr ""
+
+#: ../../basic-mapping.rst:1662
+msgid "``type=\"YesNo\"`` must be specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1665
+msgid "System.Object Mapping Types"
+msgstr ""
+
+#: ../../basic-mapping.rst:1670
+msgid "``AnsiString``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1670 ../../basic-mapping.rst:1674
+#: ../../basic-mapping.rst:1682
+msgid "``System.String``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1670
+msgid "``DbType.AnsiString``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1670
+msgid "``type=\"AnsiString\"`` must be specified."
+msgstr ""
+
+#: ../../basic-mapping.rst:1671
+msgid "``CultureInfo``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1671
+msgid "``System.Globalization.CultureInfo``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1671
+msgid "``DbType.String`` - 5 chars for culture"
+msgstr ""
+
+#: ../../basic-mapping.rst:1672
+msgid "``Binary``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1672 ../../basic-mapping.rst:1683
+msgid "``System.Byte[]``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1672 ../../basic-mapping.rst:1683
+#: ../../basic-mapping.rst:1684
+msgid "``DbType.Binary``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1673
+msgid "``Type``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1673
+msgid "``System.Type``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1673
+msgid "``DbType.String`` holding Assembly Qualified Name."
+msgstr ""
+
+#: ../../basic-mapping.rst:1674
+msgid "``String``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1674 ../../basic-mapping.rst:1682
+msgid "``DbType.String``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1677
+msgid "Large Object Mapping Types"
+msgstr ""
+
+#: ../../basic-mapping.rst:1682
+msgid "``StringClob``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1682
+msgid ""
+"``type=\"StringClob\"`` must be specified.  Entire field is read into "
+"memory."
+msgstr ""
+
+#: ../../basic-mapping.rst:1683
+msgid "``BinaryBlob``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1683
+msgid ""
+"``type=\"BinaryBlob\"`` must be specified.  Entire field is read into "
+"memory."
+msgstr ""
+
+#: ../../basic-mapping.rst:1684
+msgid "``Serializable``"
+msgstr ""
+
+#: ../../basic-mapping.rst:1684
+msgid "Any ``System.Object`` that is marked with SerializableAttribute."
+msgstr ""
+
+#: ../../basic-mapping.rst:1684
+msgid ""
+"``type=\"Serializable\"`` should be specified.  This is the fallback type if"
+" no NHibernate Type can be found for the Property."
+msgstr ""
+
+#: ../../basic-mapping.rst:1687
+msgid ""
+"NHibernate supports some additional type names for compatibility with Java's"
+" Hibernate (useful for those coming over from Hibernate or using some of the"
+" tools to generate ``hbm.xml`` files). A ``type=\"integer\"`` or "
+"``type=\"int\"`` will map to an ``Int32`` NHibernate type, "
+"``type=\"short\"`` to an ``Int16`` NHibernateType. To see all of the "
+"conversions you can view the source of static constructor of the class "
+"``NHibernate.Type.TypeFactory``."
+msgstr ""
+
+#: ../../basic-mapping.rst:1695
+msgid "Custom value types"
+msgstr ""
+
+#: ../../basic-mapping.rst:1697
+msgid ""
+"It is relatively easy for developers to create their own value types. For "
+"example, you might want to persist properties of type ``Int64`` to "
+"``VARCHAR`` columns. NHibernate does not provide a built-in type for this. "
+"But custom types are not limited to mapping a property (or collection "
+"element) to a single table column. So, for example, you might have a "
+"property ``Name { get; set; }`` of type ``String`` that is persisted to the "
+"columns ``FIRST_NAME``, ``INITIAL``, ``SURNAME``."
+msgstr ""
+
+#: ../../basic-mapping.rst:1706
+msgid ""
+"To implement a custom type, implement either "
+"``NHibernate.UserTypes.IUserType`` or "
+"``NHibernate.UserTypes.ICompositeUserType`` and declare properties using the"
+" fully qualified name of the type. Check out "
+"``NHibernate.DomainModel.DoubleStringType`` to see the kind of things that "
+"are possible."
+msgstr ""
+
+#: ../../basic-mapping.rst:1719
+msgid ""
+"Notice the use of ``<column>`` tags to map a property to multiple columns."
+msgstr ""
+
+#: ../../basic-mapping.rst:1722
+msgid ""
+"The ``ICompositeUserType``, ``IEnhancedUserType``, ``INullableUserType``, "
+"``IUserCollectionType``, and ``IUserVersionType`` interfaces provide support"
+" for more specialized uses."
+msgstr ""
+
+#: ../../basic-mapping.rst:1727
+msgid ""
+"You may even supply parameters to an ``IUserType`` in the mapping file. To "
+"do this, your ``IUserType`` must implement the "
+"``NHibernate.UserTypes.IParameterizedType`` interface. To supply parameters "
+"to your custom type, you can use the ``<type>`` element in your mapping "
+"files."
+msgstr ""
+
+#: ../../basic-mapping.rst:1741
+msgid ""
+"The ``IUserType`` can now retrieve the value for the parameter named "
+"``default`` from the ``IDictionary`` object passed to it."
+msgstr ""
+
+#: ../../basic-mapping.rst:1744
+msgid ""
+"If you use a certain ``UserType`` very often, it may be useful to define a "
+"shorter name for it. You can do this using the ``<typedef>`` element. "
+"Typedefs assign a name to a custom type, and may also contain a list of "
+"default parameter values if the type is parameterized."
+msgstr ""
+
+#: ../../basic-mapping.rst:1759
+msgid ""
+"It is also possible to override the parameters supplied in a typedef on a "
+"case-by-case basis by using type parameters on the property mapping."
+msgstr ""
+
+#: ../../basic-mapping.rst:1762
+msgid ""
+"Even though NHibernate's rich range of built-in types and support for "
+"components means you will very rarely *need* to use a custom type, it is "
+"nevertheless considered good form to use custom types for (non-entity) "
+"classes that occur frequently in your application. For example, a "
+"``MonetaryAmount`` class is a good candidate for an ``ICompositeUserType``, "
+"even though it could easily be mapped as a component. One motivation for "
+"this is abstraction. With a custom type, your mapping documents would be "
+"future-proofed against possible changes in your way of representing monetary"
+" values."
+msgstr ""
+
+#: ../../basic-mapping.rst:1772
+msgid "Any type mappings"
+msgstr ""
+
+#: ../../basic-mapping.rst:1774
+msgid ""
+"There is one further type of property mapping. The ``<any>`` mapping element"
+" defines a polymorphic association to classes from multiple tables. This "
+"type of mapping always requires more than one column. The first column holds"
+" the type of the associated entity. The remaining columns hold the "
+"identifier. It is impossible to specify a foreign key constraint for this "
+"kind of association, so this is most certainly not meant as the usual way of"
+" mapping (polymorphic) associations. You should use this only in very "
+"special cases (eg. audit logs, user session data, etc)."
+msgstr ""
+
+#: ../../basic-mapping.rst:1789
+msgid ""
+"The ``meta-type`` attribute lets the application specify a custom type that "
+"maps database column values to persistent classes which have identifier "
+"properties of the type specified by ``id-type``. If the meta-type returns "
+"instances of ``System.Type``, nothing else is required. On the other hand, "
+"if it is a basic type like ``String`` or ``Char``, you must specify the "
+"mapping from values to classes."
+msgstr ""
+
+#: ../../basic-mapping.rst:1824
+msgid "``name``: the property name."
+msgstr ""
+
+#: ../../basic-mapping.rst:1826
+msgid "``id-type``: the identifier type."
+msgstr ""
+
+#: ../../basic-mapping.rst:1828
+msgid ""
+"``meta-type`` (optional - defaults to ``Type``): a type that maps "
+"``System.Type`` to a single database column or, alternatively, a type that "
+"is allowed for a discriminator mapping."
+msgstr ""
+
+#: ../../basic-mapping.rst:1832
+msgid "``cascade`` (optional - defaults to ``none``): the cascade style."
+msgstr ""
+
+#: ../../basic-mapping.rst:1838
+msgid ""
+"``optimistic-lock`` (optional - defaults to ``true``): Specifies that "
+"updates to this property do or do not require acquisition of the optimistic "
+"lock. In other words, define if a version increment should occur if this "
+"property is dirty."
+msgstr ""
+
+#: ../../basic-mapping.rst:1844
+msgid "SQL quoted identifiers"
+msgstr ""
+
+#: ../../basic-mapping.rst:1846
+msgid ""
+"You may force NHibernate to quote an identifier in the generated SQL by "
+"enclosing the table or column name in backticks in the mapping document. "
+"NHibernate will use the correct quotation style for the SQL ``Dialect`` "
+"(usually double quotes, but brackets for SQL Server and backticks for "
+"MySQL)."
+msgstr ""
+
+#: ../../basic-mapping.rst:1860
+msgid "Modular mapping files"
+msgstr ""
+
+#: ../../basic-mapping.rst:1862
+msgid ""
+"It is possible to define ``subclass`` and ``joined-subclass`` mappings in "
+"seperate mapping documents, directly beneath ``hibernate-mapping``. This "
+"allows you to extend a class hierachy just by adding a new mapping file. You"
+" must specify an ``extends`` attribute in the subclass mapping, naming a "
+"previously mapped superclass. Use of this feature makes the ordering of the "
+"mapping documents important!"
+msgstr ""
+
+#: ../../basic-mapping.rst:1880
+msgid "Generated Properties"
+msgstr ""
+
+#: ../../basic-mapping.rst:1882
+msgid ""
+"Generated properties are properties which have their values generated by the"
+" database.  Typically, NHibernate applications needed to ``Refresh`` objects"
+" which contain any properties for which the database was generating values. "
+"Marking properties as generated, however, lets the application delegate this"
+" responsibility to NHibernate.  Essentially, whenever NHibernate issues an "
+"SQL INSERT or UPDATE for an entity which has defined generated properties, "
+"it immediately issues a select afterwards to retrieve the generated values."
+msgstr ""
+
+#: ../../basic-mapping.rst:1890
+msgid ""
+"Properties marked as generated must additionally be non-insertable and non-"
+"updateable. Only :ref:`mapping-declaration-version`, :ref:`mapping-"
+"declaration-timestamp`, and :ref:`mapping-declaration-property` can be "
+"marked as generated."
+msgstr ""
+
+#: ../../basic-mapping.rst:1896
+msgid ""
+"``never`` (the default) - means that the given property value is not "
+"generated within the database."
+msgstr ""
+
+#: ../../basic-mapping.rst:1899
+msgid ""
+"``insert`` - states that the given property value is generated on insert, "
+"but is not regenerated on subsequent updates.  Things like created-date "
+"would fall into this category.  Note that even though :ref:`mapping-"
+"declaration-version` and :ref:`mapping-declaration-timestamp` properties can"
+" be marked as generated, this option is not available there..."
+msgstr ""
+
+#: ../../basic-mapping.rst:1906
+msgid ""
+"``always`` - states that the property value is generated both on insert and "
+"on update."
+msgstr ""
+
+#: ../../basic-mapping.rst:1910
+msgid "Auxiliary Database Objects"
+msgstr ""
+
+#: ../../basic-mapping.rst:1912
+msgid ""
+"Allows CREATE and DROP of arbitrary database objects, in conjunction with "
+"NHibernate's schema evolution tools, to provide the ability to fully define "
+"a user schema within the NHibernate mapping files.  Although designed "
+"specifically for creating and dropping things like triggers or stored "
+"procedures, really any SQL command that can be run via a "
+"``IDbCommand.ExecuteNonQuery()`` method is valid here (ALTERs, INSERTS, "
+"etc).  There are essentially two modes for defining auxiliary database "
+"objects."
+msgstr ""
+
+#: ../../basic-mapping.rst:1920
+msgid ""
+"The first mode is to explicitly list the CREATE and DROP commands out in the"
+" mapping file:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1933
+msgid ""
+"The second mode is to supply a custom class which knows how to construct the"
+" CREATE and DROP commands.  This custom class must implement the "
+"``NHibernate.Mapping.IAuxiliaryDatabaseObject`` interface."
+msgstr ""
+
+#: ../../basic-mapping.rst:1946
+msgid "You may also specify parameters to be passed to the database object:"
+msgstr ""
+
+#: ../../basic-mapping.rst:1959
+msgid ""
+"NHibernate will call ``IAuxiliaryDatabaseObject.SetParameterValues`` passing"
+" it a dictionary of parameter names and values."
+msgstr ""
+
+#: ../../basic-mapping.rst:1962
+msgid ""
+"Additionally, these database objects can be optionally scoped such that they"
+" only apply when certain dialects are used."
+msgstr ""

@@ -1,0 +1,849 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../manipulating-data.rst:5
+msgid "Manipulating Persistent Data"
+msgstr ""
+
+#: ../../manipulating-data.rst:8
+msgid "Creating a persistent object"
+msgstr ""
+
+#: ../../manipulating-data.rst:10
+msgid ""
+"An object (entity instance) is either *transient* or *persistent* with "
+"respect to a particular ``ISession``. Newly instantiated objects are, of "
+"course, transient. The session offers services for saving (ie. persisting) "
+"transient instances:"
+msgstr ""
+
+#: ../../manipulating-data.rst:33
+msgid ""
+"The single-argument ``Save()`` generates and assigns a unique identifier to "
+"``fritz``. The two-argument form attempts to persist ``pk`` using the given "
+"identifier. We generally discourage the use of the two-argument form since "
+"it may be used to create primary keys with business meaning."
+msgstr ""
+
+#: ../../manipulating-data.rst:38
+msgid ""
+"Associated objects may be made persistent in any order you like unless you "
+"have a ``NOT NULL`` constraint upon a foreign key column. There is never a "
+"risk of violating foreign key constraints. However, you might violate a "
+"``NOT NULL`` constraint if you ``Save()`` the objects in the wrong order."
+msgstr ""
+
+#: ../../manipulating-data.rst:45
+msgid "Loading an object"
+msgstr ""
+
+#: ../../manipulating-data.rst:47
+msgid ""
+"The ``Load()`` methods of ``ISession`` give you a way to retrieve a "
+"persistent instance if you already know its identifier. One version takes a "
+"class object and will load the state into a newly instantiated object. The "
+"second version allows you to supply an instance into which the state will be"
+" loaded. The form which takes an instance is only useful in special "
+"circumstances (DIY instance pooling etc.)"
+msgstr ""
+
+#: ../../manipulating-data.rst:70
+msgid ""
+"Note that ``Load()`` will throw an unrecoverable exception if there is no "
+"matching database row. If the class is mapped with a proxy, ``Load()`` "
+"returns an object that is an uninitialized proxy and does not actually hit "
+"the database until you invoke a method of the object. This behaviour is very"
+" useful if you wish to create an association to an object without actually "
+"loading it from the database."
+msgstr ""
+
+#: ../../manipulating-data.rst:76
+msgid ""
+"If you are not certain that a matching row exists, you should use the "
+"``Get()`` method, which hits the database immediately and returns null if "
+"there is no matching row."
+msgstr ""
+
+#: ../../manipulating-data.rst:88
+msgid ""
+"You may also load an objects using an SQL ``SELECT ... FOR UPDATE``. See the"
+" next section for a discussion of NHibernate ``LockMode``."
+msgstr ""
+
+#: ../../manipulating-data.rst:95
+msgid ""
+"Note that any associated instances or contained collections are *not* "
+"selected ``FOR UPDATE``."
+msgstr ""
+
+#: ../../manipulating-data.rst:98
+msgid ""
+"It is possible to re-load an object and all its collections at any time, "
+"using the ``Refresh()`` method. This is useful when database triggers are "
+"used to initialize some of the properties of the object."
+msgstr ""
+
+#: ../../manipulating-data.rst:108
+msgid ""
+"An important question usually appears at this point: How much does "
+"NHibernate load from the database and how many SQL ``SELECT`` will it use? "
+"This depends on the *fetching strategy* and is explained in :ref"
+":`performance-fetching`."
+msgstr ""
+
+#: ../../manipulating-data.rst:114
+msgid "Querying"
+msgstr ""
+
+#: ../../manipulating-data.rst:116
+msgid ""
+"If you don't know the identifier(s) of the object(s) you are looking for, "
+"use the ``Find()`` methods of ``ISession``. NHibernate supports a simple but"
+" powerful object oriented query language."
+msgstr ""
+
+#: ../../manipulating-data.rst:154
+msgid ""
+"The second argument to ``Find()`` accepts an object or array of objects. The"
+" third argument accepts a NHibernate type or array of NHibernate types. "
+"These given types are used to bind the given objects to the ``?`` query "
+"placeholders (which map to input parameters of an ADO.NET ``IDbCommand``). "
+"Just as in ADO.NET, you should use this binding mechanism in preference to "
+"string manipulation."
+msgstr ""
+
+#: ../../manipulating-data.rst:162
+msgid ""
+"The ``NHibernateUtil`` class defines a number of static methods and "
+"constants, providing access to most of the built-in types, as instances of "
+"``NHibernate.Type.IType``."
+msgstr ""
+
+#: ../../manipulating-data.rst:166
+msgid ""
+"If you expect your query to return a very large number of objects, but you "
+"don't expect to use them all, you might get better performance from the "
+"``Enumerable()`` methods, which return a ``System.Collections.IEnumerable``."
+" The iterator will load objects on demand, using the identifiers returned by"
+" an initial SQL query (n+1 selects total)."
+msgstr ""
+
+#: ../../manipulating-data.rst:186
+msgid ""
+"The ``Enumerable()`` method also performs better if you expect that many of "
+"the objects are already loaded and cached by the session, or if the query "
+"results contain the same objects many times. (When no data is cached or "
+"repeated, ``Find()`` is almost always faster.) Heres an example of a query "
+"that should be called using ``Enumerable()``:"
+msgstr ""
+
+#: ../../manipulating-data.rst:203
+msgid ""
+"Calling the previous query using ``Find()`` would return a very large "
+"ADO.NET result set containing the same data many times."
+msgstr ""
+
+#: ../../manipulating-data.rst:206
+msgid ""
+"NHibernate queries sometimes return tuples of objects, in which case each "
+"tuple is returned as an array:"
+msgstr ""
+
+#: ../../manipulating-data.rst:222
+msgid "Scalar queries"
+msgstr ""
+
+#: ../../manipulating-data.rst:224
+msgid ""
+"Queries may specify a property of a class in the ``select`` clause. They may"
+" even call SQL aggregate functions. Properties or aggregates are considered "
+"\"scalar\" results."
+msgstr ""
+
+#: ../../manipulating-data.rst:255
+msgid "The IQuery interface"
+msgstr ""
+
+#: ../../manipulating-data.rst:257
+msgid ""
+"If you need to specify bounds upon your result set (the maximum number of "
+"rows you want to retrieve and / or the first row you want to retrieve) you "
+"should obtain an instance of ``NHibernate.IQuery``:"
+msgstr ""
+
+#: ../../manipulating-data.rst:268
+msgid ""
+"You may even define a named query in the mapping document. (Remember to use "
+"a ``CDATA`` section if your query contains characters that could be "
+"interpreted as markup.)"
+msgstr ""
+
+#: ../../manipulating-data.rst:287
+msgid ""
+"The query interface supports the use of named parameters. Named parameters "
+"are identifiers of the form ``:name`` in the query string. There are methods"
+" on ``IQuery`` for binding values to named or positional parameters. "
+"NHibernate numbers parameters from zero. The advantages of named parameters "
+"are:"
+msgstr ""
+
+#: ../../manipulating-data.rst:293
+msgid ""
+"named parameters are insensitive to the order they occur in the query string"
+msgstr ""
+
+#: ../../manipulating-data.rst:296
+msgid "they may occur multiple times in the same query"
+msgstr ""
+
+#: ../../manipulating-data.rst:298
+msgid "they are self-documenting"
+msgstr ""
+
+#: ../../manipulating-data.rst:325
+msgid "Filtering collections"
+msgstr ""
+
+#: ../../manipulating-data.rst:327
+msgid ""
+"A collection *filter* is a special type of query that may be applied to a "
+"persistent collection or array. The query string may refer to ``this``, "
+"meaning the current collection element."
+msgstr ""
+
+#: ../../manipulating-data.rst:337
+msgid "The returned collection is considered a bag."
+msgstr ""
+
+#: ../../manipulating-data.rst:339
+msgid ""
+"Observe that filters do not require a ``from`` clause (though they may have "
+"one if required). Filters are not limited to returning the collection "
+"elements themselves."
+msgstr ""
+
+#: ../../manipulating-data.rst:349
+msgid "Criteria queries"
+msgstr ""
+
+#: ../../manipulating-data.rst:351
+msgid ""
+"HQL is extremely powerful but some people prefer to build queries "
+"dynamically, using an object oriented API, rather than embedding strings in "
+"their .NET code. For these people, NHibernate provides an intuitive "
+"``ICriteria`` query API."
+msgstr ""
+
+#: ../../manipulating-data.rst:362
+msgid ""
+"If you are uncomfortable with SQL-like syntax, this is perhaps the easiest "
+"way to get started with NHibernate. This API is also more extensible than "
+"HQL. Applications might provide their own implementations of the "
+"``ICriterion`` interface."
+msgstr ""
+
+#: ../../manipulating-data.rst:367
+msgid "Queries in native SQL"
+msgstr ""
+
+#: ../../manipulating-data.rst:369
+msgid ""
+"You may express a query in SQL, using ``CreateSQLQuery()``. You must enclose"
+" SQL aliases in braces."
+msgstr ""
+
+#: ../../manipulating-data.rst:390
+msgid ""
+"SQL queries may contain named and positional parameters, just like "
+"NHibernate queries."
+msgstr ""
+
+#: ../../manipulating-data.rst:393
+msgid "Updating objects"
+msgstr ""
+
+#: ../../manipulating-data.rst:396
+msgid "Updating in the same ISession"
+msgstr ""
+
+#: ../../manipulating-data.rst:398
+msgid ""
+"*Transactional persistent instances* (ie. objects loaded, saved, created or "
+"queried by the ``ISession``) may be manipulated by the application and any "
+"changes to persistent state will be persisted when the ``ISession`` is "
+"*flushed* (discussed later in this chapter). So the most straightforward way"
+" to update the state of an object is to ``Load()`` it, and then manipulate "
+"it directly, while the ``ISession`` is open:"
+msgstr ""
+
+#: ../../manipulating-data.rst:411
+msgid ""
+"Sometimes this programming model is inefficient since it would require both "
+"an SQL ``SELECT`` (to load an object) and an SQL ``UPDATE`` (to persist its "
+"updated state) in the same session. Therefore NHibernate offers an alternate"
+" approach."
+msgstr ""
+
+#: ../../manipulating-data.rst:417
+msgid "Updating detached objects"
+msgstr ""
+
+#: ../../manipulating-data.rst:419
+msgid ""
+"Many applications need to retrieve an object in one transaction, send it to "
+"the UI layer for manipulation, then save the changes in a new transaction. "
+"(Applications  that use this kind of approach in a high-concurrency "
+"environment usually use versioned  data to ensure transaction isolation.) "
+"This approach requires a slightly different  programming model to the one "
+"described in the last section. NHibernate supports this model by providing "
+"the method ``Session.Update()``."
+msgstr ""
+
+#: ../../manipulating-data.rst:441
+msgid ""
+"If the ``Cat`` with identifier ``catId`` had already been loaded  by "
+"``secondSession`` when the application tried to update it, an exception "
+"would have been thrown."
+msgstr ""
+
+#: ../../manipulating-data.rst:445
+msgid ""
+"The application should individually ``Update()`` transient instances "
+"reachable from the given transient instance if and *only* if it wants their "
+"state also updated. (Except for lifecycle objects, discussed later.)"
+msgstr ""
+
+#: ../../manipulating-data.rst:449
+msgid ""
+"NHibernate users have requested a general purpose method that either saves a"
+" transient instance by generating a new identifier or update the persistent "
+"state associated with its current identifier. The ``SaveOrUpdate()`` method "
+"now implements this functionality."
+msgstr ""
+
+#: ../../manipulating-data.rst:454
+msgid ""
+"NHibernate distinguishes \"new\" (unsaved) instances from \"existing\" "
+"(saved or loaded in a previous session) instances by the value of their "
+"identifier (or version, or timestamp) property. The ``unsaved-value`` "
+"attribute of the ``<id>`` (or ``<version>``, or ``<timestamp>``) mapping "
+"specifies which values should be interpreted as representing a \"new\" "
+"instance."
+msgstr ""
+
+#: ../../manipulating-data.rst:467
+msgid "The allowed values of ``unsaved-value`` are:"
+msgstr ""
+
+#: ../../manipulating-data.rst:469
+msgid "``any`` - always save"
+msgstr ""
+
+#: ../../manipulating-data.rst:471
+msgid "``none`` - always update"
+msgstr ""
+
+#: ../../manipulating-data.rst:473
+msgid "``null`` - save when identifier is null"
+msgstr ""
+
+#: ../../manipulating-data.rst:475
+msgid ""
+"valid identifier value - save when identifier is null or the given value"
+msgstr ""
+
+#: ../../manipulating-data.rst:477
+msgid ""
+"``undefined`` - if set for ``version`` or ``timestamp``, then identifier "
+"check is used"
+msgstr ""
+
+#: ../../manipulating-data.rst:480
+msgid ""
+"If ``unsaved-value`` is not specified for a class, NHibernate will attempt "
+"to guess it by creating an instance of the class using the no-argument "
+"constructor and reading the property value from the instance."
+msgstr ""
+
+#: ../../manipulating-data.rst:497
+msgid ""
+"The usage and semantics of ``SaveOrUpdate()`` seems to be confusing for new "
+"users. Firstly, so long as you are not trying to use instances from one "
+"session in another new session, you should not need to use ``Update()`` or "
+"``SaveOrUpdate()``. Some whole applications will never use either of these "
+"methods."
+msgstr ""
+
+#: ../../manipulating-data.rst:503
+msgid ""
+"Usually ``Update()`` or ``SaveOrUpdate()`` are used in the following "
+"scenario:"
+msgstr ""
+
+#: ../../manipulating-data.rst:506
+msgid "the application loads an object in the first session"
+msgstr ""
+
+#: ../../manipulating-data.rst:508
+msgid "the object is passed up to the UI tier"
+msgstr ""
+
+#: ../../manipulating-data.rst:510
+msgid "some modifications are made to the object"
+msgstr ""
+
+#: ../../manipulating-data.rst:512
+msgid "the object is passed back down to the business logic tier"
+msgstr ""
+
+#: ../../manipulating-data.rst:514
+msgid ""
+"the application persists these modifications by calling ``Update()`` in a "
+"second session"
+msgstr ""
+
+#: ../../manipulating-data.rst:517
+msgid "``SaveOrUpdate()`` does the following:"
+msgstr ""
+
+#: ../../manipulating-data.rst:519
+msgid "if the object is already persistent in this session, do nothing"
+msgstr ""
+
+#: ../../manipulating-data.rst:521
+msgid "if the object has no identifier property, ``Save()`` it"
+msgstr ""
+
+#: ../../manipulating-data.rst:523
+msgid ""
+"if the object's identifier matches the criteria specified by ``unsaved-"
+"value``, ``Save()`` it"
+msgstr ""
+
+#: ../../manipulating-data.rst:526
+msgid ""
+"if the object is versioned (``version`` or ``timestamp``), then the version "
+"will take precedence to identifier check, unless the versions ``unsaved-"
+"value=\"undefined\"`` (default value)"
+msgstr ""
+
+#: ../../manipulating-data.rst:531
+msgid ""
+"if another object associated with the session has the same identifier, throw"
+" an exception"
+msgstr ""
+
+#: ../../manipulating-data.rst:534
+msgid ""
+"The last case can be avoided by using ``Merge(Object o)``. This method "
+"copies the state of the given object onto the persistent object with the "
+"same identifier. If there is no persistent instance currently associated "
+"with the session, it will be loaded. The method returns the persistent "
+"instance. If the given instance is unsaved or does not exist in the "
+"database, NHibernate will save it and return it as a newly persistent "
+"instance. Otherwise, the given instance  does not become associated with the"
+" session. In most applications with detached objects, you need both methods,"
+" ``SaveOrUpdate()`` and ``Merge()``."
+msgstr ""
+
+#: ../../manipulating-data.rst:544
+msgid "Reattaching detached objects"
+msgstr ""
+
+#: ../../manipulating-data.rst:546
+msgid ""
+"The ``Lock()`` method allows the application to reassociate an unmodified "
+"object with a new session."
+msgstr ""
+
+#: ../../manipulating-data.rst:559
+msgid "Deleting persistent objects"
+msgstr ""
+
+#: ../../manipulating-data.rst:561
+msgid ""
+"``ISession.Delete()`` will remove an object's state from the database. Of "
+"course, your application might still hold a reference to it. So it's best to"
+" think of ``Delete()`` as making a persistent instance transient."
+msgstr ""
+
+#: ../../manipulating-data.rst:569
+msgid ""
+"You may also delete many objects at once by passing a NHibernate query "
+"string to ``Delete()``."
+msgstr ""
+
+#: ../../manipulating-data.rst:572
+msgid ""
+"You may now delete objects in any order you like, without risk of foreign "
+"key constraint violations. Of course, it is still possible to violate a "
+"``NOT NULL`` constraint on a foreign key column by deleting objects in the "
+"wrong order."
+msgstr ""
+
+#: ../../manipulating-data.rst:578
+msgid "Flush"
+msgstr ""
+
+#: ../../manipulating-data.rst:580
+msgid ""
+"From time to time the ``ISession`` will execute the SQL statements needed to"
+" synchronize the ADO.NET connection's state with the state of objects held "
+"in memory. This process, *flush*, occurs by default at the following points"
+msgstr ""
+
+#: ../../manipulating-data.rst:585
+msgid "from some invocations of ``Find()`` or ``Enumerable()``"
+msgstr ""
+
+#: ../../manipulating-data.rst:587
+msgid "from ``NHibernate.ITransaction.Commit()``"
+msgstr ""
+
+#: ../../manipulating-data.rst:589
+msgid "from ``ISession.Flush()``"
+msgstr ""
+
+#: ../../manipulating-data.rst:591
+msgid "The SQL statements are issued in the following order"
+msgstr ""
+
+#: ../../manipulating-data.rst:593
+msgid ""
+"all entity insertions, in the same order the corresponding objects were "
+"saved using ``ISession.Save()``"
+msgstr ""
+
+#: ../../manipulating-data.rst:596
+msgid "all entity updates"
+msgstr ""
+
+#: ../../manipulating-data.rst:598
+msgid "all collection deletions"
+msgstr ""
+
+#: ../../manipulating-data.rst:600
+msgid "all collection element deletions, updates and insertions"
+msgstr ""
+
+#: ../../manipulating-data.rst:602
+msgid "all collection insertions"
+msgstr ""
+
+#: ../../manipulating-data.rst:604
+msgid ""
+"all entity deletions, in the same order the corresponding objects were "
+"deleted using ``ISession.Delete()``"
+msgstr ""
+
+#: ../../manipulating-data.rst:607
+msgid ""
+"(An exception is that objects using ``native`` ID generation are inserted "
+"when they are saved.)"
+msgstr ""
+
+#: ../../manipulating-data.rst:610
+msgid ""
+"Except when you explicity ``Flush()``, there are absolutely no guarantees "
+"about *when* the ``Session`` executes the ADO.NET calls, only the *order* in"
+" which they are executed. However, NHibernate does guarantee that the "
+"``ISession.Find(..)`` methods will never return stale data; nor will they "
+"return the wrong data."
+msgstr ""
+
+#: ../../manipulating-data.rst:616
+msgid ""
+"It is possible to change the default behavior so that flush occurs less "
+"frequently. The ``FlushMode`` class defines three different modes: only "
+"flush at commit time (and only when the NHibernate ``ITransaction`` API is "
+"used), flush automatically using the explained routine (will only work "
+"inside an explicit NHibernate ``ITransaction``), or never flush unless "
+"``Flush()`` is called explicitly. The last mode is useful for long running "
+"units of work, where an ISession is kept open and disconnected for a long "
+"time (see :ref:`transactions-optimistic`)."
+msgstr ""
+
+#: ../../manipulating-data.rst:639
+msgid "Ending a Session"
+msgstr ""
+
+#: ../../manipulating-data.rst:641
+msgid "Ending a session involves four distinct phases:"
+msgstr ""
+
+#: ../../manipulating-data.rst:643
+msgid "flush the session"
+msgstr ""
+
+#: ../../manipulating-data.rst:645
+msgid "commit the transaction"
+msgstr ""
+
+#: ../../manipulating-data.rst:647
+msgid "close the session"
+msgstr ""
+
+#: ../../manipulating-data.rst:649
+msgid "handle exceptions"
+msgstr ""
+
+#: ../../manipulating-data.rst:652
+msgid "Flushing the Session"
+msgstr ""
+
+#: ../../manipulating-data.rst:654
+msgid ""
+"If you happen to be using the ``ITransaction`` API, you don't need to worry "
+"about this step. It will be performed implicitly when the transaction is "
+"committed. Otherwise you should call ``ISession.Flush()`` to ensure that all"
+" changes are synchronized with the database."
+msgstr ""
+
+#: ../../manipulating-data.rst:661
+msgid "Committing the database transaction"
+msgstr ""
+
+#: ../../manipulating-data.rst:663
+msgid "If you are using the NHibernate ``ITransaction`` API, this looks like:"
+msgstr ""
+
+#: ../../manipulating-data.rst:669
+msgid ""
+"If you are managing ADO.NET transactions yourself you should manually "
+"``Commit()`` the ADO.NET transaction."
+msgstr ""
+
+#: ../../manipulating-data.rst:677
+msgid "If you decide *not* to commit your changes:"
+msgstr ""
+
+#: ../../manipulating-data.rst:683
+msgid "or:"
+msgstr ""
+
+#: ../../manipulating-data.rst:689
+msgid ""
+"If you rollback the transaction you should immediately close and discard the"
+" current session to ensure that NHibernate's internal state is consistent."
+msgstr ""
+
+#: ../../manipulating-data.rst:693
+msgid "Closing the ISession"
+msgstr ""
+
+#: ../../manipulating-data.rst:695
+msgid ""
+"A call to ``ISession.Close()`` marks the end of a session. The main "
+"implication of ``Close()`` is that the ADO.NET connection will be "
+"relinquished by the session."
+msgstr ""
+
+#: ../../manipulating-data.rst:709
+msgid ""
+"If you provided your own connection, ``Close()`` returns a reference to it, "
+"so you can manually close it or return it to the pool. Otherwise ``Close()``"
+" returns it to the pool."
+msgstr ""
+
+#: ../../manipulating-data.rst:713
+msgid "Exception handling"
+msgstr ""
+
+#: ../../manipulating-data.rst:715
+msgid ""
+"NHibernate use might lead to exceptions, usually ``HibernateException``. "
+"This exception can have a nested inner exception (the root cause), use the "
+"``InnerException`` property to access it."
+msgstr ""
+
+#: ../../manipulating-data.rst:718
+msgid ""
+"If the ``ISession`` throws an exception you should immediately rollback the "
+"transaction, call ``ISession.Close()`` and discard the ``ISession`` "
+"instance. Certain methods of ``ISession`` will *not* leave the session in a "
+"consistent state."
+msgstr ""
+
+#: ../../manipulating-data.rst:724
+msgid ""
+"For exceptions thrown by the data provider while interacting with the "
+"database, NHibernate will wrap the error in an instance of ``ADOException``."
+" The underlying exception is accessible by calling "
+"``ADOException.InnerException``. NHibernate converts the DbException into an"
+" appropriate ADOException subclass using the ISQLExceptionConverter attached"
+" to the SessionFactory. By default, the ISQLExceptionConverter is defined by"
+" the configured dialect; however, it is also possible to plug in a custom "
+"implementation (see the api-docs for the ISQLExceptionConverter class for "
+"details)."
+msgstr ""
+
+#: ../../manipulating-data.rst:731
+msgid ""
+"The following exception handling idiom shows the typical case in NHibernate "
+"applications:"
+msgstr ""
+
+#: ../../manipulating-data.rst:743
+msgid "Or, when manually managing ADO.NET transactions:"
+msgstr ""
+
+#: ../../manipulating-data.rst:766
+msgid "Lifecyles and object graphs"
+msgstr ""
+
+#: ../../manipulating-data.rst:768
+msgid ""
+"To save or update all objects in a graph of associated objects, you must "
+"either"
+msgstr ""
+
+#: ../../manipulating-data.rst:770
+msgid ""
+"``Save()``, ``SaveOrUpdate()`` or ``Update()`` each individual object OR"
+msgstr ""
+
+#: ../../manipulating-data.rst:773
+msgid ""
+"map associated objects using ``cascade=\"all\"`` or ``cascade=\"save-"
+"update\"``."
+msgstr ""
+
+#: ../../manipulating-data.rst:776
+msgid "Likewise, to delete all objects in a graph, either"
+msgstr ""
+
+#: ../../manipulating-data.rst:778
+msgid "``Delete()`` each individual object OR"
+msgstr ""
+
+#: ../../manipulating-data.rst:780
+msgid ""
+"map associated objects using ``cascade=\"all\"``, ``cascade=\"all-delete-"
+"orphan\"`` or ``cascade=\"delete\"``."
+msgstr ""
+
+#: ../../manipulating-data.rst:784
+msgid "Recommendation:"
+msgstr ""
+
+#: ../../manipulating-data.rst:786
+msgid ""
+"If the child object's lifespan is bounded by the lifespan of the of the "
+"parent object make it a *lifecycle object* by specifying "
+"``cascade=\"all\"``."
+msgstr ""
+
+#: ../../manipulating-data.rst:790
+msgid ""
+"Otherwise, ``Save()`` and ``Delete()`` it explicitly from application code. "
+"If you really want to save yourself some extra typing, use ``cascade=\"save-"
+"update\"`` and explicit ``Delete()``."
+msgstr ""
+
+#: ../../manipulating-data.rst:795
+msgid ""
+"Mapping an association (many-to-one, or collection) with ``cascade=\"all\"``"
+" marks the association as a *parent/child* style relationship where "
+"save/update/deletion of the parent results in save/update/deletion of the "
+"child(ren). Futhermore, a mere reference to a child from a persistent parent"
+" will result in save / update of the child. The metaphor is incomplete, "
+"however. A child which becomes unreferenced by its parent is *not* "
+"automatically deleted, except in the case of a ``<one-to-many>`` association"
+" mapped with ``cascade=\"all-delete-orphan\"``. The precise semantics of "
+"cascading operations are as follows:"
+msgstr ""
+
+#: ../../manipulating-data.rst:805
+msgid "If a parent is saved, all children are passed to ``SaveOrUpdate()``"
+msgstr ""
+
+#: ../../manipulating-data.rst:807
+msgid ""
+"If a parent is passed to ``Update()`` or ``SaveOrUpdate()``, all children "
+"are passed to ``SaveOrUpdate()``"
+msgstr ""
+
+#: ../../manipulating-data.rst:810
+msgid ""
+"If a transient child becomes referenced by a persistent parent, it is passed"
+" to ``SaveOrUpdate()``"
+msgstr ""
+
+#: ../../manipulating-data.rst:813
+msgid "If a parent is deleted, all children are passed to ``Delete()``"
+msgstr ""
+
+#: ../../manipulating-data.rst:815
+msgid ""
+"If a transient child is dereferenced by a persistent parent, *nothing "
+"special happens* (the application should explicitly delete the child if "
+"necessary) unless ``cascade=\"all-delete-orphan\"``, in which case the "
+"\"orphaned\" child is deleted."
+msgstr ""
+
+#: ../../manipulating-data.rst:820
+msgid ""
+"NHibernate does not fully implement \"persistence by reachability\", which "
+"would imply (inefficient) persistent garbage collection. However, due to "
+"popular demand, NHibernate does support the notion of entities becoming "
+"persistent when referenced by another persistent object. Associations marked"
+" ``cascade=\"save-update\"`` behave in this way. If you wish to use this "
+"approach throughout your application, it's easier to specify the ``default-"
+"cascade`` attribute of the ``<hibernate-mapping>`` element."
+msgstr ""
+
+#: ../../manipulating-data.rst:830
+msgid "Interceptors"
+msgstr ""
+
+#: ../../manipulating-data.rst:832
+msgid ""
+"The ``IInterceptor`` interface provides callbacks from the session to the "
+"application allowing the application to inspect and / or manipulate "
+"properties of a persistent object before it is saved, updated, deleted or "
+"loaded. One possible use for this is to track auditing information. For "
+"example, the following ``IInterceptor`` automatically sets the  "
+"``CreateTimestamp`` when an ``IAuditable`` is created and updates the "
+"``LastUpdateTimestamp`` property when an ``IAuditable`` is updated."
+msgstr ""
+
+#: ../../manipulating-data.rst:931
+msgid "The interceptor would be specified when a session is created."
+msgstr ""
+
+#: ../../manipulating-data.rst:937
+msgid ""
+"You may also set an interceptor on a global level, using the "
+"``Configuration``:"
+msgstr ""
+
+#: ../../manipulating-data.rst:944
+msgid "Metadata API"
+msgstr ""
+
+#: ../../manipulating-data.rst:946
+msgid ""
+"NHibernate requires a very rich meta-level model of all entity and value "
+"types. From time to time, this model is very useful to the application "
+"itself. For example, the application might use NHibernate's metadata to "
+"implement a \"smart\" deep-copy algorithm that understands which objects "
+"should be copied (eg. mutable value types) and which should not (eg. "
+"immutable value types and, possibly, associated entities)."
+msgstr ""
+
+#: ../../manipulating-data.rst:952
+msgid ""
+"NHibernate exposes metadata via the ``IClassMetadata`` and "
+"``ICollectionMetadata`` interfaces and the ``IType`` hierarchy. Instances of"
+" the metadata interfaces may be obtained from the ``ISessionFactory``."
+msgstr ""

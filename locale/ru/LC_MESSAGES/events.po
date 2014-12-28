@@ -1,0 +1,141 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../events.rst:5
+msgid "Interceptors and events"
+msgstr ""
+
+#: ../../events.rst:7
+msgid ""
+"It is often useful for the application to react to certain events that occur"
+" inside NHibernate. This allows implementation of certain kinds of generic "
+"functionality, and extension of NHibernate functionality."
+msgstr ""
+
+#: ../../events.rst:12
+msgid "Interceptors"
+msgstr ""
+
+#: ../../events.rst:14
+msgid ""
+"The ``IInterceptor`` interface provides callbacks from the session to the "
+"application allowing the application to inspect and/or manipulate properties"
+" of a persistent object before it is saved, updated, deleted or loaded. One "
+"possible use for this is to track auditing information. For example, the "
+"following ``IInterceptor`` automatically sets the  ``createTimestamp`` when "
+"an ``IAuditable`` is created and updates the ``lastUpdateTimestamp`` "
+"property when an ``IAuditable`` is updated."
+msgstr ""
+
+#: ../../events.rst:23
+msgid ""
+"You may either implement ``IInterceptor`` directly or (better) extend "
+"``EmptyInterceptor``."
+msgstr ""
+
+#: ../../events.rst:109
+msgid ""
+"Interceptors come in two flavors: ``ISession``-scoped and "
+"``ISessionFactory``-scoped."
+msgstr ""
+
+#: ../../events.rst:112
+msgid ""
+"An ``ISession``-scoped interceptor is specified when a session is opened "
+"using one of the overloaded ISessionFactory.OpenSession() methods accepting "
+"an ``IInterceptor``."
+msgstr ""
+
+#: ../../events.rst:120
+msgid ""
+"An ``ISessionFactory``-scoped interceptor is registered with the "
+"``Configuration`` object prior to building the ``ISessionFactory``.  In this"
+" case, the supplied interceptor will be applied to all sessions opened from "
+"that ``ISessionFactory``; this is true unless a session is opened explicitly"
+" specifying the interceptor to use.  ``ISessionFactory``-scoped interceptors"
+" must be thread safe, taking care to not store session-specific state since "
+"multiple sessions will use this interceptor (potentially) concurrently."
+msgstr ""
+
+#: ../../events.rst:132
+msgid "Event system"
+msgstr ""
+
+#: ../../events.rst:134
+msgid ""
+"If you have to react to particular events in your persistence layer, you may"
+" also use the NHibernate2 *event* architecture. The event system can be used"
+" in addition or as a replacement for interceptors."
+msgstr ""
+
+#: ../../events.rst:138
+msgid ""
+"Essentially all of the methods of the ``ISession`` interface correlate to an"
+" event. You have a ``LoadEvent``, a ``FlushEvent``, etc (consult the XML "
+"configuration-file XSD or the ``NHibernate.Event`` namespace for the full "
+"list of defined event types). When a request is made of one of these "
+"methods, the ``ISession`` generates an appropriate event and passes it to "
+"the configured event listeners for that type. Out-of-the-box, these "
+"listeners implement the same processing in which those methods always "
+"resulted. However, you are free to implement a customization of one of the "
+"listener interfaces (i.e., the ``LoadEvent`` is processed by the registered "
+"implemenation of the ``ILoadEventListener`` interface), in which case their "
+"implementation would be responsible for processing any ``Load()`` requests "
+"made of the ``ISession``."
+msgstr ""
+
+#: ../../events.rst:151
+msgid ""
+"The listeners should be considered effectively singletons; meaning, they are"
+" shared between requests, and thus should not save any state as instance "
+"variables."
+msgstr ""
+
+#: ../../events.rst:154
+msgid ""
+"A custom listener should implement the appropriate interface for the event "
+"it wants to process and/or extend one of the convenience base classes (or "
+"even the default event listeners used by NHibernate out-of-the-box as their "
+"methods are declared virtual for this purpose). Custom listeners can either "
+"be registered programmatically through the ``Configuration`` object, or "
+"specified in the NHibernate configuration XML. Here's an example of a custom"
+" load event listener:"
+msgstr ""
+
+#: ../../events.rst:174
+msgid ""
+"You also need a configuration entry telling NHibernate to use the listener "
+"in addition to the default listener:"
+msgstr ""
+
+#: ../../events.rst:189
+msgid "Instead, you may register it programmatically:"
+msgstr ""
+
+#: ../../events.rst:197
+msgid ""
+"Listeners registered declaratively cannot share instances. If the same class"
+" name is used in multiple ``<listener/>`` elements, each reference will "
+"result in a separate instance of that class. If you need the capability to "
+"share listener instances between listener types you must use the "
+"programmatic registration approach."
+msgstr ""
+
+#: ../../events.rst:203
+msgid ""
+"Why implement an interface and define the specific type during "
+"configuration? Well, a listener implementation could implement multiple "
+"event listener interfaces. Having the type additionally defined during "
+"registration makes it easier to turn custom listeners on or off during "
+"configuration."
+msgstr ""

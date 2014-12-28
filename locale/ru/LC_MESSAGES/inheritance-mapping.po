@@ -1,0 +1,352 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../inheritance-mapping.rst:5
+msgid "Inheritance Mapping"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:8
+msgid "The Three Strategies"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:10
+msgid "NHibernate supports the three basic inheritance mapping strategies."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:12
+msgid "table per class hierarchy"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:14 ../../inheritance-mapping.rst:359
+msgid "table per subclass"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:16
+msgid "table per concrete class"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:18
+msgid ""
+"In addition, NHibernate supports a fourth, slightly different kind of "
+"polymorphism:"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:21
+msgid "implicit polymorphism"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:23
+msgid ""
+"It is possible to use different mapping strategies for different branches of"
+" the same inheritance hierarchy, and then make use of implicit polymorphism "
+"to achieve polymorphism across the whole hierarchy. However, NHibernate does"
+" not support mixing ``<subclass>``, and ``<joined-subclass>`` and ``<union-"
+"subclass>`` mappings under the same root ``<class>`` element. It is possible"
+" to mix together the table per hierarchy and table per subclass strategies, "
+"under the the same ``<class>`` element, by combining the ``<subclass>`` and "
+"``<join>`` elements (see below)."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:35
+msgid ""
+"It is possible to define ``subclass``, ``union-subclass``, and ``joined-"
+"subclass`` mappings in separate mapping documents, directly beneath "
+"``hibernate-mapping``. This allows you to extend a class hierachy just by "
+"adding a new mapping file. You must specify an ``extends`` attribute in the "
+"subclass mapping, naming a previously mapped superclass."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:50
+msgid "Table per class hierarchy"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:52
+msgid ""
+"Suppose we have an interface ``IPayment``, with implementors "
+"``CreditCardPayment``, ``CashPayment``, ``ChequePayment``. The table-per-"
+"hierarchy mapping would look like:"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:77
+msgid ""
+"Exactly one table is required. There is one big limitation of this mapping "
+"strategy: columns declared by the subclasses may not have ``NOT NULL`` "
+"constraints."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:82
+msgid "Table per subclass"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:84
+msgid "A table-per-subclass mapping would look like:"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:108
+msgid ""
+"Four tables are required. The three subclass tables have primary key "
+"associations to the superclass table (so the relational model is actually a "
+"one-to-one association)."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:113
+msgid "Table per subclass, using a discriminator"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:115
+msgid ""
+"Note that NHibernate's implementation of table-per-subclass requires no "
+"discriminator column. Other object/relational mappers use a different "
+"implementation of table-per-subclass which requires a type discriminator "
+"column in the superclass table. The approach taken by NHibernate is much "
+"more difficult to implement but arguably more correct from a relational "
+"point of view. If you would like to use a discriminator column with the "
+"table per subclass strategy, you may combine the use of ``<subclass>`` and "
+"``<join>``, as follow:"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:155
+msgid ""
+"The optional ``fetch=\"select\"`` declaration tells NHibernate not to fetch "
+"the ``ChequePayment`` subclass data using an outer join when querying the "
+"superclass."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:160
+msgid "Mixing table per class hierarchy with table per subclass"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:162
+msgid ""
+"You may even mix the table per hierarchy and table per subclass strategies "
+"using this approach:"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:188
+msgid ""
+"For any of these mapping strategies, a polymorphic association to "
+"``IPayment`` is mapped using ``<many-to-one>``."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:197
+msgid "Table per concrete class"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:199
+msgid ""
+"There are two ways we could go about mapping the table per concrete class "
+"strategy. The first is to use ``<union-subclass>``."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:222
+msgid ""
+"Three tables are involved for the subclasses. Each table defines columns for"
+" all properties of the class, including inherited properties."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:225
+msgid ""
+"The limitation of this approach is that if a property is mapped on the "
+"superclass, the column name must be the same on all subclass tables. (We "
+"might relax this in a future release of NHibernate.) The identity generator "
+"strategy is not allowed in union subclass inheritance, indeed the primary "
+"key seed has to be shared accross all unioned subclasses of a hierarchy."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:232
+msgid ""
+"If your superclass is abstract, map it with ``abstract=\"true\"``. Of "
+"course, if it is not abstract, an additional table (defaults to ``PAYMENT`` "
+"in the example above) is needed to hold instances of the superclass."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:238
+msgid "Table per concrete class, using implicit polymorphism"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:240
+msgid "An alternative approach is to make use of implicit polymorphism:"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:268
+msgid ""
+"Notice that nowhere do we mention the ``IPayment`` interface explicitly. "
+"Also notice that properties of ``IPayment`` are mapped in each of the "
+"subclasses. If you want to avoid duplication, consider using XML entities "
+"(e.g. ``[ <!ENTITY allproperties SYSTEM \"allproperties.xml\"> ]`` in the "
+"``DOCTYPE`` declartion and ``&allproperties;`` in the mapping)."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:276
+msgid ""
+"The disadvantage of this approach is that NHibernate does not generate SQL "
+"``UNION`` when performing polymorphic queries."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:279
+msgid ""
+"For this mapping strategy, a polymorphic association to ``IPayment`` is "
+"usually mapped using ``<any>``."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:293
+msgid "Mixing implicit polymorphism with other inheritance mappings"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:295
+msgid ""
+"There is one further thing to notice about this mapping. Since the "
+"subclasses are each mapped in their own ``<class>`` element (and since "
+"``IPayment`` is just an interface), each of the subclasses could easily be "
+"part of another table-per-class or table-per-subclass inheritance hierarchy!"
+" (And you can still use polymorphic queries against the ``IPayment`` "
+"interface.)"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:334
+msgid ""
+"Once again, we don't mention ``IPayment`` explicitly. If we execute a query "
+"against the ``IPayment`` interface - for example, ``from IPayment`` - "
+"NHibernate automatically returns instances of ``CreditCardPayment`` (and its"
+" subclasses, since they also implement ``IPayment``), ``CashPayment`` and "
+"``ChequePayment`` but not instances of ``NonelectronicTransaction``."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:343
+msgid "Limitations"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:345
+msgid ""
+"There are certain limitations to the \"implicit polymorphism\" approach to "
+"the table per concrete-class mapping strategy. There are somewhat less "
+"restrictive limitations to ``<union-subclass>`` mappings."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:350
+msgid ""
+"The following table shows the limitations of table per concrete-class "
+"mappings, and of implicit polymorphism, in NHibernate."
+msgstr ""
+
+#: ../../inheritance-mapping.rst:353
+msgid "Features of inheritance mappings"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:356
+msgid "Inheritance strategy"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:356
+msgid "Polymorphic many-to-one"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:356
+msgid "Polymorphic one-to-one"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:356
+msgid "Polymorphic one-to-many"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:356
+msgid "Polymorphic many-to-many"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:356
+msgid "Polymorphic ``load()/get()``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:356
+msgid "Polymorphic queries"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:356
+msgid "Polymorphic joins"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:356
+msgid "Outer join fetching"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:358
+msgid "table per class-hierarchy"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:358 ../../inheritance-mapping.rst:359
+#: ../../inheritance-mapping.rst:360
+msgid "``<many-to-one>``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:358 ../../inheritance-mapping.rst:359
+#: ../../inheritance-mapping.rst:360
+msgid "``<one-to-one>``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:358 ../../inheritance-mapping.rst:359
+msgid "``<one-to-many>``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:358 ../../inheritance-mapping.rst:359
+#: ../../inheritance-mapping.rst:360
+msgid "``<many-to-many>``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:358 ../../inheritance-mapping.rst:359
+#: ../../inheritance-mapping.rst:360
+msgid "``s.Get(typeof(IPayment), id)``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:358 ../../inheritance-mapping.rst:359
+#: ../../inheritance-mapping.rst:360 ../../inheritance-mapping.rst:361
+msgid "``from IPayment p``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:358 ../../inheritance-mapping.rst:359
+#: ../../inheritance-mapping.rst:360
+msgid "``from Order o join o.Payment p``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:358 ../../inheritance-mapping.rst:359
+#: ../../inheritance-mapping.rst:360
+msgid "*supported*"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:360
+msgid "table per concrete-class (union-subclass)"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:360
+msgid "``<one-to-many>`` (for ``inverse=\"true\"`` only)"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:361
+msgid "table per concrete class (implicit polymorphism)"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:361
+msgid "``<any>``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:361 ../../inheritance-mapping.rst:361
+#: ../../inheritance-mapping.rst:361 ../../inheritance-mapping.rst:361
+msgid "*not supported*"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:361
+msgid "``<many-to-any>``"
+msgstr ""
+
+#: ../../inheritance-mapping.rst:361
+msgid "*use a query*"
+msgstr ""

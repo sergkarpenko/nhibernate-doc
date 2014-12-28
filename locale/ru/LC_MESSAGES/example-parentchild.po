@@ -1,0 +1,293 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../example-parentchild.rst:5
+msgid "Example: Parent/Child"
+msgstr ""
+
+#: ../../example-parentchild.rst:7
+msgid ""
+"One of the very first things that new users try to do with NHibernate is to "
+"model a parent / child type relationship. There are two different approaches"
+" to this. For various reasons the most convenient approach, especially for "
+"new users, is to model both ``Parent`` and ``Child`` as entity classes with "
+"a ``<one-to-many>`` association from ``Parent`` to ``Child``. (The "
+"alternative approach is to declare the ``Child`` as a ``<composite-"
+"element>``.) Now, it turns out that default semantics of a one to many "
+"association (in NHibernate) are much less close to the usual semantics of a "
+"parent / child relationship than those of a composite element mapping. We "
+"will explain how to use a *bidirectional one to many association with "
+"cascades* to model a parent / child relationship efficiently and elegantly. "
+"It's not at all difficult!"
+msgstr ""
+
+#: ../../example-parentchild.rst:19
+msgid "A note about collections"
+msgstr ""
+
+#: ../../example-parentchild.rst:21
+msgid ""
+"NHibernate collections are considered to be a logical part of their owning "
+"entity; never of the contained entities. This is a crucial distinction! It "
+"has the following consequences:"
+msgstr ""
+
+#: ../../example-parentchild.rst:24
+msgid ""
+"When we remove / add an object from / to a collection, the version number of"
+" the collection owner is incremented."
+msgstr ""
+
+#: ../../example-parentchild.rst:27
+msgid ""
+"If an object that was removed from a collection is an instance of a value "
+"type (eg, a composite element), that object will cease to be persistent and "
+"its state will be completely removed from the database. Likewise, adding a "
+"value type instance to the collection will cause its state to be immediately"
+" persistent."
+msgstr ""
+
+#: ../../example-parentchild.rst:32
+msgid ""
+"On the other hand, if an entity is removed from a collection (a one-to-many "
+"or many-to-many association), it will not be deleted, by default. This "
+"behavior is completely consistent - a change to the internal state of "
+"another entity should not cause the associated entity to vanish! Likewise, "
+"adding an entity to a collection does not cause that entity to become "
+"persistent, by default."
+msgstr ""
+
+#: ../../example-parentchild.rst:38
+msgid ""
+"Instead, the default behavior is that adding an entity to a collection "
+"merely creates a link between the two entities, while removing it removes "
+"the link. This is very appropriate for all sorts of cases. Where it is not "
+"appropriate at all is the case of a parent / child relationship, where the "
+"life of the child is bound to the lifecycle of the parent."
+msgstr ""
+
+#: ../../example-parentchild.rst:44
+msgid "Bidirectional one-to-many"
+msgstr ""
+
+#: ../../example-parentchild.rst:46
+msgid ""
+"Suppose we start with a simple ``<one-to-many>`` association from ``Parent``"
+" to ``Child``."
+msgstr ""
+
+#: ../../example-parentchild.rst:56
+msgid "If we were to execute the following code"
+msgstr ""
+
+#: ../../example-parentchild.rst:66
+msgid "NHibernate would issue two SQL statements:"
+msgstr ""
+
+#: ../../example-parentchild.rst:68
+msgid "an ``INSERT`` to create the record for ``c``"
+msgstr ""
+
+#: ../../example-parentchild.rst:70
+msgid "an ``UPDATE`` to create the link from ``p`` to ``c``"
+msgstr ""
+
+#: ../../example-parentchild.rst:73
+msgid ""
+"This is not only inefficient, but also violates any ``NOT NULL`` constraint "
+"on the ``parent_id`` column."
+msgstr ""
+
+#: ../../example-parentchild.rst:76
+msgid ""
+"The underlying cause is that the link (the foreign key ``parent_id``) from "
+"``p`` to ``c`` is not considered part of the state of the ``Child`` object "
+"and is therefore not created in the ``INSERT``. So the solution is to make "
+"the link part of the ``Child`` mapping."
+msgstr ""
+
+#: ../../example-parentchild.rst:85
+msgid "(We also need to add the ``Parent`` property to the ``Child`` class.)"
+msgstr ""
+
+#: ../../example-parentchild.rst:87
+msgid ""
+"Now that the ``Child`` entity is managing the state of the link, we tell the"
+" collection not to update the link. We use the ``inverse`` attribute."
+msgstr ""
+
+#: ../../example-parentchild.rst:97
+msgid "The following code would be used to add a new ``Child``."
+msgstr ""
+
+#: ../../example-parentchild.rst:108
+msgid "And now, only one SQL ``INSERT`` would be issued!"
+msgstr ""
+
+#: ../../example-parentchild.rst:110
+msgid ""
+"To tighten things up a bit, we could create an ``AddChild()`` method of "
+"``Parent``."
+msgstr ""
+
+#: ../../example-parentchild.rst:121
+msgid "Now, the code to add a ``Child`` looks like"
+msgstr ""
+
+#: ../../example-parentchild.rst:132
+msgid "Cascading lifecycle"
+msgstr ""
+
+#: ../../example-parentchild.rst:134
+msgid ""
+"The explicit call to ``Save()`` is still annoying. We will address this by "
+"using cascades."
+msgstr ""
+
+#: ../../example-parentchild.rst:144
+msgid "This simplifies the code above to"
+msgstr ""
+
+#: ../../example-parentchild.rst:153
+msgid ""
+"Similarly, we don't need to iterate over the children when saving or "
+"deleting a ``Parent``. The following removes ``p`` and all its children from"
+" the database."
+msgstr ""
+
+#: ../../example-parentchild.rst:162
+msgid "However, this code"
+msgstr ""
+
+#: ../../example-parentchild.rst:176
+msgid ""
+"will not remove ``c`` from the database; it will only remove the link to "
+"``p`` (and cause a ``NOT NULL`` constraint violation, in this case). You "
+"need to explicitly ``Delete()`` the ``Child``."
+msgstr ""
+
+#: ../../example-parentchild.rst:192
+msgid ""
+"Now, in our case, a ``Child`` can't really exist without its parent. So if "
+"we remove a ``Child`` from the collection, we really do want it to be "
+"deleted. For this, we must use ``cascade=\"all-delete-orphan\"``."
+msgstr ""
+
+#: ../../example-parentchild.rst:203
+msgid ""
+"Note: even though the collection mapping specifies ``inverse=\"true\"``, "
+"cascades are still processed by iterating the collection elements. So if you"
+" require that an object be saved, deleted or updated by cascade, you must "
+"add it to the collection. It is not enough to simply set its parent."
+msgstr ""
+
+#: ../../example-parentchild.rst:208
+msgid "Using cascading ``Update()``"
+msgstr ""
+
+#: ../../example-parentchild.rst:210
+msgid ""
+"Suppose we loaded up a ``Parent`` in one ``ISession``, made some changes in "
+"a UI action and wish to persist these changes in a new ISession (by calling "
+"``Update()``). The ``Parent`` will contain a collection of children and, "
+"since cascading update is enabled, NHibernate needs to know which children "
+"are newly instantiated and which represent existing rows in the database. "
+"Let's assume that both ``Parent`` and ``Child`` have (synthetic) identifier "
+"properties of type ``long``. NHibernate will use the identifier property "
+"value to determine which of the children are new. (You may also use the "
+"version or timestamp property, see :ref:`manipulatingdata-updating-"
+"detached`.)"
+msgstr ""
+
+#: ../../example-parentchild.rst:219
+msgid ""
+"The ``unsaved-value`` attribute is used to specify the identifier value of a"
+" newly instantiated instance. *In NHibernate it is not necessary to specify "
+"``unsaved-value`` explicitly.*"
+msgstr ""
+
+#: ../../example-parentchild.rst:222
+msgid ""
+"The following code will update ``parent`` and ``child`` and insert "
+"``newChild``."
+msgstr ""
+
+#: ../../example-parentchild.rst:234
+msgid ""
+"Well, thats all very well for the case of a generated identifier, but what "
+"about assigned identifiers and composite identifiers? This is more "
+"difficult, since ``unsaved-value`` can't distinguish between a newly "
+"instantiated object (with an identifier assigned by the user) and an object "
+"loaded in a previous session. In these cases, you will probably need to give"
+" NHibernate a hint; either"
+msgstr ""
+
+#: ../../example-parentchild.rst:239
+msgid ""
+"define an ``unsaved-value`` on a ``<version>`` or ``<timestamp>`` property "
+"mapping for the class."
+msgstr ""
+
+#: ../../example-parentchild.rst:242
+msgid ""
+"set ``unsaved-value=\"none\"`` and explicitly ``Save()`` newly instantiated "
+"children before calling ``Update(parent)``"
+msgstr ""
+
+#: ../../example-parentchild.rst:245
+msgid ""
+"set ``unsaved-value=\"any\"`` and explicitly ``Update()`` previously "
+"persistent children before calling ``Update(parent)``"
+msgstr ""
+
+#: ../../example-parentchild.rst:248
+msgid ""
+"``null`` is the default ``unsaved-value`` for assigned identifiers, ``none``"
+" is the default ``unsaved-value`` for composite identifiers."
+msgstr ""
+
+#: ../../example-parentchild.rst:252
+msgid ""
+"There is one further possibility. There is a new ``IInterceptor`` method "
+"named ``IsTransient()`` which lets the application implement its own "
+"strategy for distinguishing newly instantiated objects. For example, you "
+"could define a base class for your persistent classes."
+msgstr ""
+
+#: ../../example-parentchild.rst:280
+msgid ""
+"(The ``saved`` property is non-persistent.) Now implement ``IsTransient()``,"
+" along with ``OnLoad()`` and ``OnSave()`` as follows."
+msgstr ""
+
+#: ../../example-parentchild.rst:319
+msgid "Conclusion"
+msgstr ""
+
+#: ../../example-parentchild.rst:321
+msgid ""
+"There is quite a bit to digest here and it might look confusing first time "
+"around. However, in practice, it all works out quite nicely. Most NHibernate"
+" applications use the parent / child pattern in many places."
+msgstr ""
+
+#: ../../example-parentchild.rst:324
+msgid ""
+"We mentioned an alternative in the first paragraph. None of the above issues"
+" exist in the case of ``<composite-element>`` mappings, which have exactly "
+"the semantics of a parent / child relationship. Unfortunately, there are two"
+" big limitations to composite element classes: composite elements may not "
+"own collections, and they should not be the child of any entity other than "
+"the unique parent. (However, they *may* have a surrogate primary key, using "
+"an ``<idbag>`` mapping.)"
+msgstr ""

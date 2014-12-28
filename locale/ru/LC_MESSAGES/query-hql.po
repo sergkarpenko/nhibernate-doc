@@ -1,0 +1,664 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../query-hql.rst:5
+msgid "HQL: The Hibernate Query Language"
+msgstr ""
+
+#: ../../query-hql.rst:7
+msgid ""
+"NHibernate is equiped with an extremely powerful query language that (quite "
+"intentionally) looks very much like SQL. But don't be fooled by the syntax; "
+"HQL is fully object-oriented, understanding notions like inheritence, "
+"polymorphism and association."
+msgstr ""
+
+#: ../../query-hql.rst:12
+msgid "Case Sensitivity"
+msgstr ""
+
+#: ../../query-hql.rst:14
+msgid ""
+"Queries are case-insensitive, except for names of .NET classes and "
+"properties. So ``SeLeCT`` is the same as ``sELEct`` is the same as "
+"``SELECT`` but ``Eg.FOO`` is not ``Eg.Foo`` and ``foo.barSet`` is not "
+"``foo.BARSET``."
+msgstr ""
+
+#: ../../query-hql.rst:23
+msgid ""
+"This manual uses lowercase HQL keywords. Some users find queries with "
+"uppercase keywords more readable, but we find this convention ugly when "
+"embedded in C# code."
+msgstr ""
+
+#: ../../query-hql.rst:27
+msgid "The from clause"
+msgstr ""
+
+#: ../../query-hql.rst:29
+msgid "The simplest possible NHibernate query is of the form:"
+msgstr ""
+
+#: ../../query-hql.rst:35
+msgid "which simply returns all instances of the class ``Eg.Cat``."
+msgstr ""
+
+#: ../../query-hql.rst:37
+msgid ""
+"Most of the time, you will need to assign an *alias*, since you will want to"
+" refer to the ``Cat`` in other parts of the query."
+msgstr ""
+
+#: ../../query-hql.rst:45
+msgid ""
+"This query assigns the alias ``cat`` to ``Cat`` instances, so we could use "
+"that alias later in the query. The ``as`` keyword is optional; we could also"
+" write:"
+msgstr ""
+
+#: ../../query-hql.rst:53
+msgid ""
+"Multiple classes may appear, resulting in a cartesian product or \"cross\" "
+"join."
+msgstr ""
+
+#: ../../query-hql.rst:63
+msgid ""
+"It is considered good practice to name query aliases using an initial "
+"lowercase, consistent with naming standards for local variables (eg. "
+"``domesticCat``)."
+msgstr ""
+
+#: ../../query-hql.rst:68
+msgid "Associations and joins"
+msgstr ""
+
+#: ../../query-hql.rst:70
+msgid ""
+"We may also assign aliases to associated entities, or even to elements of a "
+"collection of values, using a ``join``."
+msgstr ""
+
+#: ../../query-hql.rst:83
+msgid "The supported join types are borrowed from ANSI SQL"
+msgstr ""
+
+#: ../../query-hql.rst:85
+msgid "``inner join``"
+msgstr ""
+
+#: ../../query-hql.rst:87
+msgid "``left outer join``"
+msgstr ""
+
+#: ../../query-hql.rst:89
+msgid "``right outer join``"
+msgstr ""
+
+#: ../../query-hql.rst:91
+msgid "``full join`` (not usually useful)"
+msgstr ""
+
+#: ../../query-hql.rst:93
+msgid ""
+"The ``inner join``, ``left outer join`` and ``right outer join`` constructs "
+"may be abbreviated."
+msgstr ""
+
+#: ../../query-hql.rst:102
+msgid ""
+"In addition, a \"fetch\" join allows associations or collections of values "
+"to be initialized along with their parent objects, using a single select. "
+"This is particularly useful in the case of a collection. It effectively "
+"overrides the outer join and lazy declarations of the mapping file for "
+"associations and collections. See :ref:`performance-fetching` for more "
+"information."
+msgstr ""
+
+#: ../../query-hql.rst:114
+msgid ""
+"The associated objects are not returned directly in the query results. "
+"Instead, they may be accessed via the parent object."
+msgstr ""
+
+#: ../../query-hql.rst:117
+msgid ""
+"It is possible to create a cartesian product by join fetching more than one "
+"collection in a query, so take care in this case. Join fetching multiple "
+"collection roles is also disabled for bag mappings. Note also that the "
+"``fetch`` construct may not be used in queries called using "
+"``Enumerable()``. Finally, note that ``full join fetch`` and ``right join "
+"fetch`` are not meaningful."
+msgstr ""
+
+#: ../../query-hql.rst:124
+msgid "The select clause"
+msgstr ""
+
+#: ../../query-hql.rst:126
+msgid ""
+"The ``select`` clause picks which objects and properties to return in the "
+"query result set. Consider:"
+msgstr ""
+
+#: ../../query-hql.rst:135
+msgid ""
+"The query will select ``Mate`` of other ``Cat``. Actually, you may express "
+"this query more compactly as:"
+msgstr ""
+
+#: ../../query-hql.rst:142
+msgid ""
+"You may even select collection elements, using the special ``elements`` "
+"function. The following query returns all kittens of any cat."
+msgstr ""
+
+#: ../../query-hql.rst:149
+msgid ""
+"Queries may return properties of any value type including properties of "
+"component type:"
+msgstr ""
+
+#: ../../query-hql.rst:158
+msgid ""
+"Queries may return multiple objects and/or properties as an array of type "
+"``object[]``"
+msgstr ""
+
+#: ../../query-hql.rst:168
+msgid "or as an actual typesafe object"
+msgstr ""
+
+#: ../../query-hql.rst:177
+msgid "assuming that the class ``Family`` has an appropriate constructor."
+msgstr ""
+
+#: ../../query-hql.rst:180
+msgid "Aggregate functions"
+msgstr ""
+
+#: ../../query-hql.rst:182
+msgid ""
+"HQL queries may even return the results of aggregate functions on "
+"properties:"
+msgstr ""
+
+#: ../../query-hql.rst:189
+msgid ""
+"Collections may also appear inside aggregate functions in the ``select`` "
+"clause."
+msgstr ""
+
+#: ../../query-hql.rst:197
+msgid "The supported aggregate functions are"
+msgstr ""
+
+#: ../../query-hql.rst:199
+msgid "``avg(...), sum(...), min(...), max(...)``"
+msgstr ""
+
+#: ../../query-hql.rst:201
+msgid "``count(\\*)``"
+msgstr ""
+
+#: ../../query-hql.rst:203
+msgid "``count(...), count(distinct ...), count(all...)``"
+msgstr ""
+
+#: ../../query-hql.rst:205
+msgid ""
+"The ``distinct`` and ``all`` keywords may be used and have the same "
+"semantics as in SQL."
+msgstr ""
+
+#: ../../query-hql.rst:215
+msgid "Polymorphic queries"
+msgstr ""
+
+#: ../../query-hql.rst:217
+msgid "A query like:"
+msgstr ""
+
+#: ../../query-hql.rst:223
+msgid ""
+"returns instances not only of ``Cat``, but also of subclasses like "
+"``DomesticCat``. NHibernate queries may name *any* .NET class or interface "
+"in the ``from`` clause. The query will return instances of all persistent "
+"classes that extend that class or implement the interface. The following "
+"query would return all persistent objects:"
+msgstr ""
+
+#: ../../query-hql.rst:233
+msgid ""
+"The interface ``INamed`` might be implemented by various persistent classes:"
+msgstr ""
+
+#: ../../query-hql.rst:240
+msgid ""
+"Note that these last two queries will require more than one SQL ``SELECT``. "
+"This means that the ``order by`` clause does not correctly order the whole "
+"result set."
+msgstr ""
+
+#: ../../query-hql.rst:243
+msgid ""
+"In order to use non-mapped base classes or interfaces in HQL queries, they "
+"have to be imported. See :ref:`mapping-declaration-import` for more "
+"information."
+msgstr ""
+
+#: ../../query-hql.rst:246
+msgid "The where clause"
+msgstr ""
+
+#: ../../query-hql.rst:248
+msgid ""
+"The ``where`` clause allows you to narrow the list of instances returned."
+msgstr ""
+
+#: ../../query-hql.rst:254
+msgid "returns instances of ``Cat`` named 'Fritz'."
+msgstr ""
+
+#: ../../query-hql.rst:262
+msgid ""
+"will return all instances of ``Foo`` for which there exists an instance of "
+"``Bar`` with a ``Date`` property equal to the ``StartDate`` property of the "
+"``Foo``. Compound path expressions make the ``where`` clause extremely "
+"powerful. Consider:"
+msgstr ""
+
+#: ../../query-hql.rst:273
+msgid ""
+"This query translates to an SQL query with a table (inner) join. If you were"
+" to write something like"
+msgstr ""
+
+#: ../../query-hql.rst:281
+msgid ""
+"you would end up with a query that would require four table joins in SQL."
+msgstr ""
+
+#: ../../query-hql.rst:283
+msgid ""
+"The ``=`` operator may be used to compare not only properties, but also "
+"instances:"
+msgstr ""
+
+#: ../../query-hql.rst:294
+msgid ""
+"The special property (lowercase) ``id`` may be used to reference the unique "
+"identifier of an object. (You may also use its property name.)"
+msgstr ""
+
+#: ../../query-hql.rst:303
+msgid "The second query is efficient. No table join is required!"
+msgstr ""
+
+#: ../../query-hql.rst:305
+msgid ""
+"Properties of composite identifiers may also be used. Suppose ``Person`` has"
+" a composite identifier consisting of ``Country`` and ``MedicareNumber``."
+msgstr ""
+
+#: ../../query-hql.rst:319
+msgid "Once again, the second query requires no table join."
+msgstr ""
+
+#: ../../query-hql.rst:321
+msgid ""
+"Likewise, the special property ``class`` accesses the discriminator value of"
+" an instance in the case of polymorphic persistence. A .Net class name "
+"embedded in the where clause will be translated to its discriminator value."
+msgstr ""
+
+#: ../../query-hql.rst:329
+msgid ""
+"You may also specify properties of components or composite user types (and "
+"of components of components, etc). Never try to use a path-expression that "
+"ends in a property of component type (as opposed to a property of a "
+"component). For example, if ``store.Owner`` is an entity with a component "
+"``Address``"
+msgstr ""
+
+#: ../../query-hql.rst:339
+msgid ""
+"An \"any\" type has the special properties ``id`` and ``class``, allowing us"
+" to express a join in the following way (where ``AuditLog.Item`` is a "
+"property mapped with ``<any>``)."
+msgstr ""
+
+#: ../../query-hql.rst:348
+msgid ""
+"Notice that ``log.Item.class`` and ``payment.class`` would refer to the "
+"values of completely different database columns in the above query."
+msgstr ""
+
+#: ../../query-hql.rst:352
+msgid "Expressions"
+msgstr ""
+
+#: ../../query-hql.rst:354
+msgid ""
+"Expressions allowed in the ``where`` clause include most of the kind of "
+"things you could write in SQL:"
+msgstr ""
+
+#: ../../query-hql.rst:357
+msgid "mathematical operators ``+, -, \\*, /``"
+msgstr ""
+
+#: ../../query-hql.rst:359
+msgid "binary comparison operators ``=, >=, <=, <>, !=, like``"
+msgstr ""
+
+#: ../../query-hql.rst:361
+msgid "logical operations ``and, or, not``"
+msgstr ""
+
+#: ../../query-hql.rst:363
+msgid "string concatenation \\||"
+msgstr ""
+
+#: ../../query-hql.rst:365
+msgid "SQL scalar functions like ``upper()`` and ``lower()``"
+msgstr ""
+
+#: ../../query-hql.rst:368
+msgid "Parentheses ``( )`` indicate grouping"
+msgstr ""
+
+#: ../../query-hql.rst:370
+msgid "``in``, ``between``, ``is null``"
+msgstr ""
+
+#: ../../query-hql.rst:374
+msgid "positional parameters ``?``"
+msgstr ""
+
+#: ../../query-hql.rst:376
+msgid "named parameters ``:name``, ``:start_date``, ``:x1``"
+msgstr ""
+
+#: ../../query-hql.rst:378
+msgid "SQL literals ``'foo'``, ``69``, ``'1970-01-01 10:00:01.0'``"
+msgstr ""
+
+#: ../../query-hql.rst:380
+msgid "Enumeration values and constants ``Eg.Color.Tabby``"
+msgstr ""
+
+#: ../../query-hql.rst:382
+msgid "``in`` and ``between`` may be used as follows:"
+msgstr ""
+
+#: ../../query-hql.rst:390
+msgid "and the negated forms may be written"
+msgstr ""
+
+#: ../../query-hql.rst:398
+msgid ""
+"Likewise, ``is null`` and ``is not null`` may be used to test for null "
+"values."
+msgstr ""
+
+#: ../../query-hql.rst:401
+msgid ""
+"Booleans may be easily used in expressions by declaring HQL query "
+"substitutions in NHibernate configuration:"
+msgstr ""
+
+#: ../../query-hql.rst:408
+msgid ""
+"This will replace the keywords ``true`` and ``false`` with the literals "
+"``1`` and ``0`` in the translated SQL from this HQL:"
+msgstr ""
+
+#: ../../query-hql.rst:415
+msgid ""
+"You may test the size of a collection with the special property ``size``, or"
+" the special ``size()`` function."
+msgstr ""
+
+#: ../../query-hql.rst:424
+msgid ""
+"For indexed collections, you may refer to the minimum and maximum indices "
+"using ``minIndex`` and ``maxIndex``. Similarly, you may refer to the minimum"
+" and maximum elements of a collection of basic type using ``minElement`` and"
+" ``maxElement``."
+msgstr ""
+
+#: ../../query-hql.rst:433
+msgid ""
+"There are also functional forms (which, unlike the constructs above, are not"
+" case sensitive):"
+msgstr ""
+
+#: ../../query-hql.rst:441
+msgid ""
+"The SQL functions ``any, some, all, exists, in`` are supported when passed "
+"the element or index set of a collection (``elements`` and ``indices`` "
+"functions) or the result of a subquery (see below)."
+msgstr ""
+
+#: ../../query-hql.rst:459
+msgid ""
+"Note that these constructs - ``size``, ``elements``, ``indices``, "
+"``minIndex``, ``maxIndex``, ``minElement``, ``maxElement`` - have certain "
+"usage restrictions:"
+msgstr ""
+
+#: ../../query-hql.rst:464
+msgid "in a ``where`` clause: only for databases with subselects"
+msgstr ""
+
+#: ../../query-hql.rst:466
+msgid "in a ``select`` clause: only ``elements`` and ``indices`` make sense"
+msgstr ""
+
+#: ../../query-hql.rst:469
+msgid ""
+"Elements of indexed collections (arrays, lists, maps) may be referred to by "
+"index (in a where clause only):"
+msgstr ""
+
+#: ../../query-hql.rst:486
+msgid "The expression inside ``[]`` may even be an arithmetic expression."
+msgstr ""
+
+#: ../../query-hql.rst:493
+msgid ""
+"HQL also provides the built-in ``index()`` function, for elements of a one-"
+"to-many association or collection of values."
+msgstr ""
+
+#: ../../query-hql.rst:502
+msgid "Scalar SQL functions supported by the underlying database may be used"
+msgstr ""
+
+#: ../../query-hql.rst:508
+msgid ""
+"If you are not yet convinced by all this, think how much longer and less "
+"readable the following query would be in SQL:"
+msgstr ""
+
+#: ../../query-hql.rst:521
+msgid "*Hint:* something like"
+msgstr ""
+
+#: ../../query-hql.rst:544
+msgid "The order by clause"
+msgstr ""
+
+#: ../../query-hql.rst:546
+msgid ""
+"The list returned by a query may be ordered by any property of a returned "
+"class or components:"
+msgstr ""
+
+#: ../../query-hql.rst:553
+msgid ""
+"The optional ``asc`` or ``desc`` indicate ascending or descending order "
+"respectively."
+msgstr ""
+
+#: ../../query-hql.rst:557
+msgid "The group by clause"
+msgstr ""
+
+#: ../../query-hql.rst:559
+msgid ""
+"A query that returns aggregate values may be grouped by any property of a "
+"returned class or components:"
+msgstr ""
+
+#: ../../query-hql.rst:571
+msgid ""
+"Note: You may use the ``elements`` and ``indices`` constructs inside a "
+"select clause, even on databases with no subselects."
+msgstr ""
+
+#: ../../query-hql.rst:574
+msgid "A ``having`` clause is also allowed."
+msgstr ""
+
+#: ../../query-hql.rst:583
+msgid ""
+"SQL functions and aggregate functions are allowed in the ``having`` and "
+"``order by`` clauses, if supported by the underlying database (ie. not in "
+"MySQL)."
+msgstr ""
+
+#: ../../query-hql.rst:596
+msgid ""
+"Note that neither the ``group by`` clause nor the ``order by`` clause may "
+"contain arithmetic expressions. Also note that NHibernate currently does not"
+" expand a grouped entity, so you can't write ``group by cat`` if all "
+"properties of ``cat`` are non-aggregated. You have to list all non-"
+"aggregated properties explicitly."
+msgstr ""
+
+#: ../../query-hql.rst:604
+msgid "Subqueries"
+msgstr ""
+
+#: ../../query-hql.rst:606
+msgid ""
+"For databases that support subselects, NHibernate supports subqueries within"
+" queries. A subquery must be surrounded by parentheses (often by an SQL "
+"aggregate function call). Even correlated subqueries (subqueries that refer "
+"to an alias in the outer query) are allowed."
+msgstr ""
+
+#: ../../query-hql.rst:633
+msgid "HQL examples"
+msgstr ""
+
+#: ../../query-hql.rst:635
+msgid ""
+"NHibernate queries can be quite powerful and complex. In fact, the power of "
+"the query language is one of NHibernate's main selling points. Here are some"
+" example queries very similar to queries that I used on a recent project. "
+"Note that most queries you will write are much simpler than these!"
+msgstr ""
+
+#: ../../query-hql.rst:639
+msgid ""
+"The following query returns the order id, number of items and total value of"
+" the order for all unpaid orders for a particular customer and given minimum"
+" total value, ordering the results by total value. In determining the "
+"prices, it uses the current catalog. The resulting SQL query, against the "
+"``ORDER``, ``ORDER_LINE``, ``PRODUCT``, ``CATALOG`` and ``PRICE`` tables has"
+" four inner joins and an (uncorrelated) subselect."
+msgstr ""
+
+#: ../../query-hql.rst:667
+msgid ""
+"What a monster! Actually, in real life, I'm not very keen on subqueries, so "
+"my query was really more like this:"
+msgstr ""
+
+#: ../../query-hql.rst:686
+msgid ""
+"The next query counts the number of payments in each status, excluding all "
+"payments in the ``AwaitingApproval`` status where the most recent status "
+"change was made by the current user. It translates to an SQL query with two "
+"inner joins and a correlated subselect against the ``PAYMENT``, "
+"``PAYMENT_STATUS`` and ``PAYMENT_STATUS_CHANGE`` tables."
+msgstr ""
+
+#: ../../query-hql.rst:710
+msgid ""
+"If I would have mapped the ``StatusChanges`` collection as a list, instead "
+"of a set, the query would have been much simpler to write."
+msgstr ""
+
+#: ../../query-hql.rst:723
+msgid ""
+"The next query uses the MS SQL Server ``isNull()`` function to return all "
+"the accounts and unpaid payments for the organization to which the current "
+"user belongs. It translates to an SQL query with three inner joins, an outer"
+" join and a subselect against the ``ACCOUNT``, ``PAYMENT``, "
+"``PAYMENT_STATUS``, ``ACCOUNT_TYPE``, ``ORGANIZATION`` and ``ORG_USER`` "
+"tables."
+msgstr ""
+
+#: ../../query-hql.rst:739
+msgid ""
+"For some databases, we would need to do away with the (correlated) "
+"subselect."
+msgstr ""
+
+#: ../../query-hql.rst:752
+msgid "Tips & Tricks"
+msgstr ""
+
+#: ../../query-hql.rst:754
+msgid ""
+"You can count the number of query results without actually returning them:"
+msgstr ""
+
+#: ../../query-hql.rst:760
+msgid ""
+"To order a result by the size of a collection, use the following query:"
+msgstr ""
+
+#: ../../query-hql.rst:770
+msgid ""
+"If your database supports subselects, you can place a condition upon "
+"selection size in the where clause of your query:"
+msgstr ""
+
+#: ../../query-hql.rst:777
+msgid "If your database doesn't support subselects, use the following query:"
+msgstr ""
+
+#: ../../query-hql.rst:787
+msgid ""
+"As this solution can't return a ``User`` with zero messages because of the "
+"inner join, the following form is also useful:"
+msgstr ""
+
+#: ../../query-hql.rst:798
+msgid "Properties of an object can be bound to named query parameters:"
+msgstr ""
+
+#: ../../query-hql.rst:806
+msgid ""
+"Collections are pageable by using the ``IQuery`` interface with a filter:"
+msgstr ""
+
+#: ../../query-hql.rst:815
+msgid "Collection elements may be ordered or grouped using a query filter:"
+msgstr ""

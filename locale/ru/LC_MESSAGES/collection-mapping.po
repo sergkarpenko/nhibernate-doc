@@ -1,0 +1,751 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-28 22:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../collection-mapping.rst:5
+msgid "Collection Mapping"
+msgstr ""
+
+#: ../../collection-mapping.rst:8
+msgid "Persistent Collections"
+msgstr ""
+
+#: ../../collection-mapping.rst:10
+msgid ""
+"NHibernate requires that persistent collection-valued fields be declared as "
+"an interface type, for example:"
+msgstr ""
+
+#: ../../collection-mapping.rst:33
+msgid ""
+"The actual interface might be ``Iesi.Collections.ISet``, "
+"``System.Collections.ICollection``, ``System.Collections.IList``, "
+"``System.Collections.IDictionary``, "
+"``System.Collections.Generic.ICollection<T>``, "
+"``System.Collections.Generic.IList<T>``, "
+"``System.Collections.Generic.IDictionary<K, V>``, "
+"``Iesi.Collections.Generic.ISet<T>`` or ... anything you like! (Where "
+"\"anything you like\" means you will have to write an implementation of "
+"``NHibernate.UserType.IUserCollectionType``.)"
+msgstr ""
+
+#: ../../collection-mapping.rst:44
+msgid ""
+"Notice how we initialized the instance variable with an instance of "
+"``HashedSet``. This is the best way to initialize collection valued "
+"properties of newly instantiated (non-persistent) instances. When you make "
+"the instance persistent - by calling ``Save()``, for example - NHibernate "
+"will actually replace the ``HashedSet`` with an instance of NHibernate's own"
+" implementation of ``ISet``. Watch out for errors like this:"
+msgstr ""
+
+#: ../../collection-mapping.rst:64
+msgid ""
+"Collection instances have the usual behavior of value types. They are "
+"automatically persisted when referenced by a persistent object and "
+"automatically deleted when unreferenced. If a collection is passed from one "
+"persistent object to another, its elements might be moved from one table to "
+"another. Two entities may not share a reference to the same collection "
+"instance. Due to the underlying relational model, collection-valued "
+"properties do not support null value semantics; NHibernate does not "
+"distinguish between a null collection reference and an empty collection."
+msgstr ""
+
+#: ../../collection-mapping.rst:72
+msgid ""
+"You shouldn't have to worry much about any of this. Just use NHibernate's "
+"collections the same way you use ordinary .NET collections, but make sure "
+"you understand the semantics of bidirectional associations (discussed later)"
+" before using them."
+msgstr ""
+
+#: ../../collection-mapping.rst:76
+msgid ""
+"Collection instances are distinguished in the database by a foreign key to "
+"the owning entity. This foreign key is referred to as the *collection key*. "
+"The collection key is mapped by the ``<key>`` element."
+msgstr ""
+
+#: ../../collection-mapping.rst:81
+msgid ""
+"Collections may contain almost any other NHibernate type, including all "
+"basic types, custom types, entity types and components. This is an important"
+" definition: An object in a collection can either be handled with \"pass by "
+"value\" semantics (it therefore fully depends on the collection owner) or it"
+" can be a reference to another entity with an own lifecycle. Collections may"
+" not contain other collections. The contained type is referred to as the "
+"*collection element type*. Collection elements are mapped by ``<element>``, "
+"``<composite-element>``, ``<one-to-many>``, ``<many-to-many>`` or ``<many-"
+"to-any>``. The first two map elements with value semantics, the other three "
+"are used to map entity associations."
+msgstr ""
+
+#: ../../collection-mapping.rst:92
+msgid ""
+"All collection types except ``ISet`` and bag have an *index* column - a "
+"column that maps to an array or ``IList`` index or ``IDictionary`` key. The "
+"index of an ``IDictionary`` may be of any basic type, an entity type or even"
+" a composite type (it may not be a collection). The index of an array or "
+"list is always of type ``Int32``. Indexes are mapped using ``<index>``, "
+"``<index-many-to-many>``, ``<composite-index>`` or ``<index-many-to-any>``."
+msgstr ""
+
+#: ../../collection-mapping.rst:99
+msgid ""
+"There are quite a range of mappings that can be generated for collections, "
+"covering many common relational models. We suggest you experiment with the "
+"schema generation tool to get a feeling for how various mapping declarations"
+" translate to database tables."
+msgstr ""
+
+#: ../../collection-mapping.rst:105
+msgid "Mapping a Collection"
+msgstr ""
+
+#: ../../collection-mapping.rst:107
+msgid ""
+"Collections are declared by the ``<set>``, ``<list>``, ``<map>``, ``<bag>``,"
+" ``<array>`` and ``<primitive-array>`` elements. ``<map>`` is "
+"representative:"
+msgstr ""
+
+#: ../../collection-mapping.rst:140
+msgid "``name`` the collection property name"
+msgstr ""
+
+#: ../../collection-mapping.rst:142
+msgid ""
+"``table`` (optional - defaults to property name) the name of the collection "
+"table (not used for one-to-many associations)"
+msgstr ""
+
+#: ../../collection-mapping.rst:145
+msgid ""
+"``schema`` (optional) the name of a table schema to override the schema "
+"declared on the root element"
+msgstr ""
+
+#: ../../collection-mapping.rst:148
+msgid ""
+"``lazy`` (optional - defaults to ``true``) may be used to disable lazy "
+"fetching and specify that the association is always eagerly fetched. Using "
+"``extra`` fetches only the elements that are needed - see :ref:`performance-"
+"fetching` for more information."
+msgstr ""
+
+#: ../../collection-mapping.rst:153
+msgid ""
+"``inverse`` (optional - defaults to ``false``) mark this collection as the "
+"\"inverse\" end of a bidirectional association"
+msgstr ""
+
+#: ../../collection-mapping.rst:156
+msgid ""
+"``cascade`` (optional - defaults to ``none``) enable operations to cascade "
+"to child entities"
+msgstr ""
+
+#: ../../collection-mapping.rst:159
+msgid ""
+"``sort`` (optional) specify a sorted collection with ``natural`` sort order,"
+" or a given comparator class"
+msgstr ""
+
+#: ../../collection-mapping.rst:162
+msgid ""
+"``order-by`` (optional) specify a table column (or columns) that define the "
+"iteration order of the ``IDictionary``, ``ISet`` or bag, together with an "
+"optional ``asc`` or ``desc``"
+msgstr ""
+
+#: ../../collection-mapping.rst:166
+msgid ""
+"``where`` (optional) specify an arbitrary SQL ``WHERE`` condition to be used"
+" when retrieving or removing the collection (useful if the collection should"
+" contain only a subset of the available data)"
+msgstr ""
+
+#: ../../collection-mapping.rst:170
+msgid ""
+"``fetch`` (optional) Choose between outer-join fetching and fetching by "
+"sequential select."
+msgstr ""
+
+#: ../../collection-mapping.rst:173
+msgid ""
+"``batch-size`` (optional, defaults to ``1``) specify a \"batch size\" for "
+"lazily fetching instances of this collection."
+msgstr ""
+
+#: ../../collection-mapping.rst:176
+msgid ""
+"``access`` (optional - defaults to ``property``): The strategy NHibernate "
+"should use for accessing the property value."
+msgstr ""
+
+#: ../../collection-mapping.rst:179
+msgid ""
+"``optimistic-lock`` (optional - defaults to ``true``): Species that changes "
+"to the state of the collection results in increment of the owning entity's "
+"version. (For one to many associations, it is often reasonable to disable "
+"this setting.)"
+msgstr ""
+
+#: ../../collection-mapping.rst:184
+msgid ""
+"``generic`` (optional): Choose between generic and non-generic collection "
+"interface. If this option is not specified, NHibernate will use reflection "
+"to choose the interface."
+msgstr ""
+
+#: ../../collection-mapping.rst:188
+msgid ""
+"The mapping of an ``IList`` or array requires a seperate table column "
+"holding the array or list index (the ``i`` in ``foo[i]``). If your "
+"relational model doesn't have an index column, e.g. if you're working with "
+"legacy data, use an unordered ``ISet`` instead. This seems to put people off"
+" who assume that ``IList`` should just be a more convenient way of accessing"
+" an unordered collection. NHibernate collections strictly obey the actual "
+"semantics attached to the ``ISet``, ``IList`` and ``IDictionary`` "
+"interfaces. ``IList`` elements don't just spontaneously rearrange "
+"themselves!"
+msgstr ""
+
+#: ../../collection-mapping.rst:196
+msgid ""
+"On the other hand, people who planned to use the ``IList`` to emulate *bag* "
+"semantics have a legitimate grievance here. A bag is an unordered, unindexed"
+" collection which may contain the same element multiple times. The .NET "
+"collections framework lacks an ``IBag`` interface, hence you have to emulate"
+" it with an ``IList``. NHibernate lets you map properties of type ``IList`` "
+"or ``ICollection`` with the ``<bag>`` element. Note that bag semantics are "
+"not really part of the ``ICollection`` contract and they actually conflict "
+"with the semantics of the ``IList`` contract (however, you can sort the bag "
+"arbitrarily, discussed later in this chapter)."
+msgstr ""
+
+#: ../../collection-mapping.rst:206
+msgid ""
+"Note: Large NHibernate bags mapped with ``inverse=\"false\"`` are "
+"inefficient and should be  avoided; NHibernate can't create, delete or "
+"update rows individually, because there is no key that may be used to "
+"identify an individual row."
+msgstr ""
+
+#: ../../collection-mapping.rst:211
+msgid "Collections of Values and Many-To-Many Associations"
+msgstr ""
+
+#: ../../collection-mapping.rst:213
+msgid ""
+"A collection table is required for any collection of values and any "
+"collection of references to other entities mapped as a many-to-many "
+"association (the natural semantics for a .NET collection). The table "
+"requires (foreign) key column(s), element column(s) and possibly index "
+"column(s)."
+msgstr ""
+
+#: ../../collection-mapping.rst:218
+msgid ""
+"The foreign key from the collection table to the table of the owning class "
+"is declared using a ``<key>`` element."
+msgstr ""
+
+#: ../../collection-mapping.rst:225
+msgid "``column`` (required): The name of the foreign key column."
+msgstr ""
+
+#: ../../collection-mapping.rst:227
+msgid ""
+"For indexed collections like maps and lists, we require an ``<index>`` "
+"element. For lists, this column contains sequential integers numbered from "
+"zero. Make sure that your index really starts from zero if you have to deal "
+"with legacy data. For maps, the column may contain any values of any "
+"NHibernate type."
+msgstr ""
+
+#: ../../collection-mapping.rst:239
+msgid ""
+"``column`` (required): The name of the column holding the collection index "
+"values."
+msgstr ""
+
+#: ../../collection-mapping.rst:242
+msgid ""
+"``type`` (optional, defaults to ``Int32``): The type of the collection "
+"index."
+msgstr ""
+
+#: ../../collection-mapping.rst:245
+msgid ""
+"Alternatively, a map may be indexed by objects of entity type. We use the "
+"``<index-many-to-many>`` element."
+msgstr ""
+
+#: ../../collection-mapping.rst:255
+msgid ""
+"``column`` (required): The name of the foreign key column for the collection"
+" index values."
+msgstr ""
+
+#: ../../collection-mapping.rst:258
+msgid "``class`` (required): The entity class used as the collection index."
+msgstr ""
+
+#: ../../collection-mapping.rst:261
+msgid "For a collection of values, we use the ``<element>`` tag."
+msgstr ""
+
+#: ../../collection-mapping.rst:270
+msgid ""
+"``column`` (required): The name of the column holding the collection element"
+" values."
+msgstr ""
+
+#: ../../collection-mapping.rst:273
+msgid "``type`` (required): The type of the collection element."
+msgstr ""
+
+#: ../../collection-mapping.rst:275
+msgid ""
+"A collection of entities with its own table corresponds to the relational "
+"notion of *many-to-many association*. A many to many association is the most"
+" natural mapping of a .NET collection but is not usually the best relational"
+" model."
+msgstr ""
+
+#: ../../collection-mapping.rst:288
+msgid "``column`` (required): The name of the element foreign key column."
+msgstr ""
+
+#: ../../collection-mapping.rst:290 ../../collection-mapping.rst:387
+msgid "``class`` (required): The name of the associated class."
+msgstr ""
+
+#: ../../collection-mapping.rst:292
+msgid ""
+"``fetch`` (optional, defaults to ``join``): enables outer-join or sequential"
+" select fetching for this association. This is a special case; for full "
+"eager fetching (in a single SELECT) of an entity and its many-to-many "
+"relationships to other entities, you would enable join fetching not only of "
+"the collection itself, but also with this attribute on the ``<many-to-"
+"many>`` nested element."
+msgstr ""
+
+#: ../../collection-mapping.rst:298 ../../collection-mapping.rst:389
+msgid ""
+"``not-found`` (optional - defaults to ``exception``): Specifies how foreign "
+"keys that reference missing rows will be handled: ``ignore`` will treat a "
+"missing row as a null association."
+msgstr ""
+
+#: ../../collection-mapping.rst:302
+msgid "Some examples, first, a set of strings:"
+msgstr ""
+
+#: ../../collection-mapping.rst:311
+msgid ""
+"A bag containing integers (with an iteration order determined by the "
+"``order-by`` attribute):"
+msgstr ""
+
+#: ../../collection-mapping.rst:321
+msgid ""
+"An array of entities - in this case, a many to many association (note that "
+"the entities are lifecycle objects, ``cascade=\"all\"``):"
+msgstr ""
+
+#: ../../collection-mapping.rst:332
+msgid "A map from string indices to dates:"
+msgstr ""
+
+#: ../../collection-mapping.rst:342
+msgid "A list of components (discussed in the next chapter):"
+msgstr ""
+
+#: ../../collection-mapping.rst:357
+msgid "One-To-Many Associations"
+msgstr ""
+
+#: ../../collection-mapping.rst:359
+msgid ""
+"A *one to many association* links the tables of two classes *directly*, with"
+" no intervening collection table. (This implements a *one-to-many* "
+"relational model.) This relational model loses some of the semantics of .NET"
+" collections:"
+msgstr ""
+
+#: ../../collection-mapping.rst:364
+msgid "No null values may be contained in a dictionary, set or list"
+msgstr ""
+
+#: ../../collection-mapping.rst:366
+msgid ""
+"An instance of the contained entity class may not belong to more than one "
+"instance of the collection"
+msgstr ""
+
+#: ../../collection-mapping.rst:369
+msgid ""
+"An instance of the contained entity class may not appear at more than one "
+"value of the collection index"
+msgstr ""
+
+#: ../../collection-mapping.rst:372
+msgid ""
+"An association from ``Foo`` to ``Bar`` requires the addition of a key column"
+" and possibly an index column to the table of the contained entity class, "
+"``Bar``. These columns are mapped using the ``<key>`` and ``<index>`` "
+"elements described above."
+msgstr ""
+
+#: ../../collection-mapping.rst:378
+msgid "The ``<one-to-many>`` tag indicates a one to many association."
+msgstr ""
+
+#: ../../collection-mapping.rst:393
+msgid "Example:"
+msgstr ""
+
+#: ../../collection-mapping.rst:402
+msgid ""
+"Notice that the ``<one-to-many>`` element does not need to declare any "
+"columns. Nor is it necessary to specify the ``table`` name anywhere."
+msgstr ""
+
+#: ../../collection-mapping.rst:406
+msgid ""
+"*Very Important Note:* If the ``<key>`` column of a ``<one-to-many>`` "
+"association is declared ``NOT NULL``, NHibernate may cause constraint "
+"violations when it creates or updates the association. To prevent this "
+"problem, *you must use a bidirectional association* with the many valued end"
+" (the set or bag) marked as ``inverse=\"true\"``. See the discussion of "
+"bidirectional associations later in this chapter."
+msgstr ""
+
+#: ../../collection-mapping.rst:415
+msgid "Lazy Initialization"
+msgstr ""
+
+#: ../../collection-mapping.rst:417
+msgid ""
+"Collections (other than arrays) may be lazily initialized, meaning they load"
+" their state from the database only when the application needs to access it."
+" Initialization happens transparently to the user so the application would "
+"not normally need to worry about this (in fact, transparent lazy "
+"initialization is the main reason why NHibernate needs its own collection "
+"implementations). However, if the application tries something like this:"
+msgstr ""
+
+#: ../../collection-mapping.rst:435
+msgid ""
+"It could be in for a nasty surprise. Since the permissions collection was "
+"not initialized when the ``ISession`` was committed, the collection will "
+"never be able to load its state. The fix is to move the line that reads from"
+" the collection to just before the commit. (There are other more advanced "
+"ways to solve this problem, however.)"
+msgstr ""
+
+#: ../../collection-mapping.rst:441
+msgid ""
+"Alternatively, use a non-lazy collection. Since lazy initialization can lead"
+" to bugs like that above, non-laziness is the default. However, it is "
+"intended that lazy initialization be used for almost all collections, "
+"especially for collections of entities (for reasons of efficiency)."
+msgstr ""
+
+#: ../../collection-mapping.rst:446
+msgid ""
+"Exceptions that occur while lazily initializing a collection are wrapped in "
+"a ``LazyInitializationException``."
+msgstr ""
+
+#: ../../collection-mapping.rst:449
+msgid "Declare a lazy collection using the optional ``lazy`` attribute:"
+msgstr ""
+
+#: ../../collection-mapping.rst:458
+msgid ""
+"In some application architectures, particularly where the code that accesses"
+" data using NHibernate, and the code that uses it are in different "
+"application layers, it can be a problem to ensure that the ``ISession`` is "
+"open when a collection is initialized. There are two basic ways to deal with"
+" this issue:"
+msgstr ""
+
+#: ../../collection-mapping.rst:463
+msgid ""
+"In a web-based application, an event handler can be used to close the "
+"``ISession`` only at the very end of a user request, once the rendering of "
+"the view is complete. Of course, this places heavy demands upon the "
+"correctness of the exception handling of your application infrastructure. It"
+" is vitally important that the ``ISession`` is closed and the transaction "
+"ended before returning to the user, even when an exception occurs during "
+"rendering of the view. The event handler has to be able to access the "
+"``ISession`` for this approach. We recommend that the current ``ISession`` "
+"is stored in the ``HttpContext.Items`` collection (see chapter 1, :ref"
+":`quickstart-playingwithcats`, for an example implementation)."
+msgstr ""
+
+#: ../../collection-mapping.rst:475
+msgid ""
+"In an application with a seperate business tier, the business logic must "
+"\"prepare\" all collections that will be needed by the web tier before "
+"returning. This means that the business tier should load all the data and "
+"return all the data already initialized to the presentation/web tier that is"
+" required for a particular use case. Usually, the application calls "
+"``NHibernateUtil.Initialize()`` for each collection that will be needed in "
+"the web tier (this call must occur before the session is closed) or "
+"retrieves the collection eagerly using a NHibernate query with a ``FETCH`` "
+"clause."
+msgstr ""
+
+#: ../../collection-mapping.rst:485
+msgid ""
+"You may also attach a previously loaded object to a new ``ISession`` with "
+"``Update()`` or ``Lock()`` before accessing unitialized collections (or "
+"other proxies). NHibernate can not do this automatically, as it would "
+"introduce ad hoc transaction semantics!"
+msgstr ""
+
+#: ../../collection-mapping.rst:490
+msgid ""
+"You can use the ``Filter()`` method of the NHibernate ISession API to get "
+"the size of a collection without initializing it:"
+msgstr ""
+
+#: ../../collection-mapping.rst:500
+msgid ""
+"``Filter()`` or ``CreateFilter()`` are also used to efficiently retrieve "
+"subsets of a collection without needing to initialize the whole collection."
+msgstr ""
+
+#: ../../collection-mapping.rst:505
+msgid "Sorted Collections"
+msgstr ""
+
+#: ../../collection-mapping.rst:507
+msgid ""
+"NHibernate supports collections implemented by "
+"``System.Collections.SortedList`` and ``Iesi.Collections.SortedSet``. You "
+"must specify a comparer in the mapping file:"
+msgstr ""
+
+#: ../../collection-mapping.rst:523
+msgid ""
+"Allowed values of the ``sort`` attribute are ``unsorted``, ``natural`` and "
+"the name of a class implementing ``System.Collections.IComparer``."
+msgstr ""
+
+#: ../../collection-mapping.rst:527
+msgid ""
+"If you want the database itself to order the collection elements use the "
+"``order-by`` attribute of ``set``, ``bag`` or ``map`` mappings. This "
+"performs the ordering in the SQL query, not in memory."
+msgstr ""
+
+#: ../../collection-mapping.rst:532
+msgid ""
+"Setting the ``order-by`` attribute tells NHibernate to use "
+"``ListDictionary`` or ``ListSet`` class internally for dictionaries and "
+"sets, maintaining the order of the elements. *Note that lookup operations on"
+" these collections are very slow if they contain more than a few elements.*"
+msgstr ""
+
+#: ../../collection-mapping.rst:551
+msgid ""
+"Note that the value of the ``order-by`` attribute is an SQL ordering, not a "
+"HQL ordering!"
+msgstr ""
+
+#: ../../collection-mapping.rst:554
+msgid ""
+"Associations may even be sorted by some arbitrary criteria at runtime using "
+"a ``Filter()``."
+msgstr ""
+
+#: ../../collection-mapping.rst:562
+msgid "Using an ``<idbag>``"
+msgstr ""
+
+#: ../../collection-mapping.rst:564
+msgid ""
+"If you've fully embraced our view that composite keys are a bad thing and "
+"that entities should have synthetic identifiers (surrogate keys), then you "
+"might find it a bit odd that the many to many associations and collections "
+"of values that we've shown so far all map to tables with composite keys! "
+"Now, this point is quite arguable; a pure association table doesn't seem to "
+"benefit much from a surrogate key (though a collection of composite values "
+"*might*). Nevertheless, NHibernate provides a feature that allows you to map"
+" many to many associations and collections of values to a table with a "
+"surrogate key."
+msgstr ""
+
+#: ../../collection-mapping.rst:573
+msgid ""
+"The ``<idbag>`` element lets you map a ``List`` (or ``Collection``) with bag"
+" semantics."
+msgstr ""
+
+#: ../../collection-mapping.rst:586
+msgid ""
+"As you can see, an ``<idbag>`` has a synthetic id generator, just like an "
+"entity class! A different surrogate key is assigned to each collection row. "
+"NHibernate does not provide any mechanism to discover the surrogate key "
+"value of a particular row, however."
+msgstr ""
+
+#: ../../collection-mapping.rst:591
+msgid ""
+"Note that the update performance of an ``<idbag>`` is *much* better than a "
+"regular ``<bag>``! NHibernate can locate individual rows efficiently and "
+"update or delete them individually, just like a list, map or set."
+msgstr ""
+
+#: ../../collection-mapping.rst:596
+msgid ""
+"As of version 2.0, the ``native`` identifier generation strategy is "
+"supported for ``<idbag>`` collection identifiers."
+msgstr ""
+
+#: ../../collection-mapping.rst:600
+msgid "Bidirectional Associations"
+msgstr ""
+
+#: ../../collection-mapping.rst:602
+msgid ""
+"A *bidirectional association* allows navigation from both \"ends\" of the "
+"association. Two kinds of bidirectional association are supported:"
+msgstr ""
+
+#: ../../collection-mapping.rst:607
+msgid "one-to-many"
+msgstr ""
+
+#: ../../collection-mapping.rst:607
+msgid "set or bag valued at one end, single-valued at the other"
+msgstr ""
+
+#: ../../collection-mapping.rst:610
+msgid "many-to-many"
+msgstr ""
+
+#: ../../collection-mapping.rst:610
+msgid "set or bag valued at both ends"
+msgstr ""
+
+#: ../../collection-mapping.rst:612
+msgid ""
+"Please note that NHibernate does not support bidirectional one-to-many "
+"associations with an indexed collection (list, map or array) as the \"many\""
+" end, you have to use a set or bag mapping."
+msgstr ""
+
+#: ../../collection-mapping.rst:616
+msgid ""
+"You may specify a bidirectional many-to-many association simply by mapping "
+"two many-to-many associations to the same database table and declaring one "
+"end as *inverse* (which one is your choice). Here's an example of a "
+"bidirectional many-to-many association from a class back to *itself* (each "
+"category can have many items and each item can be in many categories):"
+msgstr ""
+
+#: ../../collection-mapping.rst:644
+msgid ""
+"Changes made only to the inverse end of the association are *not* persisted."
+" This means that NHibernate has two representations in memory for every "
+"bidirectional association, one link from A to B and another link from B to "
+"A. This is easier to understand if you think about the .NET object model and"
+" how we create a many-to-many relationship in C#:"
+msgstr ""
+
+#: ../../collection-mapping.rst:658
+msgid ""
+"The non-inverse side is used to save the in-memory representation to the "
+"database. We would get an unneccessary INSERT/UPDATE and probably even a "
+"foreign key violation if both would trigger changes! The same is of course "
+"also true for bidirectional one-to-many associations."
+msgstr ""
+
+#: ../../collection-mapping.rst:663
+msgid ""
+"You may map a bidirectional one-to-many association by mapping a one-to-many"
+" association to the same table column(s) as a many-to-one association and "
+"declaring the many-valued end ``inverse=\"true\"``."
+msgstr ""
+
+#: ../../collection-mapping.rst:684
+msgid ""
+"Mapping one end of an association with ``inverse=\"true\"`` doesn't affect "
+"the operation of cascades, both are different concepts!"
+msgstr ""
+
+#: ../../collection-mapping.rst:688
+msgid "Ternary Associations"
+msgstr ""
+
+#: ../../collection-mapping.rst:690
+msgid ""
+"There are two possible approaches to mapping a ternary association. One "
+"approach is to use composite elements (discussed below). Another is to use "
+"an ``IDictionary`` with an association as its index:"
+msgstr ""
+
+#: ../../collection-mapping.rst:711
+msgid "Heterogeneous Associations"
+msgstr ""
+
+#: ../../collection-mapping.rst:713
+msgid ""
+"The ``<many-to-any>`` and ``<index-many-to-any>`` elements provide for true "
+"heterogeneous associations. These mapping elements work in the same way as "
+"the ``<any>`` element - and should also be used rarely, if ever."
+msgstr ""
+
+#: ../../collection-mapping.rst:719
+msgid "Collection examples"
+msgstr ""
+
+#: ../../collection-mapping.rst:721
+msgid ""
+"The previous sections are pretty confusing. So lets look at an example. This"
+" class:"
+msgstr ""
+
+#: ../../collection-mapping.rst:753
+msgid ""
+"has a collection of ``Eg.Child`` instances. If each child has at most one "
+"parent, the most natural mapping is a one-to-many association:"
+msgstr ""
+
+#: ../../collection-mapping.rst:781
+msgid "This maps to the following table definitions:"
+msgstr ""
+
+#: ../../collection-mapping.rst:789
+msgid ""
+"If the parent is *required*, use a bidirectional one-to-many association:"
+msgstr ""
+
+#: ../../collection-mapping.rst:817
+msgid "Notice the ``NOT NULL`` constraint:"
+msgstr ""
+
+#: ../../collection-mapping.rst:828
+msgid ""
+"On the other hand, if a child might have multiple parents, a many-to-many "
+"association is appropriate:"
+msgstr ""
+
+#: ../../collection-mapping.rst:855
+msgid "Table definitions:"
+msgstr ""
