@@ -1,1 +1,1 @@
-sphinx-intl update -p _build/locale -l ru
+make -e SPHINXOPTS="-D language='ru'" html

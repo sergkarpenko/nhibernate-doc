@@ -1,33 +1,40 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: NHibernate Object Relational Mapper 4.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-12-28 22:06+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2014-12-28 23:49+0200\n"
+"Last-Translator: Sergey Karpenko <serg.karpenko@gmail.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.10\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: ru\n"
 
 #: ../../architecture.rst:7
 msgid "Architecture"
-msgstr ""
+msgstr "Архитектура"
 
 #: ../../architecture.rst:10
 msgid "Overview"
-msgstr ""
+msgstr "Обзор"
 
 #: ../../architecture.rst:12
 msgid "A (very) high-level view of the NHibernate architecture:"
-msgstr ""
+msgstr "(Очень) верхнеуровневый обзор архитектуры NHibernate"
 
 #: ../../architecture.rst:16
 msgid ""
 "This diagram shows NHibernate using the database and configuration data to "
 "provide persistence services (and persistent objects) to the application."
 msgstr ""
+"Эта диаграмма показывает NHibernate, использующий базу данных и "
+"конфигурационные данные предоставляющие персистентные сервисы (и "
+"персистетные объекты) приложению."
 
 #: ../../architecture.rst:19
 msgid ""
@@ -54,9 +61,9 @@ msgstr ""
 
 #: ../../architecture.rst:35
 msgid ""
-"A threadsafe (immutable) cache of compiled mappings for a single database. A"
-" factory for ``ISession`` and a client of ``IConnectionProvider``. Might "
-"hold an optional (second-level) cache of data that is reusable between "
+"A threadsafe (immutable) cache of compiled mappings for a single database. A "
+"factory for ``ISession`` and a client of ``IConnectionProvider``. Might hold "
+"an optional (second-level) cache of data that is reusable between "
 "transactions, at a process- or cluster-level."
 msgstr ""
 
@@ -118,8 +125,8 @@ msgstr ""
 msgid ""
 "(Optional) A factory for ADO.NET connections and commands. Abstracts "
 "application from the concrete vendor-specific implementations of "
-"``IDbConnection`` and ``IDbCommand``. Not exposed to application, but can be"
-" extended/implemented by the developer."
+"``IDbConnection`` and ``IDbCommand``. Not exposed to application, but can be "
+"extended/implemented by the developer."
 msgstr ""
 
 #: ../../architecture.rst:76
@@ -128,8 +135,8 @@ msgstr ""
 
 #: ../../architecture.rst:75
 msgid ""
-"(Optional) An interface encapsulating differences between ADO.NET providers,"
-" such as parameter naming conventions and supported ADO.NET features."
+"(Optional) An interface encapsulating differences between ADO.NET providers, "
+"such as parameter naming conventions and supported ADO.NET features."
 msgstr ""
 
 #: ../../architecture.rst:80
@@ -144,9 +151,9 @@ msgstr ""
 
 #: ../../architecture.rst:82
 msgid ""
-"Given a \"lite\" architecture, the application bypasses the "
-"``ITransaction``/``ITransactionFactory`` and/or ``IConnectionProvider`` APIs"
-" to talk to ADO.NET directly."
+"Given a \"lite\" architecture, the application bypasses the ``ITransaction``/"
+"``ITransactionFactory`` and/or ``IConnectionProvider`` APIs to talk to ADO."
+"NET directly."
 msgstr ""
 
 #: ../../architecture.rst:87
@@ -155,8 +162,8 @@ msgstr ""
 
 #: ../../architecture.rst:89
 msgid ""
-"An instance of a persistent classes may be in one of three different states,"
-" which are defined with respect to a *persistence context*. The NHibernate "
+"An instance of a persistent classes may be in one of three different states, "
+"which are defined with respect to a *persistence context*. The NHibernate "
 "``ISession`` object is the persistence context:"
 msgstr ""
 
@@ -177,9 +184,9 @@ msgstr ""
 #: ../../architecture.rst:99
 msgid ""
 "The instance is currently associated with a persistence context. It has a "
-"persistent identity (primary key value) and, perhaps, a corresponding row in"
-" the database. For a particular persistence context, NHibernate *guarantees*"
-" that persistent identity is equivalent to CLR identity (in-memory location "
+"persistent identity (primary key value) and, perhaps, a corresponding row in "
+"the database. For a particular persistence context, NHibernate *guarantees* "
+"that persistent identity is equivalent to CLR identity (in-memory location "
 "of the object)."
 msgstr ""
 
@@ -203,30 +210,30 @@ msgstr ""
 #: ../../architecture.rst:121
 msgid ""
 "Most applications using NHibernate need some form of \"contextual\" "
-"sessions, where a given session is in effect throughout the scope of a given"
-" context. However, across applications the definition of what constitutes a "
+"sessions, where a given session is in effect throughout the scope of a given "
+"context. However, across applications the definition of what constitutes a "
 "context is typically different; and different contexts define different "
 "scopes to the notion of current."
 msgstr ""
 
 #: ../../architecture.rst:126
 msgid ""
-"Starting with version 1.2, NHibernate added the "
-"``ISessionFactory.GetCurrentSession()`` method. The processing behind "
-"``ISessionFactory.GetCurrentSession()`` is pluggable. An extension interface"
-" (``NHibernate.Context.ICurrentSessionContext``) and a new configuration "
-"parameter (``hibernate.current_session_context_class``) have been added to "
-"allow pluggability of the scope and context of defining current sessions."
+"Starting with version 1.2, NHibernate added the ``ISessionFactory."
+"GetCurrentSession()`` method. The processing behind ``ISessionFactory."
+"GetCurrentSession()`` is pluggable. An extension interface (``NHibernate."
+"Context.ICurrentSessionContext``) and a new configuration parameter "
+"(``hibernate.current_session_context_class``) have been added to allow "
+"pluggability of the scope and context of defining current sessions."
 msgstr ""
 
 #: ../../architecture.rst:132
 msgid ""
-"See the API documentation for the "
-"``NHibernate.Context.ICurrentSessionContext`` interface for a detailed "
-"discussion of its contract.  It defines a single method, "
-"``CurrentSession()``, by which the implementation is responsible for "
-"tracking the current contextual session.  Out-of-the-box, NHibernate comes "
-"with several implementations of this interface:"
+"See the API documentation for the ``NHibernate.Context."
+"ICurrentSessionContext`` interface for a detailed discussion of its "
+"contract.  It defines a single method, ``CurrentSession()``, by which the "
+"implementation is responsible for tracking the current contextual session.  "
+"Out-of-the-box, NHibernate comes with several implementations of this "
+"interface:"
 msgstr ""
 
 #: ../../architecture.rst:138
@@ -263,10 +270,10 @@ msgstr ""
 #: ../../architecture.rst:155
 msgid ""
 "``NHibernate.Context.ManagedWebSessionContext`` - current sessions are "
-"tracked by ``HttpContext``. Removed in NHibernate 4.0 - "
-"``NHibernate.Context.WebSessionContext`` should be used instead. You are "
-"responsible to bind and unbind an ``ISession`` instance with static methods "
-"on this class, it never opens, flushes, or closes an ``ISession`` itself."
+"tracked by ``HttpContext``. Removed in NHibernate 4.0 - ``NHibernate.Context."
+"WebSessionContext`` should be used instead. You are responsible to bind and "
+"unbind an ``ISession`` instance with static methods on this class, it never "
+"opens, flushes, or closes an ``ISession`` itself."
 msgstr ""
 
 #: ../../architecture.rst:161
@@ -275,6 +282,6 @@ msgid ""
 "defines which ``NHibernate.Context.ICurrentSessionContext`` implementation "
 "should be used. Typically, the value of this parameter would just name the "
 "implementation class to use (including the assembly name); for the out-of-"
-"the-box implementations, however, there are corresponding short names: "
-"\"call\", \"thread_static\", \"web\" and \"wcf_operation\", respectively."
+"the-box implementations, however, there are corresponding short names: \"call"
+"\", \"thread_static\", \"web\" and \"wcf_operation\", respectively."
 msgstr ""
