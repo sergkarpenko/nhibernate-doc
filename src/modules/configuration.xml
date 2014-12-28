@@ -122,7 +122,7 @@ ISession session = sessions.OpenSession(conn);
 
         <para>
             The application must be careful not to open two concurrent
-            <literal>ISession</literal>s on the same ADO.NET connection!
+            <literal>ISession</literal> on the same ADO.NET connection!
         </para>
 
     </sect1>
@@ -278,11 +278,11 @@ ISession session = sessions.OpenSession(conn);
                         <literal>after_transaction</literal>
                     </para>
                     <para>
-                        Note that this setting only affects <literal>ISession</literal>s returned from
-                        <literal>ISessionFactory.OpenSession</literal>.  For <literal>ISession</literal>s
+                        Note that this setting only affects <literal>ISession</literal> returned from
+                        <literal>ISessionFactory.OpenSession</literal>.  For <literal>ISession</literal>
                         obtained through <literal>ISessionFactory.GetCurrentSession</literal>, the
                         <literal>ICurrentSessionContext</literal> implementation configured for use
-                        controls the connection release mode for those <literal>ISession</literal>s.
+                        controls the connection release mode for those <literal>ISession</literal>.
                         See <xref linkend="architecture-current-session"/>.
                     </para>
                 </entry>
@@ -743,6 +743,7 @@ ISession session = sessions.OpenSession(conn);
                         <row>
                             <entry>Microsoft SQL Server Compact Edition</entry>
                             <entry><literal>NHibernate.Dialect.MsSqlCeDialect</literal></entry>
+                            <entry></entry>
                         </row>
                         <row>
                             <entry>Firebird</entry> 

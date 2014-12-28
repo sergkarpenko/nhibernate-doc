@@ -122,7 +122,7 @@
                             (Optional) A single-threaded, short-lived object used by the application to
                             specify atomic units of work. Abstracts application from underlying ADO.NET
                             transaction. An <literal>ISession</literal> might span several
-                            <literal>ITransaction</literal>s in some cases.
+                            <literal>ITransaction</literal> in some cases.
                         </para>
                     </listitem>
                 </varlistentry>

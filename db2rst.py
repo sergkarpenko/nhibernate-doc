@@ -60,7 +60,7 @@ FILES = {
     'preface': 'preface',
     'quickstart': 'quickstart',
     'architecture': 'architecture',
-#    'configuration': 'configuration',
+    'configuration': 'configuration',
     'persistent_classes': 'persistent-classes',
     'basic_mapping': 'basic-mapping',
     'collection_mapping': 'collection-mapping',
@@ -124,7 +124,7 @@ def _main():
         f = open(output_file, 'wb')
         f.write(str(obj))
         f.close()
-        replace(output_file, '``s', '``')
+        #replace(output_file, '``s', '``')
     '''
     if output_dir is not None:
         output = str(obj).strip()
@@ -518,12 +518,11 @@ class Convert(object):
         return "\n::\n" + self._indent(el, 4) + "\n"
 
     def _format_code(self, el):
-        lines = [" " * 2 + i for i in el.text.strip().splitlines()
-                 if i and not i.isspace()]
+        lines = [" " * 2 + i for i in el.text.strip().splitlines()]
         return "\n\n" + "\n".join(lines)
 
     def e_programlisting(self, el):
-        if ("<?xml" in self._concat(el)):
+        if ("<" in self._concat(el)):
             lang = "xml"
         elif self._concat(el).strip().startswith("from") \
             or self._concat(el).strip().startswith("select") \
@@ -545,7 +544,10 @@ class Convert(object):
     e_section = _block_separated_with_blank_line
     e_appendix = _block_separated_with_blank_line
     e_chapter = _block_separated_with_blank_line
-
+    
+    #def e_entry(self, el):
+    #    return el.text or 'Empty'
+    
     def e_para(self, el):
         return self._block_separated_with_blank_line(el)
 
@@ -666,7 +668,10 @@ class Convert(object):
     # table support
 
     def _calc_col_width(self, el):
-        return len(self._conv(el).strip())
+        return len(self._parse_entry(el).strip())
+
+    def _parse_entry(self, el):
+        return self._concat(el).replace('\n', ' ').strip()
 
     def e_table(self, el):
         # get each column size
@@ -675,10 +680,16 @@ class Convert(object):
         colsizes = map(max, zip(*[map(self._calc_col_width, r) for r in el.xpath('.//row')]))
         fmt = ' '.join(['%%-%is' % (size,) for size in colsizes]) + '\n'
         text += fmt % tuple(['=' * size for size in colsizes])
-        text += fmt % tuple(map(self._conv, el.find('tgroup').find('thead').find('row').findall('entry')))
+        try:
+            text += fmt % tuple(map(self._parse_entry, el.find('tgroup').find('thead').find('row').findall('entry')))
+        except:
+            self._warn('Bad entry')
         text += fmt % tuple(['=' * size for size in colsizes])
         for row in el.find('tgroup').find('tbody').findall('row'):
-            text += fmt % tuple(map(self._conv, row.findall('entry')))
+            try:
+                text += fmt % tuple(map(self._parse_entry, row.findall('entry')))
+            except:
+                self._warn('Bad entry in tgroup')
         text += fmt % tuple(['=' * size for size in colsizes])
         return text
         

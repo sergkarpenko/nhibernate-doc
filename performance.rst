@@ -76,11 +76,14 @@ in an exception. For example:
 
   s = sessions.OpenSession();
   Transaction tx = s.BeginTransaction();
+
   User u = (User) s.CreateQuery("from User u where u.Name=:userName")
       .SetString("userName", userName).UniqueResult();
   IDictionary permissions = u.Permissions;
+
   tx.Commit();
   s.Close();
+
   int accessLevel = (int) permissions["accounts"];  // Error!
 
 Since the ``permissions`` collection was not initialized
@@ -109,7 +112,7 @@ Tuning fetch strategies
 Select fetching (the default) is extremely vulnerable to N+1 selects problems,
 so we might want to enable join fetching in the mapping document:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Permissions"
               fetch="join">
@@ -117,7 +120,7 @@ so we might want to enable join fetching in the mapping document:
       <one-to-many class="Permission"/>
   </set
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-one name="Mother" class="Cat" fetch="join"/>
 
@@ -129,7 +132,7 @@ The ``fetch`` strategy defined in the mapping document affects:
 
 - ``ICriteria`` queries
 
-- HQL queries if ``ubselect`` fetching is used
+- HQL queries if ``subselect`` fetching is used
 
 No matter what fetching strategy you use, the defined non-lazy graph is guaranteed
 to be loaded into memory. Note that this might result in several immediate selects
@@ -179,7 +182,7 @@ constructor. We recommend this constructor for all persistent classes!*
 There are some gotchas to be aware of when extending this approach to polymorphic
 classes, eg.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Cat" proxy="Cat">
       ......
@@ -217,7 +220,7 @@ to different proxy objects, the underlying instance will still be the same objec
   cat.Weight = 11.0;  // hit the db to initialize the proxy
   Console.WriteLine( dc.Weight );  // 11.0
 
-Third, you may not use a proxy for a ``ealed`` class or a class
+Third, you may not use a proxy for a ``sealed`` class or a class
 with any non-overridable public members.
 
 Finally, if your persistent object acquires any resources upon instantiation (eg. in
@@ -228,7 +231,7 @@ These problems are all due to fundamental limitations in .NET's single inheritan
 If you wish to avoid these problems your persistent classes must each implement an interface
 that declares its business methods. You should specify these interfaces in the mapping file. eg.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="CatImpl" proxy="ICat">
       ......
@@ -351,20 +354,20 @@ iterate through all cats and call ``cat.Owner`` on each, NHibernate will by defa
 execute 25 ``SELECT`` statements, to retrieve the proxied owners. You can tune this
 behavior by specifying a ``batch-size`` in the mapping of ``Person``:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Person" batch-size="10">...</class>
 
 NHibernate will now execute only three queries, the pattern is 10, 10, 5.
 
 You may also enable batch fetching of collections. For example, if each ``Person`` has
-a lazy collection of ``Cat``, and 10 persons are currently loaded in the
-``ISesssion``, iterating through all persons will generate 10 ``SELECT``,
+a lazy collection of ``Cat``s, and 10 persons are currently loaded in the
+``ISesssion``, iterating through all persons will generate 10 ``SELECT``s,
 one for every call to ``person.Cats``. If you enable batch fetching for the
 ``Cats`` collection in the mapping of ``Person``, NHibernate can pre-fetch
 collections:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Person">
       <set name="Cats" batch-size="3">
@@ -373,7 +376,7 @@ collections:
   </class>
 
 With a ``batch-size`` of 3, NHibernate will load 3, 3, 3, 1 collections in four
-``SELECT``. Again, the value of the attribute depends on the expected number of
+``SELECT``s. Again, the value of the attribute depends on the expected number of
 uninitialized collections in a particular ``Session``.
 
 Batch fetching of collections is particularly useful if you have a nested tree of items, ie.
@@ -418,7 +421,7 @@ Cache mappings
 The ``<cache>`` element of a class or collection mapping has the
 following form:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <cache
       usage="read-write|nonstrict-read-write|read-only"
@@ -446,7 +449,7 @@ If your application needs to read but never modify instances of a persistent cla
 ``read-only`` cache may be used. This is the simplest and best performing
 strategy. Its even perfectly safe for use in a cluster.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Eg.Immutable" mutable="false">
       <cache usage="read-only"/>
@@ -463,7 +466,7 @@ You should ensure that the transaction is completed when ``ISession.Close()`` or
 you should ensure that the underlying cache implementation supports locking. The built-in cache
 providers do *not*.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="eg.Cat" .... >
       <cache usage="read-write"/>
@@ -546,7 +549,7 @@ The Query Cache
 Query result sets may also be cached. This is only useful for queries that are run
 frequently with the same parameters. To use the query cache you must first enable it:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <add key="hibernate.cache.use_query_cache" value="true" />
 
@@ -799,7 +802,7 @@ throw an exception executing this query:
 An interesting usage of this feature is to load several collections of an object in one
 round-trip, without an expensive cartesian product (blog * users * posts).
 
-.. code-block:: csharp
+.. code-block:: xml
 
   Blog blog = s.CreateMultiQuery()
       .Add("select b from Blog b left join fetch b.Users where b.Id = :id")
@@ -834,7 +837,7 @@ added to the multi criteria.
 You can add ``ICriteria`` or ``DetachedCriteria`` to the Multi Criteria query.
 In fact, using DetachedCriteria in this fashion has some interesting implications.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   DetachedCriteria customersCriteria = AuthorizationService.GetAssociatedCustomersQuery();
   IList results = session.CreateMultiCriteria()
@@ -844,6 +847,7 @@ In fact, using DetachedCriteria in this fashion has some interesting implication
                                                       .SetProjection(Projections.Id())
                         ) )
   	).List();
+
   ICollection<Customer> customers = CollectionHelper.ToArray<Customer>(results[0]);
   ICollection<Policy> policies = CollectionHelper.ToArray<Policy>(results[1]);
 

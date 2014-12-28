@@ -86,7 +86,7 @@ return cat;]]></programlisting>
 
         <para>
             You may also load an objects using an SQL <literal>SELECT ... FOR UPDATE</literal>. See the next
-            section for a discussion of NHibernate <literal>LockMode</literal>s.
+            section for a discussion of NHibernate <literal>LockMode</literal>.
         </para>
 
         <programlisting><![CDATA[Cat cat = (Cat) sess.Get(typeof(Cat), id, LockMode.Upgrade);]]></programlisting>
@@ -108,7 +108,7 @@ sess.Refresh(cat); //re-read the state (after the trigger executes)]]></programl
 
         <para>
             An important question usually appears at this point: How much does NHibernate load
-            from the database and how many SQL <literal>SELECT</literal>s will it use? This
+            from the database and how many SQL <literal>SELECT</literal> will it use? This
             depends on the <emphasis>fetching strategy</emphasis> and is explained in
             <xref linkend="performance-fetching"/>.
         </para>

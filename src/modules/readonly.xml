@@ -493,7 +493,7 @@ s.Flush();
         </table>
   
         <para>
-            * Behavior is different when the entity having the property/association
+              Behavior is different when the entity having the property/association
               is read-only, compared to when it is not read-only.
         </para>
 

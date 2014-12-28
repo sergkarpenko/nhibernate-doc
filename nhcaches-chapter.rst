@@ -67,9 +67,7 @@ Here are the steps to follow to enable the second-level cache in NHibernate:
 - To tell NHibernate which cache provider to use, add in your NHibernate configuration file
   (can be :file:`YourAssembly.exe.config` or :file:`web.config` or a
   :file:`.cfg.xml` file, in the latter case the syntax will be different from what
-  is shown below):
-  .. code-block:: csharp
-    <add key="hibernate.cache.provider_class" value="
+  is shown below): ``<add key="hibernate.cache.provider_class" value="XXX" />`` ``<add key="expiration" value="120" />``
   "``XXX``" is the assembly-qualified class name of a class
   implementing ICacheProvider, eg.
   "NHibernate.Caches.SysCache.SysCacheProvider,
@@ -119,6 +117,7 @@ different regions. Here's an example:
   	<configSections>
   		<section name="syscache" type="NHibernate.Caches.SysCache.SysCacheSectionHandler,NHibernate.Caches.SysCache" />
   	</configSections>
+
   	<syscache>
   		<cache region="foo" expiration="500" priority="4" />
   		<cache region="bar" expiration="300" priority="3" />
@@ -133,10 +132,10 @@ table or query changes. Query dependencies are only available for SQL Server 200
 provider, the application must be setup and configured to support SQL notifications as described in the
 MSDN documentation.
 
-To configure cache regions with SqlCacheDependencies a ``yscache2`` config section must be
+To configure cache regions with SqlCacheDependencies a ``syscache2`` config section must be
 defined in the application's configuration file. See the sample below.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <configSections>
   	<section name="syscache2" type="NHibernate.Caches.SysCache2.SysCacheSection, NHibernate.Caches.SysCache2"/>
@@ -156,7 +155,7 @@ The cache will be invalidated the next time the application polls the database f
 To configure the data in a cache region to be invalidated when data in an underlying table is changed,
 a cache region must be configured in the application's configuration file. See the sample below.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <syscache2>
   	<cacheRegion name="Product">
@@ -182,7 +181,7 @@ Table-based Dependency Configuration Properties
 
 ``databaseEntryName``
     The name of a database defined in the ``databases`` element for
-    ``qlCacheDependency`` for caching (ASP.NET Settings Schema) element of the
+    ``sqlCacheDependency`` for caching (ASP.NET Settings Schema) element of the
     application's ``Web.config`` file.
 
 Command-Based Dependencies
@@ -206,7 +205,7 @@ be configured in the application's configuration file. See the samples below.
 Stored Procedure
 ----------------
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <cacheRegion name="Product" priority="High" >
   	<dependencies>
@@ -221,7 +220,7 @@ Stored Procedure
 SELECT Statement
 ----------------
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <cacheRegion name="Product" priority="High">
   	<dependencies>
@@ -266,7 +265,7 @@ notification, the data in the cache region will be invalidated.  See the samples
 Multiple commands
 -----------------
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <cacheRegion name="Product">
   	<dependencies>
@@ -283,7 +282,7 @@ Multiple commands
 Mixed
 -----
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <cacheRegion name="Product">
   	<dependencies>
@@ -311,14 +310,14 @@ have been in the cache for a specified amount of time.  See the samples below.
 Relative Expiration
 -------------------
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <cacheRegion name="Product" relativeExpiration="300" priority="High" />
 
 Time of Day Expiration
 ----------------------
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <cacheRegion name="Product" timeOfDayExpiration="2:00:00" priority="High" />
 

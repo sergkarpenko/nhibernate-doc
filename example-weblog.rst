@@ -15,6 +15,7 @@ relationship, but we will use an ordered bag, instead of a set.
 
   using System;
   using System.Collections;
+
   namespace Eg
   {
       public class Blog
@@ -22,16 +23,19 @@ relationship, but we will use an ordered bag, instead of a set.
           private long _id;
           private string _name;
           private IList _items;
+
           public virtual long Id
           {
               get { return _id; }
               set { _id = value; }
           }
+
           public virtual IList Items
           {
               get { return _items; }
               set { _items = value; }
           }
+
           public virtual string Name
           {
               get { return _name; }
@@ -43,6 +47,7 @@ relationship, but we will use an ordered bag, instead of a set.
 .. code-block:: csharp
 
   using System;
+
   namespace Eg
   {
       public class BlogItem
@@ -52,26 +57,31 @@ relationship, but we will use an ordered bag, instead of a set.
           private string _text;
           private string _title;
           private Blog _blog;
+
           public virtual Blog Blog
           {
               get { return _blog; }
               set { _blog = value; }
           }
+
           public virtual DateTime DateTime
           {
               get { return _dateTime; }
               set { _dateTime = value; }
           }
+
           public virtual long Id
           {
               get { return _id; }
               set { _id = value; }
           }
+
           public virtual string Text
           {
               get { return _text; }
               set { _text = value; }
           }
+
           public virtual string Title
           {
               get { return _title; }
@@ -90,30 +100,40 @@ The XML mappings should now be quite straightforward.
   <?xml version="1.0"?>
   <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
       assembly="Eg" namespace="Eg">
+
       <class
           name="Blog"
           table="BLOGS"
           lazy="true">
+
           <id
               name="Id"
               column="BLOG_ID">
+
               <generator class="native"/>
+
           </id>
+
           <property
               name="Name"
               column="NAME"
               not-null="true"
               unique="true"/>
+
           <bag
               name="Items"
               inverse="true"
               lazy="true"
               order-by="DATE_TIME"
               cascade="all">
+
               <key column="BLOG_ID"/>
               <one-to-many class="BlogItem"/>
+
           </bag>
+
       </class>
+
   </hibernate-mapping>
 
 .. code-block:: xml
@@ -121,32 +141,42 @@ The XML mappings should now be quite straightforward.
   <?xml version="1.0"?>
   <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
       assembly="Eg" namespace="Eg">
+
       <class
           name="BlogItem"
           table="BLOG_ITEMS"
           dynamic-update="true">
+
           <id
               name="Id"
               column="BLOG_ITEM_ID">
+
               <generator class="native"/>
+
           </id>
+
           <property
               name="Title"
               column="TITLE"
               not-null="true"/>
+
           <property
               name="Text"
               column="TEXT"
               not-null="true"/>
+
           <property
               name="DateTime"
               column="DATE_TIME"
               not-null="true"/>
+
           <many-to-one
               name="Blog"
               column="BLOG_ID"
               not-null="true"/>
+
       </class>
+
   </hibernate-mapping>
 
 NHibernate Code
@@ -159,12 +189,15 @@ we can do with these classes, using NHibernate.
 
   using System;
   using System.Collections;
+
   using NHibernate.Tool.hbm2ddl;
+
   namespace Eg
   {
       public class BlogMain
       {
           private ISessionFactory _sessions;
+
           public void Configure()
           {
               _sessions = new Configuration()
@@ -172,6 +205,7 @@ we can do with these classes, using NHibernate.
                   .AddClass(typeof(BlogItem))
                   .BuildSessionFactory();
           }
+
           public void ExportTables()
           {
               Configuration cfg = new Configuration()
@@ -179,19 +213,23 @@ we can do with these classes, using NHibernate.
                   .AddClass(typeof(BlogItem));
               new SchemaExport(cfg).create(true, true);
           }
+
           public Blog CreateBlog(string name)
           {
               Blog blog = new Blog();
               blog.Name = name;
               blog.Items = new ArrayList();
+
               using (ISession session = _sessions.OpenSession())
               using (ITransaction tx = session.BeginTransaction())
               {
                   session.Save(blog);
                   tx.Commit();
               }
+
               return blog;
           }
+
           public BlogItem CreateBlogItem(Blog blog, string title, string text)
           {
               BlogItem item = new BlogItem();
@@ -200,20 +238,24 @@ we can do with these classes, using NHibernate.
               item.Blog = blog;
               item.DateTime = DateTime.Now;
               blog.Items.Add(item);
+
               using (ISession session = _sessions.OpenSession())
               using (ITransaction tx = session.BeginTransaction())
               {
                   session.Update(blog);
                   tx.Commit();
               }
+
               return item;
           }
+
           public BlogItem CreateBlogItem(long blogId, string title, string text)
           {
               BlogItem item = new BlogItem();
               item.Title = title;
               item.Text = text;
               item.DateTime = DateTime.Now;
+
               using (ISession session = _sessions.OpenSession())
               using (ITransaction tx = session.BeginTransaction())
               {
@@ -222,11 +264,14 @@ we can do with these classes, using NHibernate.
                   blog.Items.Add(item);
                   tx.Commit();
               }
+
               return item;
           }
+
           public void UpdateBlogItem(BlogItem item, string text)
           {
               item.Text = text;
+
               using (ISession session = _sessions.OpenSession())
               using (ITransaction tx = session.BeginTransaction())
               {
@@ -234,6 +279,7 @@ we can do with these classes, using NHibernate.
                   tx.Commit();
               }
           }
+
           public void UpdateBlogItem(long itemId, string text)
           {
               using (ISession session = _sessions.OpenSession())
@@ -244,9 +290,11 @@ we can do with these classes, using NHibernate.
                   tx.Commit();
               }
           }
+
           public IList listAllBlogNamesAndItemCounts(int max)
           {
               IList result = null;
+
               using (ISession session = _sessions.OpenSession())
               using (ITransaction tx = session.BeginTransaction())
               {
@@ -261,11 +309,14 @@ we can do with these classes, using NHibernate.
                   result = q.List();
                   tx.Commit();
               }
+
               return result;
           }
+
           public Blog GetBlogAndAllItems(long blogId)
           {
               Blog blog = null;
+
               using (ISession session = _sessions.OpenSession())
               using (ITransaction tx = session.BeginTransaction())
               {
@@ -278,11 +329,14 @@ we can do with these classes, using NHibernate.
                   blog  = (Blog) q.List()[0];
                   tx.Commit();
               }
+
               return blog;
           }
+
           public IList ListBlogsAndRecentItems()
           {
               IList result = null;
+
               using (ISession session = _sessions.OpenSession())
               using (ITransaction tx = session.BeginTransaction())
               {
@@ -291,11 +345,14 @@ we can do with these classes, using NHibernate.
                       "inner join blog.Items as blogItem " +
                       "where blogItem.DateTime > :minDate"
                   );
+
                   DateTime date = DateTime.Now.AddMonths(-1);
                   q.SetDateTime("minDate", date);
+
                   result = q.List();
                   tx.Commit();
               }
+
               return result;
           }
       }

@@ -46,7 +46,7 @@ Bidirectional one-to-many
 Suppose we start with a simple ``<one-to-many>`` association from
 ``Parent`` to ``Child``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Children">
       <key column="parent_id" />
@@ -78,7 +78,7 @@ The underlying cause is that the link (the foreign key ``parent_id``) from
 object and is therefore not created in the ``INSERT``. So the solution is to make the link part
 of the ``Child`` mapping.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-one name="Parent" column="parent_id" not-null="true"/>
 
@@ -87,7 +87,7 @@ of the ``Child`` mapping.
 Now that the ``Child`` entity is managing the state of the link, we tell the collection not
 to update the link. We use the ``inverse`` attribute.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Children" inverse="true">
       <key column="parent_id"/>
@@ -134,7 +134,7 @@ Cascading lifecycle
 The explicit call to ``Save()`` is still annoying. We will address this by
 using cascades.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Children" inverse="true" cascade="all">
       <key column="parent_id"/>
@@ -168,6 +168,7 @@ However, this code
   IEnumerator childEnumerator = p.Children.GetEnumerator();
   childEnumerator.MoveNext();
   Child c = (Child) childEnumerator.Current;
+
   p.Children.Remove(c);
   c.Parent = null;
   session.Flush();
@@ -183,6 +184,7 @@ will not remove ``c`` from the database; it will only remove the link to ``p``
   IEnumerator childEnumerator = p.Children.GetEnumerator();
   childEnumerator.MoveNext();
   Child c = (Child) childEnumerator.Current;
+
   p.Children.Remove(c);
   session.Delete(c);
   session.Flush();
@@ -191,7 +193,7 @@ Now, in our case, a ``Child`` can't really exist without its parent. So if we re
 a ``Child`` from the collection, we really do want it to be deleted. For this, we must
 use ``cascade="all-delete-orphan"``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Children" inverse="true" cascade="all-delete-orphan">
       <key column="parent_id"/>
@@ -256,22 +258,26 @@ newly instantiated objects. For example, you could define a base class for your 
   public class Persistent
   {
       private bool _saved = false;
+
       public void OnSave()
       {
           _saved=true;
       }
+
       public void OnLoad()
       {
           _saved=true;
       }
+
       ......
+
       public bool IsSaved
       {
           get { return _saved; }
       }
   }
 
-(The ``aved`` property is non-persistent.)
+(The ``saved`` property is non-persistent.)
 Now implement ``IsTransient()``, along with ``OnLoad()``
 and ``OnSave()`` as follows.
 
@@ -288,6 +294,7 @@ and ``OnSave()`` as follows.
           return null;
       }
   }
+
   public bool OnLoad(object entity,
       object id,
       object[] state,
@@ -297,6 +304,7 @@ and ``OnSave()`` as follows.
       if (entity is Persistent) ( (Persistent) entity ).OnLoad();
       return false;
   }
+
   public boolean OnSave(object entity,
       object id,
       object[] state,

@@ -193,7 +193,7 @@ and update the information. If you use transitive persistence to cascade reattac
 to associated entities, NHibernate might execute uneccessary updates. This is usually
 not a problem, but *on update* triggers in the database might be
 executed even when no changes have been made to detached instances. You can customize
-this behavior by setting  ``elect-before-update="true"`` in the
+this behavior by setting  ``select-before-update="true"`` in the
 ``<class>`` mapping, forcing NHibernate to ``SELECT``
 the instance to ensure that changes did actually occur, before updating the row.
 
@@ -255,15 +255,19 @@ Heres an example:
   ....
   ISession s = sessions.OpenSession();
   ITransaction tx = null;
+
   try
   {
       tx = s.BeginTransaction())
+
       fooList = s.Find(
       	"select foo from Eg.Foo foo where foo.Date = current date"
           // uses db2 date function
       );
+
       bar = new Bar();
       s.Save(bar);
+
       tx.Commit();
   }
   catch (Exception)
@@ -279,15 +283,18 @@ Later on:
 .. code-block:: csharp
 
   s.Reconnect();
+
   try
   {
       tx = s.BeginTransaction();
+
       bar.FooTable = new HashMap();
       foreach (Foo foo in fooList)
       {
           s.Lock(foo, LockMode.Read);    //check that foo isn't stale
           bar.FooTable.Put( foo.Name, foo );
       }
+
       tx.Commit();
   }
   catch (Exception)
@@ -300,8 +307,8 @@ Later on:
       s.Close();
   }
 
-You can see from this how the relationship between ``ITransaction`` and
-``ISession`` is many-to-one, An ``ISession`` represents a
+You can see from this how the relationship between ``ITransaction``s and
+``ISession``s is many-to-one, An ``ISession`` represents a
 conversation between the application and the database. The
 ``ITransaction`` breaks that conversation up into atomic units of work
 at the database level.

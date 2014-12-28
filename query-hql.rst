@@ -13,7 +13,7 @@ Case Sensitivity
 
 Queries are case-insensitive, except for names of .NET classes and properties.
 So ``SeLeCT`` is the same as
-``ELEct`` is the same as
+``sELEct`` is the same as
 ``SELECT`` but
 ``Eg.FOO`` is not
 ``Eg.Foo`` and
@@ -75,7 +75,9 @@ values, using a ``join``.
   from Eg.Cat as cat
       inner join cat.Mate as mate
       left outer join cat.Kittens as kitten
+
   from Eg.Cat as cat left join cat.Mate.Kittens as kittens
+
   from Formula form full join form.Parameter param
 
 The supported join types are borrowed from ANSI SQL
@@ -121,7 +123,7 @@ be used in queries called using ``Enumerable()``. Finally, note that
 The select clause
 #################
 
-The ``elect`` clause picks which objects and properties to return in
+The ``select`` clause picks which objects and properties to return in
 the query result set. Consider:
 
 .. code-block:: sql
@@ -150,6 +152,7 @@ Queries may return properties of any value type including properties of componen
 
   select cat.Name from Eg.DomesticCat cat
   where cat.Name like 'fri%'
+
   select cust.Name.FirstName from Customer as cust
 
 Queries may return multiple objects and/or properties as an array of type
@@ -183,7 +186,7 @@ HQL queries may even return the results of aggregate functions on properties:
   select avg(cat.Weight), sum(cat.Weight), max(cat.Weight), count(cat)
   from Eg.Cat cat
 
-Collections may also appear inside aggregate functions in the ``elect``
+Collections may also appear inside aggregate functions in the ``select``
 clause.
 
 .. code-block:: sql
@@ -205,6 +208,7 @@ the same semantics as in SQL.
 .. code-block:: sql
 
   select distinct cat.Name from Eg.Cat cat
+
   select count(distinct cat.Name), count(cat) from Eg.Cat cat
 
 Polymorphic queries
@@ -282,6 +286,7 @@ instances:
 .. code-block:: sql
 
   from Eg.Cat cat, Eg.Cat rival where cat.Mate = rival.Mate
+
   select cat, mate
   from Eg.Cat cat, Eg.Cat mate
   where cat.Mate = mate
@@ -292,6 +297,7 @@ unique identifier of an object. (You may also use its property name.)
 .. code-block:: sql
 
   from Eg.Cat as cat where cat.id = 123
+
   from Eg.Cat as cat where cat.Mate.id = 69
 
 The second query is efficient. No table join is required!
@@ -305,6 +311,7 @@ has a composite identifier consisting of ``Country`` and
   from Bank.Person person
   where person.id.Country = 'AU'
       and person.id.MedicareNumber = 123456
+
   from Bank.Account account
   where account.Owner.id.Country = 'AU'
       and account.Owner.id.MedicareNumber = 123456
@@ -321,7 +328,7 @@ where clause will be translated to its discriminator value.
 
 You may also specify properties of components or composite user types (and of components
 of components, etc). Never try to use a path-expression that ends in a property of component
-type (as opposed to a property of a component). For example, if ``tore.Owner``
+type (as opposed to a property of a component). For example, if ``store.Owner``
 is an entity with a component ``Address``
 
 .. code-block:: csharp
@@ -377,6 +384,7 @@ most of the kind of things you could write in SQL:
 .. code-block:: sql
 
   from Eg.DomesticCat cat where cat.Name between 'A' and 'B'
+
   from Eg.DomesticCat cat where cat.Name in ( 'Foo', 'Bar', 'Baz' )
 
 and the negated forms may be written
@@ -384,6 +392,7 @@ and the negated forms may be written
 .. code-block:: sql
 
   from Eg.DomesticCat cat where cat.Name not between 'A' and 'B'
+
   from Eg.DomesticCat cat where cat.Name not in ( 'Foo', 'Bar', 'Baz' )
 
 Likewise, ``is null`` and ``is not null`` may be used to test
@@ -392,7 +401,7 @@ for null values.
 Booleans may be easily used in expressions by declaring HQL query substitutions in NHibernate
 configuration:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <property name="hibernate.query.substitutions">true 1, false 0</property>
 
@@ -403,12 +412,13 @@ literals ``1`` and ``0`` in the translated SQL from this HQL:
 
   from Eg.Cat cat where cat.Alive = true
 
-You may test the size of a collection with the special property ``ize``, or
-the special ``ize()`` function.
+You may test the size of a collection with the special property ``size``, or
+the special ``size()`` function.
 
 .. code-block:: sql
 
   from Eg.Cat cat where cat.Kittens.size > 0
+
   from Eg.Cat cat where size(cat.Kittens) > 0
 
 For indexed collections, you may refer to the minimum and maximum indices using
@@ -425,6 +435,7 @@ There are also functional forms (which, unlike the constructs above, are not cas
 .. code-block:: sql
 
   from Order order where maxindex(order.Items) > 100
+
   from Order order where minelement(order.Items) > 10000
 
 The SQL functions ``any, some, all, exists, in`` are supported when passed the element
@@ -435,20 +446,24 @@ or the result of a subquery (see below).
 
   select mother from Eg.Cat as mother, Eg.Cat as kit
   where kit in elements(mother.Kittens)
+
   select p from Eg.NameList list, Eg.Person p
   where p.Name = some elements(list.Names)
+
   from Eg.Cat cat where exists elements(cat.Kittens)
+
   from Eg.Player p where 3 > all elements(p.Scores)
+
   from Eg.Show show where 'fizard' in indices(show.Acts)
 
-Note that these constructs - ``ize``, ``elements``,
+Note that these constructs - ``size``, ``elements``,
 ``indices``, ``minIndex``, ``maxIndex``,
 ``minElement``, ``maxElement`` - have certain usage
 restrictions:
 
 - in a ``where`` clause: only for databases with subselects
 
-- in a ``elect`` clause: only ``elements`` and
+- in a ``select`` clause: only ``elements`` and
   ``indices`` make sense
 
 Elements of indexed collections (arrays, lists, maps) may be referred to by
@@ -457,11 +472,14 @@ index (in a where clause only):
 .. code-block:: sql
 
   from Order order where order.Items[0].id = 1234
+
   select person from Person person, Calendar calendar
   where calendar.Holidays['national day'] = person.BirthDay
       and person.Nationality.Calendar = calendar
+
   select item from Item item, Order order
   where order.Items[ order.DeliveredItemIndices[0] ] = item and order.id = 11
+
   select item from Item item, Order order
   where order.Items[ maxindex(order.items) ] = item and order.id = 11
 
@@ -475,7 +493,7 @@ The expression inside ``[]`` may even be an arithmetic expression.
 HQL also provides the built-in ``index()`` function, for elements of
 a one-to-many association or collection of values.
 
-.. code-block:: sql
+.. code-block:: xml
 
   select item, index(item) from Order order
       join order.Items item
@@ -545,6 +563,7 @@ A query that returns aggregate values may be grouped by any property of a return
   select cat.Color, sum(cat.Weight), count(cat)
   from Eg.Cat cat
   group by cat.Color
+
   select foo.id, avg( elements(foo.Names) ), max( indices(foo.Names) )
   from Eg.Foo foo
   group by foo.id
@@ -594,14 +613,17 @@ be surrounded by parentheses (often by an SQL aggregate function call). Even cor
   where fatcat.Weight > (
       select avg(cat.Weight) from Eg.DomesticCat cat
   )
+
   from Eg.DomesticCat as cat
   where cat.Name = some (
       select name.NickName from Eg.Name as name
   )
+
   from Eg.Cat as cat
   where not exists (
       from eg.Cat as mate where mate.Mate = cat
   )
+
   from Eg.DomesticCat as cat
   where cat.Name not in (
       select name.NickName from Eg.Name as name
@@ -621,7 +643,7 @@ against the ``ORDER``, ``ORDER_LINE``, ``PRODUCT``,
 ``CATALOG`` and ``PRICE`` tables has four inner joins and an
 (uncorrelated) subselect.
 
-.. code-block:: sql
+.. code-block:: xml
 
   select order.id, sum(price.Amount), count(item)
   from Order as order
@@ -667,7 +689,7 @@ current user. It translates to an SQL query with two inner joins and a correlate
 against the ``PAYMENT``, ``PAYMENT_STATUS`` and
 ``PAYMENT_STATUS_CHANGE`` tables.
 
-.. code-block:: sql
+.. code-block:: xml
 
   select count(payment), status.Name
   from Payment as payment
@@ -688,7 +710,7 @@ against the ``PAYMENT``, ``PAYMENT_STATUS`` and
 If I would have mapped the ``StatusChanges`` collection as a list, instead of a set,
 the query would have been much simpler to write.
 
-.. code-block:: sql
+.. code-block:: xml
 
   select count(payment), status.Name
   from Payment as payment

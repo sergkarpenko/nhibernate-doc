@@ -119,7 +119,7 @@
                  <calloutlist>
                      <callout arearefs="hm1">
                          <para>
-                             <literal>schema</literal> (optional): The name of a database schema.
+                             <literal> schema</literal> (optional): The name of a database schema.
                          </para>
                      </callout>
                      <callout arearefs="hm2">
@@ -137,7 +137,7 @@
                      </callout>
                      <callout arearefs="hm4 hm5">
                          <para>
-                             <literal>assembly</literal> and <literal>namespace</literal>(optional): Specify
+                             <literal>assembly</literal> and <literal>namespace</literal> (optional): Specify
                              assembly and namespace to assume for unqualified class names in the mapping
                              document.
                          </para>
@@ -1993,13 +1993,13 @@
                     <callout arearefs="component3">
                         <para>
                             <literal>insert</literal>: Do the mapped columns appear in SQL 
-                            <literal>INSERT</literal>s?
+                            <literal>INSERT</literal>?
                         </para>               
                     </callout>                   
                     <callout arearefs="component4">
                         <para>
                             <literal>update</literal>: Do the mapped columns appear in SQL 
-                            <literal>UPDATE</literal>s?
+                            <literal>UPDATE</literal>?
                         </para>               
                     </callout>                   
                     <callout arearefs="component5">

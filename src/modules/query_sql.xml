@@ -450,8 +450,7 @@ IList pusList = query.SetString("name", "Pus%").List();          ]]></programlis
     .List();]]></programlisting>
 
     <sect2 id="propertyresults">
-      <title>Using return-property to explicitly specify column/alias
-      names</title>
+      <title>Using return-property to explicitly specify column/alias names</title>
 
       <para>With <literal>&lt;return-property&gt;</literal> you can explicitly
       tell NHibernate what column aliases to use, instead of using the

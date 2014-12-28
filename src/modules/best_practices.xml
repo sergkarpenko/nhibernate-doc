@@ -38,7 +38,7 @@
             <listitem>
                 <para>
                     Place mapping files along with the classes they map and declare them as
-                    <literal>Embedded Resource</literal>s in Visual Studio.
+                    <literal>Embedded Resource</literal> in Visual Studio.
                 </para>
             </listitem>
         </varlistentry>

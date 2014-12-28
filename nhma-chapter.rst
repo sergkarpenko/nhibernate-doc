@@ -44,15 +44,18 @@ introduces many new features, improvements and changes:
 * [RawXmlAttribute] is a new attribute allowing to insert xml as-is in the mapping. This feature can be very useful to do complex mapping (eg: components). It may also be used to quickly move the mapping from xml files to attributes. Usage: ``[RawXml(After=typeof(ComponentAttribute), Content="<component name="...">...</component>")]``. After tells after which kind of mapping the xml should be inserted (generally, it is the type of the mapping you are inserting); it is optional (in which case the xml is inserted on the top of the mapping). Note: At the moment, all raw xmls are prefixed by a ``<!---->`` (in the generated stream); this is a known side-effect.
 
 * [AttributeIdentifierAttribute] is a new attribute allowing to provide the value of a defined "place holder". Eg:
-  .. code-block:: csharp
-    public class Base {
-        [Id(..., Column="{{Id.Column}}")]
-        [AttributeIdentifier(Name="Id.Column", Value="ID")] // Default value
-        public int Id { ... }
-    }
-    [AttributeIdentifier(Name="Id.Column", Value="SUB_ID")]
-    [Class] public class MappedSubClass : Base { }
-  The idea is that, when you have a mapping which is shared by many subclasses but which has minor differences (like different column names), you can put the mapping in the base class with place holders on these fields and give their values in subclasses. Note that this is possible for any mapping field taking a string (column, name, type, access, etc.). And, instead of Value, you can use ValueType or ValueObject (if you use an enum, you can control its formatting with ValueObject).
+
+.. code-block:: csharp
+
+  public class Base {
+      [Id(..., Column="{{Id.Column}}")]
+      [AttributeIdentifier(Name="Id.Column", Value="ID")] // Default value
+      public int Id { ... }
+  }
+  [AttributeIdentifier(Name="Id.Column", Value="SUB_ID")]
+  [Class] public class MappedSubClass : Base { }
+
+* The idea is that, when you have a mapping which is shared by many subclasses but which has minor differences (like different column names), you can put the mapping in the base class with place holders on these fields and give their values in subclasses. Note that this is possible for any mapping field taking a string (column, name, type, access, etc.). And, instead of Value, you can use ValueType or ValueObject (if you use an enum, you can control its formatting with ValueObject).
   The "place holder" is defined like this: ``{{XXX}}``. If you don't want to use these double curly brackets, you can change them using the properties StartQuote and EndQuote of the class HbmWriter.
 
 * It is possible to register patterns (using Regular Expressions) to automatically transform fully qualified names of properties types into something else. Eg: ``HbmSerializer.Default.HbmWriter.Patterns.Add(@"Namespace.(\\S+), Assembly", "$1");`` will map all properties with a not-qualified type name.
@@ -82,11 +85,11 @@ The first step is to decorate your entities with attributes; you can use: [Class
 .. code-block:: csharp
 
   [NHibernate.Mapping.Attributes.Class]
-      public class Example
-      {
-          [NHibernate.Mapping.Attributes.Property]
-          public string Name;
-      }
+  public class Example
+  {
+      [NHibernate.Mapping.Attributes.Property]
+      public string Name;
+  }
 
 After this step, you use NHibernate.Mapping.Attributes.HbmSerializer: (here, we use Default which is an instance you can use if you don't need/want to create it yourself).
 
@@ -126,9 +129,12 @@ Tips
 * You can add [HibernateMapping] on your classes to specify ``<hibernate-mapping>`` attributes (used when serializing the class in its stream). You can also use HbmSerializer.Hbm* properties (used when serializing an assembly or a type that is not decorated with [HibernateMapping]).
 
 * Instead of using a string for DiscriminatorValue (in [Class] and [Subclass]), you can use any object you want. Example:
-  .. code-block:: csharp
-    [Subclass(DiscriminatorValueEnumFormat="d", DiscriminatorValueObject=DiscEnum.Val1)]
-  Here, the object is an Enum, and you can set the format you want (the default value is "g"). Note that you must put it *before*! For others types, It simply use the ToString() method of the object.
+
+.. code-block:: csharp
+
+  [Subclass(DiscriminatorValueEnumFormat="d", DiscriminatorValueObject=DiscEnum.Val1)]
+
+* Here, the object is an Enum, and you can set the format you want (the default value is "g"). Note that you must put it *before*! For others types, It simply use the ToString() method of the object.
 
 * If you are using members of the type Nullables.NullableXXX (from the library :ref:`Nullables <nullables>`), then they will be mapped to Nullables.NHibernate.NullableXXXType automatically; don't set ``Type="..."`` in [Property] (leave it null). This is also the case for SqlTypes (and you can add your own patterns). Thanks to *Michael Third* for the idea :)
 
@@ -141,32 +147,37 @@ Tips
 
 * Another way to map [Component] is to use the way this library works: If a mapped class contains a mapped component, then this component will be include in the class. *NHibernate.Mapping.Attributes.Test* contains the classes JoinedBaz and Stuff which both use the component Address.
   Basically, it is done by adding
-  .. code-block:: csharp
-    [Component(Name = "MyComp")] private class SubComp : Comp {}
-  in each class. One of the advantages is that you can override Access, Update or Insert for each member. But you have to add the component subclass in *each* class (and it can not be inherited). Another advantage is that you can use [AttributeIdentifier].
+
+.. code-block:: csharp
+
+  [Component(Name = "MyComp")]
+  private class SubComp : Comp {}
+
+* in each class. One of the advantages is that you can override Access, Update or Insert for each member. But you have to add the component subclass in *each* class (and it can not be inherited). Another advantage is that you can use [AttributeIdentifier].
 
 * Finally, whenever you think that it is easier to write the mapping in XML (this is often the case for [Component]), you can use [RawXml].
 
 * About customization
-  ~~~~~~~~~~~~~~~~~~~
   HbmSerializer uses HbmWriter to serialize each kind of attributes. Their methods are virtual; so you can create a subclass and override any method you want (to change its default behavior).
   Use the property HbmSerializer.HbmWriter to change the writer used (you may set a subclass of HbmWriter).
 
 Example using some this tips: (0, 1 and 2 are position indexes)
+
 .. code-block:: csharp
 
   [NHibernate.Mapping.Attributes.Id(0, TypeType=typeof(int))] // Don't put it after [ManyToOne] !!!
-          [NHibernate.Mapping.Attributes.Generator(1, Class="uuid.hex")]
-      [NHibernate.Mapping.Attributes.ManyToOne(2, ClassType=typeof(Foo), OuterJoin=OuterJoinStrategy.True)]
-      private Foo Entity;
+  [NHibernate.Mapping.Attributes.Generator(1, Class="uuid.hex")]
+  [NHibernate.Mapping.Attributes.ManyToOne(2, ClassType=typeof(Foo), OuterJoin=OuterJoinStrategy.True)]
+  private Foo Entity;
 
 Generates:
-.. code-block:: csharp
+
+.. code-block:: xml
 
   <id type="Int32">
-          <generator class="uuid.hex" />
-      </id>
-      <many-to-one name="Entity" class="Namespaces.Foo, SampleAssembly" outer-join="true" />
+      <generator class="uuid.hex" />
+  </id>
+  <many-to-one name="Entity" class="Namespaces.Foo, SampleAssembly" outer-join="true" />
 
 Known issues and TODOs
 ######################
@@ -177,24 +188,25 @@ A Position property has been added to all attributes to order them. But there is
 
 When a parent element "p" has a child element "x" that is also the child element of another child element "c" of "p" (preceding "x") :D
 Illustration:
-.. code-block:: csharp
+
+.. code-block:: xml
 
   <p>
-          <c>
-              <x />
-          </c>
+      <c>
           <x />
-      </p>
+      </c>
+      <x />
+  </p>
 
 In this case, when writing:
 
 .. code-block:: csharp
 
   [Attributes.P(0)]
-          [Attributes.C(1)]
-              [Attributes.X(2)]
-          [Attributes.X(3)]
-      public MyType MyProperty;
+  [Attributes.C(1)]
+  [Attributes.X(2)]
+  [Attributes.X(3)]
+  public MyType MyProperty;
 
 X(3) will always belong to C(1) ! (as X(2)).
 

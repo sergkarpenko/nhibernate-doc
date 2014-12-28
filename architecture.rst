@@ -113,6 +113,8 @@ detached
     about the relationship between persistent identity and
     CLR identity.
 
+.. _architecture-current-session:
+
 Contextual Sessions
 ###################
 

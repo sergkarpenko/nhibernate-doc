@@ -322,7 +322,7 @@
         
         <para>
             The disadvantage of this approach is that NHibernate does not generate SQL
-            <literal>UNION</literal>s when performing polymorphic queries.
+            <literal>UNION</literal> when performing polymorphic queries.
         </para>
 
         <para>

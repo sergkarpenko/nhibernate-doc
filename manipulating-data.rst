@@ -123,24 +123,29 @@ oriented query language.
       date,
       NHibernateUtil.Date
   );
+
   IList mates = sess.Find(
       "select mate from Cat as cat join cat.Mate as mate " +
       "where cat.name = ?",
       name,
       NHibernateUtil.String
   );
+
   IList cats = sess.Find( "from Cat as cat where cat.Mate.Birthdate is null" );
+
   IList moreCats = sess.Find(
       "from Cat as cat where " +
       "cat.Name = 'Fritz' or cat.id = ? or cat.id = ?",
       new object[] { id1, id2 },
       new IType[] { NHibernateUtil.Int64, NHibernateUtil.Int64 }
   );
+
   IList mates = sess.Find(
       "from Cat as cat where cat.Mate = ?",
       izi,
       NHibernateUtil.Entity(typeof(Cat))
   );
+
   IList problems = sess.Find(
       "from GoldFish as fish " +
       "where fish.Birthday > fish.Deceased or fish.Birthday is null"
@@ -216,7 +221,7 @@ is returned as an array:
 Scalar queries
 ==============
 
-Queries may specify a property of a class in the ``elect`` clause.
+Queries may specify a property of a class in the ``select`` clause.
 They may even call SQL aggregate functions. Properties or aggregates are considered
 "scalar" results.
 
@@ -264,7 +269,7 @@ You may even define a named query in the mapping document. (Remember to use a
 ``CDATA`` section if your query contains characters that could
 be interpreted as markup.)
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <query name="Eg.DomesticCat.by.name.and.minimum.weight"><![CDATA[
       from Eg.DomesticCat as cat
@@ -364,7 +369,7 @@ Queries in native SQL
 You may express a query in SQL, using ``CreateSQLQuery()``. You must enclose
 SQL aliases in braces.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IList cats = session.CreateSQLQuery(
       "SELECT {cat.*} FROM CAT {cat} WHERE ROWNUM<10",
@@ -372,7 +377,7 @@ SQL aliases in braces.
       typeof(Cat)
   ).List();
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IList cats = session.CreateSQLQuery(
       "SELECT {cat}.ID AS {cat.Id}, {cat}.SEX AS {cat.Sex}, " +
@@ -425,14 +430,16 @@ method ``Session.Update()``.
   Cat cat = (Cat) firstSession.Load(typeof(Cat), catId);
   Cat potentialMate = new Cat();
   firstSession.Save(potentialMate);
+
   // in a higher tier of the application
   cat.Mate = potentialMate;
+
   // later, in a new session
   secondSession.Update(cat);  // update cat
   secondSession.Update(mate); // update mate
 
 If the ``Cat`` with identifier ``catId`` had already
-been loaded  by ``econdSession`` when the application tried to
+been loaded  by ``secondSession`` when the application tried to
 update it, an exception would have been thrown.
 
 The application should individually ``Update()`` transient instances
@@ -451,7 +458,7 @@ attribute of the ``<id>`` (or ``<version>``,
 or ``<timestamp>``) mapping specifies which values should
 be interpreted as representing a "new" instance.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <id name="Id" type="Int64" column="uid" unsaved-value="0">
       <generator class="hilo"/>
@@ -478,9 +485,11 @@ constructor and reading the property value from the instance.
 
   // in the first session
   Cat cat = (Cat) firstSession.Load(typeof(Cat), catID);
+
   // in a higher tier of the application
   Cat mate = new Cat();
   cat.Mate = mate;
+
   // later, in a new session
   secondSession.SaveOrUpdate(cat);   // update existing state (cat has a non-null id)
   secondSession.SaveOrUpdate(mate);  // save the new instance (mate has a null id)
@@ -829,17 +838,20 @@ when an ``IAuditable`` is created and updates the
 ``LastUpdateTimestamp`` property when an ``IAuditable`` is
 updated.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   using System;
   using NHibernate.Type;
+
   namespace NHibernate.Test
   {
       [Serializable]
       public class AuditInterceptor : IInterceptor
       {
+
           private int updates;
           private int creates;
+
           public void OnDelete(object entity,
                                object id,
                                object[] state,
@@ -848,12 +860,14 @@ updated.
           {
               // do nothing
           }
+
           public boolean OnFlushDirty(object entity,
                                       object id,
                                       object[] currentState,
                                       object[] previousState,
                                       string[] propertyNames,
                                       IType[] types) {
+
               if ( entity is IAuditable )
               {
                   updates++;
@@ -868,6 +882,7 @@ updated.
               }
               return false;
           }
+
           public boolean OnLoad(object entity,
                                 object id,
                                 object[] state,
@@ -876,6 +891,7 @@ updated.
           {
               return false;
           }
+
           public boolean OnSave(object entity,
                                 object id,
                                 object[] state,
@@ -896,14 +912,17 @@ updated.
               }
               return false;
           }
+
           public void PostFlush(ICollection entities)
           {
               Console.Out.WriteLine("Creations: {0}, Updates: {1}", creates, updates);
           }
+
           public void PreFlush(ICollection entities) {
               updates=0;
               creates=0;
           }
+
           ......
           ......
       }
@@ -935,7 +954,7 @@ NHibernate exposes metadata via the ``IClassMetadata`` and
 hierarchy. Instances of the metadata interfaces may be obtained from the
 ``ISessionFactory``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   Cat fritz = ......;
   IClassMetadata catMeta = sessionfactory.GetClassMetadata(typeof(Cat));
@@ -943,8 +962,10 @@ hierarchy. Instances of the metadata interfaces may be obtained from the
   object[] propertyValues = catMeta.GetPropertyValues(fritz);
   string[] propertyNames = catMeta.PropertyNames;
   IType[] propertyTypes = catMeta.PropertyTypes;
+
   // get an IDictionary of all properties which are not collections or associations
   // TODO: what about components?
+
   IDictionary namedValues = new Hashtable();
   for ( int i=0; i<propertyNames.Length; i++ )
   {

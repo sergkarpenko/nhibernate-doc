@@ -175,7 +175,7 @@ namespace Eg
 
         <para>
             This only applies if these objects are loaded in two different
-            <literal>ISession</literal>s, as NHibernate only guarantees identity (<literal> a == b </literal>,
+            <literal>ISession</literal>, as NHibernate only guarantees identity (<literal> a == b </literal>,
             the default implementation of <literal>Equals()</literal>) inside a single
             <literal>ISession</literal>!
         </para>
@@ -253,7 +253,7 @@ namespace Eg
         <para>
             Persistent entities don't necessarily have to be represented as POCO classes
             at runtime. NHibernate also supports dynamic models
-            (using <literal>Dictionaries</literal> of <literal>Dictionary</literal>s at runtime) . With this approach, you don't
+            (using <literal>Dictionaries</literal> of <literal>Dictionary</literal> at runtime) . With this approach, you don't
             write persistent classes, only mapping files.
         </para>
         
@@ -265,7 +265,7 @@ namespace Eg
         </para>
         
         <para>
-            The following examples demonstrates the representation using <literal>Map</literal>s (Dictionary).
+            The following examples demonstrates the representation using <literal>Map</literal> (Dictionary).
             First, in the mapping file, an <literal>entity-name</literal> has to be declared
             instead of (or in addition to) a class name:
         </para>
@@ -387,8 +387,8 @@ using(ITransaction tx = s.BeginTransaction())
             constructor and how to access the POCO properties using the defined property accessors.
             There are two high-level types of Tuplizers, represented by the
             <literal>NHibernate.Tuple.Entity.IEntityTuplizer</literal> and <literal>NHibernate.Tuple.Component.IComponentTuplizer</literal>
-            interfaces.  <literal>IEntityTuplizer</literal>s are responsible for managing the above mentioned
-            contracts in regards to entities, while <literal>IComponentTuplizer</literal>s do the same for
+            interfaces.  <literal>IEntityTuplizer</literal> are responsible for managing the above mentioned
+            contracts in regards to entities, while <literal>IComponentTuplizer</literal> do the same for
             components.
         </para>
         

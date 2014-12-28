@@ -32,13 +32,13 @@ the same ``<class>`` element, by combining the
 ``<subclass>`` and ``<join>``
 elements (see below).
 
-It is possible to define ``ubclass``, ``union-subclass``,
+It is possible to define ``subclass``, ``union-subclass``,
 and ``joined-subclass`` mappings in separate mapping documents, directly beneath
 ``hibernate-mapping``. This allows you to extend a class hierachy just by adding
 a new mapping file. You must specify an ``extends`` attribute in the subclass mapping,
 naming a previously mapped superclass.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping>
        <subclass name="DomesticCat" extends="Cat" discriminator-value="D">
@@ -54,7 +54,7 @@ Suppose we have an interface ``IPayment``, with implementors
 ``ChequePayment``. The table-per-hierarchy mapping would
 look like:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="IPayment" table="PAYMENT">
       <id name="Id" type="Int64" column="PAYMENT_ID">
@@ -83,7 +83,7 @@ Table per subclass
 
 A table-per-subclass mapping would look like:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="IPayment" table="PAYMENT">
       <id name="Id" type="Int64" column="PAYMENT_ID">
@@ -122,7 +122,7 @@ a discriminator column with the table per subclass strategy, you
 may combine the use of ``<subclass>`` and
 ``<join>``, as follow:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Payment" table="PAYMENT">
       <id name="Id" type="Int64" column="PAYMENT_ID">
@@ -162,7 +162,7 @@ Mixing table per class hierarchy with table per subclass
 You may even mix the table per hierarchy and table per subclass strategies
 using this approach:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Payment" table="PAYMENT">
       <id name="Id" type="Int64" column="PAYMENT_ID">
@@ -189,7 +189,7 @@ For any of these mapping strategies, a polymorphic
 association to ``IPayment`` is mapped using
 ``<many-to-one>``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-one name="Payment" column="PAYMENT" class="IPayment"/>
 
@@ -199,7 +199,7 @@ Table per concrete class
 There are two ways we could go about mapping the table per concrete class
 strategy. The first is to use ``<union-subclass>``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Payment">
       <id name="Id" type="Int64" column="PAYMENT_ID">
@@ -239,7 +239,7 @@ Table per concrete class, using implicit polymorphism
 
 An alternative approach is to make use of implicit polymorphism:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="CreditCardPayment" table="CREDIT_PAYMENT">
       <id name="Id" type="Int64" column="CREDIT_PAYMENT_ID">
@@ -248,6 +248,7 @@ An alternative approach is to make use of implicit polymorphism:
       <property name="Amount" column="CREDIT_AMOUNT"/>
       ...
   </class>
+
   <class name="CashPayment" table="CASH_PAYMENT">
       <id name="Id" type="Int64" column="CASH_PAYMENT_ID">
           <generator class="native"/>
@@ -255,6 +256,7 @@ An alternative approach is to make use of implicit polymorphism:
       <property name="Amount" column="CASH_AMOUNT"/>
       ...
   </class>
+
   <class name="ChequePayment" table="CHEQUE_PAYMENT">
       <id name="Id" type="Int64" column="CHEQUE_PAYMENT_ID">
           <generator class="native"/>
@@ -277,7 +279,7 @@ The disadvantage of this approach is that NHibernate does not generate SQL
 For this mapping strategy, a polymorphic association to ``IPayment``
 is usually mapped using ``<any>``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <any name="Payment" meta-type="string" id-type="Int64">
       <meta-value value="CREDIT" class="CreditCardPayment"/>
@@ -299,7 +301,7 @@ or table-per-subclass inheritance hierarchy! (And you can
 still use polymorphic queries against the
 ``IPayment`` interface.)
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="CreditCardPayment" table="CREDIT_PAYMENT">
       <id name="Id" type="Int64" column="CREDIT_PAYMENT_ID">
@@ -311,6 +313,7 @@ still use polymorphic queries against the
       <subclass name="MasterCardPayment" discriminator-value="MDC"/>
       <subclass name="VisaPayment" discriminator-value="VISA"/>
   </class>
+
   <class name="NonelectronicTransaction" table="NONELECTRONIC_TXN">
       <id name="Id" type="Int64" column="TXN_ID">
           <generator class="native"/>
@@ -352,9 +355,9 @@ Features of inheritance mappings
 ================================================ ======================= ====================== =============================================== ======================== =============================== =================== ================================= ===================
 Inheritance strategy                             Polymorphic many-to-one Polymorphic one-to-one Polymorphic one-to-many                         Polymorphic many-to-many Polymorphic ``load()/get()``    Polymorphic queries Polymorphic joins                 Outer join fetching
 ================================================ ======================= ====================== =============================================== ======================== =============================== =================== ================================= ===================
-table per class-hierarchy                        ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>``                               ``<many-to-many>``       ``.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
-table per subclass                               ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>``                               ``<many-to-many>``       ``.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
-table per concrete-class (union-subclass)        ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>`` (for ``inverse="true"`` only) ``<many-to-many>``       ``.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
+table per class-hierarchy                        ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>``                               ``<many-to-many>``       ``s.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
+table per subclass                               ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>``                               ``<many-to-many>``       ``s.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
+table per concrete-class (union-subclass)        ``<many-to-one>``       ``<one-to-one>``       ``<one-to-many>`` (for ``inverse="true"`` only) ``<many-to-many>``       ``s.Get(typeof(IPayment), id)`` ``from IPayment p`` ``from Order o join o.Payment p`` *supported*
 table per concrete class (implicit polymorphism) ``<any>``               *not supported*        *not supported*                                 ``<many-to-any>``        *use a query*                   ``from IPayment p`` *not supported*                   *not supported*
 ================================================ ======================= ====================== =============================================== ======================== =============================== =================== ================================= ===================
 

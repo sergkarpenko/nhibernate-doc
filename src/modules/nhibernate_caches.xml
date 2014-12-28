@@ -113,11 +113,7 @@
 						To tell NHibernate which cache provider to use, add in your NHibernate configuration file
 						(can be <filename>YourAssembly.exe.config</filename> or <filename>web.config</filename> or a
 						<filename>.cfg.xml</filename> file, in the latter case the syntax will be different from what
-						is shown below):
-						<programlisting>
-&lt;add key="hibernate.cache.provider_class" value="<literal>XXX</literal>" /&gt;<co id="hibernate.cache.provider_class-co" linkends="hibernate.cache.provider_class"/>
-&lt;add key="expiration" value="<literal>120</literal>" /&gt;<co id="nhcaches-expiration-co" linkends="nhcaches-expiration"/>
-						</programlisting>
+						is shown below): <literal>&lt;add key="hibernate.cache.provider_class" value="XXX" /&gt;</literal><co id="hibernate.cache.provider_class-co" linkends="hibernate.cache.provider_class"/> <literal>&lt;add key="expiration" value="120" /&gt;</literal><co id="nhcaches-expiration-co" linkends="nhcaches-expiration"/>
 						<calloutlist>
 							<callout arearefs="hibernate.cache.provider_class-co" id="hibernate.cache.provider_class">
 								<para>

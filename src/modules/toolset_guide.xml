@@ -232,7 +232,7 @@ new SchemaExport(cfg).Create(false, true);]]></programlisting>
 
             <itemizedlist spacing="compact">
                 <listitem>
-                    <para>as system properties with <literal>-D</literal><emphasis>&lt;property&gt;</emphasis></para>
+                    <para>as system properties with <literal>-D</literal> <emphasis>&lt;property&gt;</emphasis></para>
                 </listitem>
                 <listitem>
                     <para>in <literal>hibernate.properties</literal></para>
@@ -353,11 +353,11 @@ new SchemaExport(cfg).Create(false, true);]]></programlisting>
                 </thead>
                 <tbody>
                     <row>
-                        <entry><literal>-output:</literal><emphasis>output_dir</emphasis></entry>
+                        <entry><literal>-output:</literal> <emphasis>output_dir</emphasis></entry>
                         <entry>root directory for generated code</entry>
                     </row>
                     <row>
-                        <entry><literal>-config:</literal><emphasis>config_file</emphasis></entry>
+                        <entry><literal>-config:</literal> <emphasis>config_file</emphasis></entry>
                         <entry>optional file for configuring hbm2net</entry>
                     </row>
                 </tbody>

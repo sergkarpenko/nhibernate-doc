@@ -24,6 +24,7 @@ Let's kick off with an example mapping:
   <?xml version="1.0"?>
   <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Eg"
       namespace="Eg">
+
           <class name="Cat" table="CATS" discriminator-value="C">
                   <id name="Id" column="uid" type="Int64">
                           <generator class="hilo"/>
@@ -42,9 +43,11 @@ Let's kick off with an example mapping:
                           <property name="Name" type="String"/>
                   </subclass>
           </class>
+
           <class name="Dog">
                   <!-- mapping for Dog could go here -->
           </class>
+
   </hibernate-mapping>
 
 We will now discuss the content of the mapping document. We will only describe the
@@ -56,7 +59,7 @@ XML Namespace
 =============
 
 All XML mappings should declare the XML namespace shown. The actual schema definition
-may be found in the ``rc\\nhibernate-mapping.xsd`` file in the
+may be found in the ``src\\nhibernate-mapping.xsd`` file in the
 NHibernate distribution.
 
 Tip: to enable IntelliSense for mapping and configuration files, copy the appropriate
@@ -69,7 +72,7 @@ with different version of the xsd for different versions of NHibernate.
 hibernate-mapping
 =================
 
-This element has several optional attributes. The ``chema`` attribute
+This element has several optional attributes. The ``schema`` attribute
 specifies that tables referred to by this mapping belong to the named schema. If specified,
 tablenames will be qualified by the given schema name. If missing, tablenames will be
 unqualified. The ``default-cascade`` attribute specifies what cascade style
@@ -79,7 +82,7 @@ use unqualified class names in the query language, by default. The ``assembly``
 and ``namespace`` attributes specify the assembly where persistent classes
 are located and the namespace they are declared in.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping
            schema="schemaName"
@@ -91,7 +94,7 @@ are located and the namespace they are declared in.
            default-lazy="true|false"
    />
 
-``chema`` (optional): The name of a database schema.
+``schema`` (optional): The name of a database schema.
 
 ``default-cascade`` (optional - defaults to ``none``):
 A default cascade style.
@@ -100,7 +103,7 @@ A default cascade style.
 Specifies whether we can use unqualified class names (of classes in this mapping)
 in the query language.
 
-``assembly`` and ``namespace``(optional): Specify
+``assembly`` and ``namespace`` (optional): Specify
 assembly and namespace to assume for unqualified class names in the mapping
 document.
 
@@ -123,7 +126,7 @@ class
 
 You may declare a persistent class using the ``class`` element:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class
           name="ClassName"
@@ -156,7 +159,7 @@ values include ``null`` and ``not null``.
 ``mutable`` (optional, defaults to ``true``): Specifies
 that instances of the class are (not) mutable.
 
-``chema`` (optional): Override the schema name specified by
+``schema`` (optional): Override the schema name specified by
 the root ``<hibernate-mapping>`` element.
 
 ``proxy`` (optional): Specifies an interface to use for lazy
@@ -170,7 +173,7 @@ contain only those columns whose values have changed.
 Specifies that ``INSERT`` SQL should be generated at runtime and
 contain only the columns whose values are not null.
 
-``elect-before-update`` (optional, defaults to ``false``):
+``select-before-update`` (optional, defaults to ``false``):
 Specifies that NHibernate should *never* perform an SQL ``UPDATE``
 unless it is certain that an object is actually modified. In certain cases (actually, only
 when a transient object has been associated with a new session using ``update()``),
@@ -237,7 +240,7 @@ settings are not inherited by subclasses and so may also be specified on the
 These settings may increase performance in some cases, but might actually decrease
 performance in others. Use judiciously.
 
-Use of ``elect-before-update`` will usually decrease performance. It is very
+Use of ``select-before-update`` will usually decrease performance. It is very
 useful to prevent a database update trigger being called unnecessarily.
 
 If you enable ``dynamic-update``, you will have a choice of optimistic
@@ -271,7 +274,7 @@ table. Most classes will also have a property holding the unique identifier
 of an instance. The ``<id>`` element defines the mapping from that
 property to the primary key column.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <id
           name="PropertyName"
@@ -279,6 +282,7 @@ property to the primary key column.
           column="column_name"
           unsaved-value="any|none|null|id_value"
           access="field|property|nosetter|ClassName">
+
           <generator class="generatorClass"/>
   </id>
 
@@ -315,7 +319,7 @@ The generator can be declared using the ``<generator>`` child element. If
 any parameters are required to configure or initialize the generator instance, they are passed
 using ``<param>`` elements.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <id name="Id" type="Int64" column="uid" unsaved-value="0">
           <generator class="NHibernate.Id.TableHiLoGenerator">
@@ -327,7 +331,7 @@ using ``<param>`` elements.
 If no parameters are required, the generator can be declared using a ``generator``
 attribute directly on the ``<id>`` element, as follows:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <id name="Id" type="Int64" column="uid" unsaved-value="0" generator="native" />
 
@@ -345,7 +349,7 @@ names for the built-in generators:
     supports identity columns in DB2, MySQL, MS SQL Server and Sybase. The identifier
     returned by the database is converted to the property type using ``Convert.ChangeType``. Any integral property type is thus supported.
 
-``equence``
+``sequence``
     uses a sequence in DB2, PostgreSQL, Oracle or a generator
     in Firebird. The identifier returned by the database is converted to the property
     type using ``Convert.ChangeType``. Any integral property type is
@@ -360,7 +364,7 @@ names for the built-in generators:
     You can use the "where" parameter to specify the row to use in a table. This is useful
     if you want to use a single tabel for your identifiers, with different rows for each table.
 
-``eqhilo``
+``seqhilo``
     uses a hi/lo algorithm to efficiently generate identifiers of any integral type,
     given a named database sequence.
 
@@ -382,7 +386,7 @@ names for the built-in generators:
     http://www.informit.com/articles/article.asp?p=25862.
 
 ``native``
-    picks ``identity``, ``equence`` or
+    picks ``identity``, ``sequence`` or
     ``hilo`` depending upon the capabilities of the
     underlying database.
 
@@ -397,12 +401,12 @@ names for the built-in generators:
 Hi/Lo Algorithm
 ---------------
 
-The ``hilo`` and ``eqhilo`` generators provide two alternate
+The ``hilo`` and ``seqhilo`` generators provide two alternate
 implementations of the hi/lo algorithm, a favorite approach to identifier generation. The
 first implementation requires a "special" database table to hold the next available "hi" value.
 The second uses an Oracle-style sequence (where supported).
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <id name="Id" type="Int64" column="cat_id">
           <generator class="hilo">
@@ -412,7 +416,7 @@ The second uses an Oracle-style sequence (where supported).
           </generator>
   </id>
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <id name="Id" type="Int64" column="cat_id">
           <generator class="seqhilo">
@@ -428,7 +432,7 @@ fetch the "hi" value in a new transaction.
 UUID Hex Algorithm
 ------------------
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <id name="Id" type="String" column="cat_id">
           <generator class="uuid.hex">
@@ -439,9 +443,9 @@ UUID Hex Algorithm
 
 The UUID is generated by calling ``Guid.NewGuid().ToString(format)``.
 The valid values for ``format`` are described in the MSDN documentation.
-The default ``eperator`` is ``-`` and should rarely be
+The default ``seperator`` is ``-`` and should rarely be
 modified.  The ``format`` determines if the configured
-``eperator`` can replace the default seperator used by
+``seperator`` can replace the default seperator used by
 the ``format``.
 
 UUID String Algorithm
@@ -466,10 +470,10 @@ Identity columns and Sequences
 For databases which support identity columns (DB2, MySQL, Sybase, MS SQL), you
 may use ``identity`` key generation. For databases that support
 sequences (DB2, Oracle, PostgreSQL, Interbase, McKoi, SAP DB) you may use
-``equence`` style key generation. Both these strategies require
+``sequence`` style key generation. Both these strategies require
 two SQL queries to insert a new object.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <id name="Id" type="Int64" column="uid">
           <generator class="sequence">
@@ -477,14 +481,14 @@ two SQL queries to insert a new object.
           </generator>
   </id>
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <id name="Id" type="Int64" column="uid" unsaved-value="0">
           <generator class="identity"/>
   </id>
 
 For cross-platform development, the ``native`` strategy will
-choose from the ``identity``, ``equence`` and
+choose from the ``identity``, ``sequence`` and
 ``hilo`` strategies, dependent upon the capabilities of the
 underlying database.
 
@@ -520,10 +524,10 @@ The first of these new generators is
 ``NHibernate.Id.Enhanced.SequenceStyleGenerator``
 (short name ``enhanced-sequence``)
 which is intended, firstly, as a replacement for the
-``equence`` generator and, secondly, as a better
+``sequence`` generator and, secondly, as a better
 portability generator than ``native``. This is because
 ``native`` generally chooses between
-``identity`` and ``equence`` which have
+``identity`` and ``sequence`` which have
 largely different semantics that can cause subtle issues in
 applications eyeing portability.
 ``NHibernate.Id.Enhanced.SequenceStyleGenerator``,
@@ -536,7 +540,7 @@ semantic. In fact, sequences are exactly what NHibernate tries to
 emulate with its table-based generators. This generator has a number
 of configuration parameters:
 
-- ``equence_name`` (optional, defaults to
+- ``sequence_name`` (optional, defaults to
   ``hibernate_sequence``): the name of the sequence
   or table to be used.
 
@@ -566,7 +570,7 @@ of configuration parameters:
   separate sequence for each entity that share current generator
   based on its name?
 
-- ``equence_per_entity_suffix`` (optional -
+- ``sequence_per_entity_suffix`` (optional -
   defaults to ``_SEQ``): suffix added to the name
   of a dedicated sequence.
 
@@ -593,18 +597,18 @@ rows. This generator has a number of configuration parameters:
   to ``next_val``): the name of the column on the
   table that is used to hold the value.
 
-- ``egment_column_name`` (optional -
-  defaults to ``equence_name``): the name of the
+- ``segment_column_name`` (optional -
+  defaults to ``sequence_name``): the name of the
   column on the table that is used to hold the "segment key". This
   is the value which identifies which increment value to
   use.
 
-- ``egment_value`` (optional - defaults to
+- ``segment_value`` (optional - defaults to
   ``default``): The "segment key" value for the
   segment from which we want to pull increment values for this
   generator.
 
-- ``egment_value_length`` (optional -
+- ``segment_value_length`` (optional -
   defaults to ``255``): Used for schema generation;
   the column size to create this segment key column.
 
@@ -665,13 +669,14 @@ operation.
 composite-id
 ============
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <composite-id
           name="PropertyName"
           class="ClassName"
           unsaved-value="any|none"
           access="field|property|nosetter|ClassName">
+
           <key-property name="PropertyName" type="typename" column="column_name"/>
           <key-many-to-one name="PropertyName class="ClassName" column="column_name"/>
           ......
@@ -682,7 +687,7 @@ as identifier properties. The ``<composite-id>`` element
 accepts ``<key-property>`` property mappings and
 ``<key-many-to-one>`` mappings as child elements.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <composite-id>
           <key-property name="MedicareNumber"/>
@@ -722,7 +727,7 @@ subclass to instantiate for a particular row. A restricted set of types may be u
 ``Byte``, ``Short``, ``Boolean``,
 ``YesNo``, ``TrueFalse``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <discriminator
           column="discriminator_column"
@@ -760,7 +765,7 @@ usually be the case.
 Using the ``formula`` attribute you can declare an arbitrary SQL expression
 that will be used to evaluate the type of a row:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <discriminator
       formula="case when CLASS_TYPE in ('a', 'b', 'c') then 0 else 1 end"
@@ -775,7 +780,7 @@ The ``<version>`` element is optional and indicates that
 the table contains versioned data. This is particularly useful if you plan to
 use *long transactions* (see below).
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <version
           column="version_column"
@@ -821,7 +826,7 @@ timestamped data. This is intended as an alternative to versioning. Timestamps a
 a less safe implementation of optimistic locking. However, sometimes the application might
 use the timestamps in other ways.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <timestamp
           column="timestamp_column"
@@ -861,7 +866,7 @@ property
 The ``<property>`` element declares a persistent property
 of the class.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <property
           name="propertyName"
@@ -952,40 +957,10 @@ Access Strategies
 ==================== ==================================================================================================================================================================================================================================================================================================================================================================================================================================
 Access Strategy Name Description
 ==================== ==================================================================================================================================================================================================================================================================================================================================================================================================================================
-``property``
-
-The default implementation.  NHibernate uses the get/set accessors of
-the property.  No naming strategy should be used with this access strategy
-because the value of the ``name`` attribute is the name
-of the property.
-
-``field``
-
-NHibernate will access the field directly.  NHibernate uses the value
-of the ``name`` attribute as the name of the field.
-This can be used when a property's getter and setter contain extra actions
-that you don't want to occur when NHibernate is populating or reading
-the object. If you want the name of the property and not the field to
-be what the consumers of your API use with HQL, then a naming strategy
-is needed.
-
-``nosetter``
-
-NHibernate will access the field directly when setting the value and will use the
-Property when getting the value.  This can be used when a property only exposes
-a get accessor because the consumers of your API can't change the value directly.
-A naming strategy is required because NHibernate uses the value of the
-``name`` attribute as the property name and needs to
-be told what the name of the field is.
-
-``ClassName``
-
-If NHibernate's built in access strategies are not what is needed for your situation
-then you can build your own by implementing the interface
-``NHibernate.Property.IPropertyAccessor``.  The value of the
-``access`` attribute should be an assembly-qualified name that can be
-loaded with ``Activator.CreateInstance(string assemblyQualifiedName)``.
-
+``property``         The default implementation.  NHibernate uses the get/set accessors of the property.  No naming strategy should be used with this access strategy because the value of the ``name`` attribute is the name of the property.
+``field``            NHibernate will access the field directly.  NHibernate uses the value of the ``name`` attribute as the name of the field. This can be used when a property's getter and setter contain extra actions that you don't want to occur when NHibernate is populating or reading the object. If you want the name of the property and not the field to be what the consumers of your API use with HQL, then a naming strategy is needed.
+``nosetter``         NHibernate will access the field directly when setting the value and will use the Property when getting the value.  This can be used when a property only exposes a get accessor because the consumers of your API can't change the value directly. A naming strategy is required because NHibernate uses the value of the ``name`` attribute as the property name and needs to  be told what the name of the field is.
+``ClassName``        If NHibernate's built in access strategies are not what is needed for your situation then you can build your own by implementing the interface  ``NHibernate.Property.IPropertyAccessor``.  The value of the  ``access`` attribute should be an assembly-qualified name that can be  loaded with ``Activator.CreateInstance(string assemblyQualifiedName)``.
 ==================== ==================================================================================================================================================================================================================================================================================================================================================================================================================================
 
 Naming Strategies
@@ -993,51 +968,14 @@ Naming Strategies
 =========================== ===========================================================================================================================================================================================
 Naming Strategy Name        Description
 =========================== ===========================================================================================================================================================================================
-``camelcase``
-
-The ``name`` attribute is converted to camel case to find the field.
-``<property name="FooBar" ... >`` uses the field ``fooBar``.
-
-``camelcase-underscore``
-
-The ``name`` attribute is converted to camel case and prefixed with an
-underscore to find the field.
-``<property name="FooBar" ... >`` uses the field ``_fooBar``.
-
-``camelcase-m-underscore``
-
-The ``name`` attribute is converted to camel case and prefixed with
-the character ``m`` and an underscore to find the field.
-``<property name="FooBar" ... >`` uses the field ``m_fooBar``.
-
-``lowercase``
-
-The ``name`` attribute is converted to lower case to find the Field.
-``<property name="FooBar" ... >`` uses the field ``foobar``.
-
-``lowercase-underscore``
-
-The ``name`` attribute is converted to lower case and prefixed with an
-underscore to find the Field.
-``<property name="FooBar" ... >`` uses the field ``_foobar``.
-
-``pascalcase-underscore``
-
-The ``name`` attribute is prefixed with an underscore to find the field.
-``<property name="FooBar" ... >`` uses the field ``_FooBar``.
-
-``pascalcase-m``
-
-The ``name`` attribute is prefixed with the character
-``m`` to find the field.
-``<property name="FooBar" ... >`` uses the field ``mFooBar``.
-
-``pascalcase-m-underscore``
-
-The ``name`` attribute is prefixed with the character
-``m`` and an underscore to find the field.
-``<property name="FooBar" ... >`` uses the field ``m_FooBar``.
-
+``camelcase``               The ``name`` attribute is converted to camel case to find the field. ``<property name="FooBar" ... >`` uses the field ``fooBar``.
+``camelcase-underscore``    The ``name`` attribute is converted to camel case and prefixed with an underscore to find the field. ``<property name="FooBar" ... >`` uses the field ``_fooBar``.
+``camelcase-m-underscore``  The ``name`` attribute is converted to camel case and prefixed with the character ``m`` and an underscore to find the field. ``<property name="FooBar" ... >`` uses the field ``m_fooBar``.
+``lowercase``               The ``name`` attribute is converted to lower case to find the Field. ``<property name="FooBar" ... >`` uses the field ``foobar``.
+``lowercase-underscore``    The ``name`` attribute is converted to lower case and prefixed with an underscore to find the Field. ``<property name="FooBar" ... >`` uses the field ``_foobar``.
+``pascalcase-underscore``   The ``name`` attribute is prefixed with an underscore to find the field. ``<property name="FooBar" ... >`` uses the field ``_FooBar``.
+``pascalcase-m``            The ``name`` attribute is prefixed with the character ``m`` to find the field. ``<property name="FooBar" ... >`` uses the field ``mFooBar``.
+``pascalcase-m-underscore`` The ``name`` attribute is prefixed with the character ``m`` and an underscore to find the field. ``<property name="FooBar" ... >`` uses the field ``m_FooBar``.
 =========================== ===========================================================================================================================================================================================
 
 many-to-one
@@ -1047,7 +985,7 @@ An ordinary association to another persistent class is declared using a
 ``many-to-one`` element. The relational model is a
 many-to-one association. (It's really just an object reference.)
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-one
           name="PropertyName"
@@ -1074,7 +1012,7 @@ determined by reflection): The name of the associated class.
 ``cascade`` (optional): Specifies which operations should
 be cascaded from the parent object to the associated object.
 
-``fetch`` (optional - defaults to ``elect``):
+``fetch`` (optional - defaults to ``select``):
 Chooses between outer-join fetching or sequential select fetching.
 
 ``update, insert`` (optional - defaults to ``true``)
@@ -1103,7 +1041,7 @@ Specifies how foreign keys that reference missing rows will be handled:
 ``ignore`` will treat a missing row as a null association.
 
 The ``cascade`` attribute permits the following values:
-``all``, ``ave-update``, ``delete``,
+``all``, ``save-update``, ``delete``,
 ``none``. Setting a value other than ``none``
 will propagate certain operations to the associated (child) object.
 See "Lifecycle Objects" below.
@@ -1112,11 +1050,11 @@ The ``fetch`` attribute accepts two different values:
 
 - ``join`` Fetch the association using an outer join
 
-- ``elect`` Fetch the association using a separate query
+- ``select`` Fetch the association using a separate query
 
 A typical ``many-to-one`` declaration looks as simple as
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-one name="product" class="Product" column="PRODUCT_ID"/>
 
@@ -1127,13 +1065,13 @@ the primary key. This is an ugly relational model. For example, suppose the
 key. (The ``unique`` attribute controls NHibernate's DDL generation with
 the SchemaExport tool.)
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <property name="serialNumber" unique="true" type="string" column="SERIAL_NUMBER"/>
 
 Then the mapping for ``OrderItem`` might use:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-one name="product" property-ref="serialNumber" column="PRODUCT_SERIAL_NUMBER"/>
 
@@ -1145,7 +1083,7 @@ one-to-one
 A one-to-one association to another persistent class is declared using a
 ``one-to-one`` element.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <one-to-one
           name="PropertyName"
@@ -1171,7 +1109,7 @@ class. This option affects the order in which ``Save()`` and
 ``Delete()`` are cascaded (and is also used by the schema export
 tool).
 
-``fetch`` (optional - defaults to ``elect``):
+``fetch`` (optional - defaults to ``select``):
 Chooses between outer-join fetching or sequential select fetching.
 
 ``property-ref``: (optional) The name of a property of the associated class
@@ -1195,11 +1133,11 @@ are assigned the same identifier value!
 For a primary key association, add the following mappings to ``Employee`` and
 ``Person``, respectively.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <one-to-one name="Person" class="Person"/>
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <one-to-one name="Employee" class="Employee" constrained="true"/>
 
@@ -1207,7 +1145,7 @@ Now we must ensure that the primary keys of related rows in the PERSON and
 EMPLOYEE tables are equal. We use a special NHibernate identifier generation strategy
 called ``foreign``:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Person" table="PERSON">
       <id name="Id" column="PERSON_ID">
@@ -1228,21 +1166,21 @@ property of that ``Person``.
 Alternatively, a foreign key with a unique constraint, from ``Employee`` to
 ``Person``, may be expressed as:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-one name="Person" class="Person" column="PERSON_ID" unique="true"/>
 
 And this association may be made bidirectional by adding the following to the
 ``Person`` mapping:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <one-to-one name="Employee" class="Employee" property-ref="Person"/>
 
 natural-id
 ==========
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <natural-id mutable="true|false"/>
           <property ... />
@@ -1273,7 +1211,7 @@ child object to columns of the table of a parent class. Components may, in
 turn, declare their own properties, components or collections. See
 "Components" below.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <component
           name="PropertyName"
@@ -1282,6 +1220,7 @@ turn, declare their own properties, components or collections. See
           upate="true|false"
           access="field|property|nosetter|ClassName"
           optimistic-lock="true|false">
+
           <property ...../>
           <many-to-one .... />
           ........
@@ -1326,7 +1265,7 @@ of properties to be the target of a ``property-ref``. It
 is also a convenient way to define a multi-column unique constraint. For
 example:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <properties
         name="logicalName"
@@ -1334,6 +1273,7 @@ example:
         update="true|false"
         optimistic-lock="true|false"
         unique="true|false">
+
         <property .../>
         <many-to-one .../>
         ........
@@ -1361,7 +1301,7 @@ exists upon all mapped columns of the component.
 For example, if we have the following
 ``<properties>`` mapping:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Person">
         <id name="personNumber" />
@@ -1376,7 +1316,7 @@ You might have some legacy data association that refers to this
 unique key of the ``Person`` table, instead of to the
 primary key:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-one name="owner" class="Person" property-ref="name">
           <column name="firstName" />
@@ -1394,7 +1334,7 @@ Finally, polymorphic persistence requires the declaration of each subclass of
 the root persistent class. For the (recommended) table-per-class-hierarchy
 mapping strategy, the ``<subclass>`` declaration is used.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <subclass
           name="ClassName"
@@ -1403,6 +1343,7 @@ mapping strategy, the ``<subclass>`` declaration is used.
           lazy="true|false"
           dynamic-update="true|false"
           dynamic-insert="true|false">
+
           <property .... />
           <properties .... />
           .....
@@ -1435,7 +1376,7 @@ Alternatively, a subclass that is persisted to its own table (table-per-subclass
 mapping strategy) is declared using a ``<joined-subclass>``
 element.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <joined-subclass
           name="ClassName"
@@ -1443,7 +1384,9 @@ element.
           lazy="true|false"
           dynamic-update="true|false"
           dynamic-insert="true|false">
+
           <key .... >
+
           <property .... />
           <properties .... />
           .....
@@ -1468,6 +1411,7 @@ would be re-written as:
   <?xml version="1.0"?>
   <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Eg"
       namespace="Eg">
+
           <class name="Cat" table="CATS">
                   <id name="Id" column="uid" type="Int64">
                           <generator class="hilo"/>
@@ -1486,9 +1430,11 @@ would be re-written as:
                           <property name="Name" type="String"/>
                   </joined-subclass>
           </class>
+
           <class name="Dog">
                   <!-- mapping for Dog could go here -->
           </class>
+
   </hibernate-mapping>
 
 For information about inheritance mappings, see :ref:`inheritance`.
@@ -1505,7 +1451,7 @@ declaration. However, if you wish use polymorphic associations (e.g. an associat
 to the superclass of your hierarchy), you need to
 use the ``<union-subclass>`` mapping.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <union-subclass
           name="ClassName"
@@ -1522,6 +1468,7 @@ use the ``<union-subclass>`` mapping.
           subselect="SQL expression"
           entity-name="EntityName"
           node="element-name">
+
           <property .... />
           <properties .... />
           .....
@@ -1547,7 +1494,7 @@ join
 Using the ``<join>`` element, it is possible to map
 properties of one class to several tables, when there's a 1-to-1 relationship between the tables.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <join
           table="tablename"
@@ -1555,21 +1502,23 @@ properties of one class to several tables, when there's a 1-to-1 relationship be
           fetch="join|select"
           inverse="true|false"
           optional="true|false">
+
           <key ... />
+
           <property ... />
           ...
   </join>
 
 ``table``: The name of the joined table.
 
-``chema`` (optional): Override the schema name specified by
+``schema`` (optional): Override the schema name specified by
 the root ``<hibernate-mapping>`` element.
 
 ``fetch`` (optional - defaults to ``join``):
 If set to ``join``, the default, NHibernate will use an inner join
 to retrieve a ``<join>`` defined by a class or its superclasses
 and an outer join for a ``<join>`` defined by a subclass.
-If set to ``elect`` then NHibernate will use a sequential select for
+If set to ``select`` then NHibernate will use a sequential select for
 a ``<join>`` defined on a subclass, which will be issued only
 if a row turns out to represent an instance of the subclass. Inner joins will still
 be used to retrieve a ``<join>`` defined by the class and its
@@ -1586,11 +1535,13 @@ join are non-null and will always use an outer join to retrieve the properties.
 For example, the address information for a person can be mapped to a separate
 table (while preserving value type semantics for all properties):
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Person"
       table="PERSON">
+
       <id name="id" column="PERSON_ID">...</id>
+
       <join table="ADDRESS">
           <key column="ADDRESS_ID"/>
           <property name="address"/>
@@ -1619,11 +1570,11 @@ specify the fully qualified name in NHibernate queries. Classes may be "imported
 explicitly, rather than relying upon ``auto-import="true"``. You may even import
 classes and interfaces that are not explicitly mapped.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <import class="System.Object" rename="Universe"/>
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <import
           class="ClassName"
@@ -1700,9 +1651,7 @@ NHibernate Type    .NET Type           Database Type                            
 ``Int16``          ``System.Int16``    ``DbType.Int16``                                            Default when no ``type`` attribute specified.
 ``Int32``          ``System.Int32``    ``DbType.Int32``                                            Default when no ``type`` attribute specified.
 ``Int64``          ``System.Int64``    ``DbType.Int64``                                            Default when no ``type`` attribute specified.
-``PersistentEnum`` A ``System.Enum``   The ``DbType`` for the underlying value.                    Do not specify ``type="PersistentEnum"`` in the mapping.  Instead
-specify the Assembly Qualified Name of the Enum or let NHibernate use Reflection to "guess" the Type.
-The UnderlyingType of the Enum is used to determine the correct ``DbType``.
+``PersistentEnum`` A ``System.Enum``   The ``DbType`` for the underlying value.                    Do not specify ``type="PersistentEnum"`` in the mapping.  Instead  specify the Assembly Qualified Name of the Enum or let NHibernate use Reflection to "guess" the Type.   The UnderlyingType of the Enum is used to determine the correct ``DbType``.
 ``Single``         ``System.Single``   ``DbType.Single``                                           Default when no ``type`` attribute specified.
 ``Ticks``          ``System.DateTime`` ``DbType.Int64``                                            ``type="Ticks"`` must be specified.
 ``Time``           ``System.DateTime`` ``DbType.Time``                                             ``type="Time"`` must be specified.
@@ -1732,8 +1681,7 @@ NHibernate Type  .NET Type                                                      
 ================ ================================================================ ================= ============================================================================================================================
 ``StringClob``   ``System.String``                                                ``DbType.String`` ``type="StringClob"`` must be specified.  Entire field is read into memory.
 ``BinaryBlob``   ``System.Byte[]``                                                ``DbType.Binary`` ``type="BinaryBlob"`` must be specified.  Entire field is read into memory.
-``Serializable`` Any ``System.Object`` that is marked with SerializableAttribute. ``DbType.Binary`` ``type="Serializable"`` should be specified.  This is the fallback type
-if no NHibernate Type can be found for the Property.
+``Serializable`` Any ``System.Object`` that is marked with SerializableAttribute. ``DbType.Binary`` ``type="Serializable"`` should be specified.  This is the fallback type if no NHibernate Type can be found for the Property.
 ================ ================================================================ ================= ============================================================================================================================
 
 NHibernate supports some additional type names for compatibility with Java's Hibernate (useful for those coming over from
@@ -1761,7 +1709,7 @@ fully qualified name of the type. Check out
 ``NHibernate.DomainModel.DoubleStringType`` to see the kind of things that
 are possible.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <property name="TwoStrings" type="NHibernate.DomainModel.DoubleStringType, NHibernate.DomainModel">
       <column name="first_string"/>
@@ -1782,7 +1730,7 @@ do this, your ``IUserType`` must implement the
 to your custom type, you can use the ``<type>`` element in your mapping
 files.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <property name="priority">
       <type name="MyCompany.UserTypes.DefaultValueIntegerType">
@@ -1798,13 +1746,13 @@ shorter name for it. You can do this using the ``<typedef>`` element.
 Typedefs assign a name to a custom type, and may also contain a list of default
 parameter values if the type is parameterized.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <typedef class="MyCompany.UserTypes.DefaultValueIntegerType" name="default_zero">
       <param name="default">0</param>
   </typedef>
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <property name="priority" type="default_zero"/>
 
@@ -1831,7 +1779,7 @@ for this kind of association, so this is most certainly not meant as the usual w
 (polymorphic) associations. You should use this only in very special cases (eg. audit logs,
 user session data, etc).
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <any name="AnyEntity" id-type="Int64" meta-type="Eg.Custom.Class2TablenameType">
       <column name="table_name"/>
@@ -1845,7 +1793,7 @@ type specified by ``id-type``. If the meta-type returns instances of
 a basic type like ``String`` or ``Char``, you must
 specify the mapping from values to classes.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <any name="AnyEntity" id-type="Int64" meta-type="String">
       <meta-value value="TBL_ANIMAL" class="Animal"/>
@@ -1855,7 +1803,7 @@ specify the mapping from values to classes.
       <column name="id"/>
   </any>
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <any
           name="PropertyName"
@@ -1900,7 +1848,7 @@ column name in backticks in the mapping document. NHibernate will use the correc
 style for the SQL ``Dialect`` (usually double quotes, but brackets for SQL
 Server and backticks for MySQL).
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="LineItem" table="`Line Item`">
       <id name="Id" column="`Item Id`"/><generator class="assigned"/></id>
@@ -1911,13 +1859,13 @@ Server and backticks for MySQL).
 Modular mapping files
 #####################
 
-It is possible to define ``ubclass`` and ``joined-subclass``
+It is possible to define ``subclass`` and ``joined-subclass``
 mappings in seperate mapping documents, directly beneath ``hibernate-mapping``.
 This allows you to extend a class hierachy just by adding a new mapping file. You must
 specify an ``extends`` attribute in the subclass mapping, naming a previously
 mapped superclass. Use of this feature makes the ordering of the mapping documents important!
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping>
           <subclass name="Eg.Subclass.DomesticCat, Eg"
@@ -1972,7 +1920,7 @@ defining auxiliary database objects.
 The first mode is to explicitly list the CREATE and DROP commands out in the mapping
 file:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <nhibernate-mapping>
       ...
@@ -1986,7 +1934,7 @@ The second mode is to supply a custom class which knows how to construct the
 CREATE and DROP commands.  This custom class must implement the
 ``NHibernate.Mapping.IAuxiliaryDatabaseObject`` interface.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping>
       ...
@@ -1997,7 +1945,7 @@ CREATE and DROP commands.  This custom class must implement the
 
 You may also specify parameters to be passed to the database object:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping>
       ...
@@ -2014,7 +1962,7 @@ passing it a dictionary of parameter names and values.
 Additionally, these database objects can be optionally scoped such that they only
 apply when certain dialects are used.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping>
       ...

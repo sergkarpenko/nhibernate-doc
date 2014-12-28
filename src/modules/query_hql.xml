@@ -164,7 +164,7 @@ from Eg.Cat as cat
     inner join cat.Mate as mate]]></programlisting>
 
         <para>
-            The query will select <literal>Mate</literal>s of other <literal>Cat</literal>s.
+            The query will select <literal>Mate</literal> of other <literal>Cat</literal>.
             Actually, you may express this query more compactly as:
         </para>
 

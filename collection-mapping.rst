@@ -16,11 +16,13 @@ as an interface type, for example:
   {
       private string serialNumber;
       private ISet parts = new HashedSet();
+
       public ISet Parts
       {
           get { return parts; }
           set { parts = value; }
       }
+
       public string SerialNumber
       {
           get { return serialNumber; }
@@ -111,7 +113,7 @@ Collections are declared by the
 ``<primitive-array>`` elements.
 ``<map>`` is representative:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <map
       name="propertyName"
@@ -129,6 +131,7 @@ Collections are declared by the
       optimistic-lock="true|false"
       generic="true|false"
   >
+
       <key .... />
       <index .... />
       <element .... />
@@ -139,7 +142,7 @@ Collections are declared by the
 ``table`` (optional - defaults to property name) the
 name of the collection table (not used for one-to-many associations)
 
-``chema`` (optional) the name of a table schema to
+``schema`` (optional) the name of a table schema to
 override the schema declared on the root element
 
 ``lazy`` (optional - defaults to ``true``)
@@ -153,7 +156,7 @@ mark this collection as the "inverse" end of a bidirectional association
 ``cascade`` (optional - defaults to ``none``)
 enable operations to cascade to child entities
 
-``ort`` (optional) specify a sorted collection with
+``sort`` (optional) specify a sorted collection with
 ``natural`` sort order, or a given comparator class
 
 ``order-by`` (optional) specify a table column (or columns)
@@ -215,7 +218,7 @@ possibly index column(s).
 The foreign key from the collection table to the table of the owning class is
 declared using a ``<key>`` element.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <key column="column_name"/>
 
@@ -226,7 +229,7 @@ element. For lists, this column contains sequential integers numbered from zero.
 that your index really starts from zero if you have to deal with legacy data. For maps,
 the column may contain any values of any NHibernate type.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <index
           column="column_name"
@@ -242,7 +245,7 @@ The type of the collection index.
 Alternatively, a map may be indexed by objects of entity type. We use the
 ``<index-many-to-many>`` element.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <index-many-to-many
           column="column_name"
@@ -257,7 +260,7 @@ collection index.
 
 For a collection of values, we use the ``<element>`` tag.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <element
           column="column_name"
@@ -273,7 +276,7 @@ A collection of entities with its own table corresponds to the relational notion
 of *many-to-many association*. A many to many association is the
 most natural mapping of a .NET collection but is not usually the best relational model.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-many
           column="column_name"
@@ -298,7 +301,7 @@ Specifies how foreign keys that reference missing rows will be handled:
 
 Some examples, first, a set of strings:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Names" table="NAMES">
       <key column="GROUPID"/>
@@ -308,7 +311,7 @@ Some examples, first, a set of strings:
 A bag containing integers (with an iteration order determined by the
 ``order-by`` attribute):
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <bag name="Sizes" table="SIZES" order-by="SIZE ASC">
       <key column="OWNER"/>
@@ -318,7 +321,7 @@ A bag containing integers (with an iteration order determined by the
 An array of entities - in this case, a many to many association (note that
 the entities are lifecycle objects, ``cascade="all"``):
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <array name="Foos" table="BAR_FOOS" cascade="all">
       <key column="BAR_ID"/>
@@ -328,7 +331,7 @@ the entities are lifecycle objects, ``cascade="all"``):
 
 A map from string indices to dates:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <map name="Holidays" table="holidays" schema="dbo" order-by="hol_name asc">
       <key column="id"/>
@@ -338,7 +341,7 @@ A map from string indices to dates:
 
 A list of components (discussed in the next chapter):
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <list name="CarComponents" table="car_components">
       <key column="car_id"/>
@@ -374,7 +377,7 @@ described above.
 
 The ``<one-to-many>`` tag indicates a one to many association.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <one-to-many
           class="ClassName"
@@ -389,7 +392,7 @@ Specifies how foreign keys that reference missing rows will be handled:
 
 Example:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Bars">
       <key column="foo_id"/>
@@ -426,6 +429,7 @@ However, if the application tries something like this:
   IDictionary permissions = u.Permissions;
   tx.Commit();
   s.Close();
+
   int accessLevel = (int) permissions["accounts"];  // Error!
 
 It could be in for a nasty surprise. Since the permissions collection was not
@@ -444,7 +448,7 @@ Exceptions that occur while lazily initializing a collection are wrapped in a
 
 Declare a lazy collection using the optional ``lazy`` attribute:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Names" table="NAMES" lazy="true">
       <key column="group_id"/>
@@ -503,24 +507,25 @@ Sorted Collections
 NHibernate supports collections implemented by ``System.Collections.SortedList`` and
 ``Iesi.Collections.SortedSet``. You must specify a comparer in the mapping file:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Aliases" table="person_aliases" sort="natural">
       <key column="person"/>
       <element column="name" type="String"/>
   </set>
+
   <map name="Holidays" sort="My.Custom.HolidayComparer, MyAssembly" lazy="true">
       <key column="year_id"/>
       <index column="hol_name" type="String"/>
       <element column="hol_date" type="Date"/>
   </map>
 
-Allowed values of the ``ort`` attribute are ``unsorted``,
+Allowed values of the ``sort`` attribute are ``unsorted``,
 ``natural`` and the name of a class implementing
 ``System.Collections.IComparer``.
 
 If you want the database itself to order the collection elements use the
-``order-by`` attribute of ``et``, ``bag``
+``order-by`` attribute of ``set``, ``bag``
 or ``map`` mappings. This performs the ordering in the SQL query, not in
 memory.
 
@@ -530,12 +535,13 @@ internally for dictionaries and sets, maintaining the order of the elements.
 *Note that lookup operations on these collections are very slow if they
 contain more than a few elements.*
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Aliases" table="person_aliases" order-by="name asc">
       <key column="person"/>
       <element column="name" type="String"/>
   </set>
+
   <map name="Holidays" order-by="hol_date, hol_name" lazy="true">
       <key column="year_id"/>
       <index column="hol_name" type="String"/>
@@ -567,7 +573,7 @@ associations and collections of values to a table with a surrogate key.
 The ``<idbag>`` element lets you map a ``List``
 (or ``Collection``) with bag semantics.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <idbag name="Lovers" table="LOVERS" lazy="true">
       <collection-id column="ID" type="Int64">
@@ -613,7 +619,7 @@ many-to-many associations to the same database table and declaring one end as
 a bidirectional many-to-many association from a class back to *itself*
 (each category can have many items and each item can be in many categories):
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="NHibernate.Auction.Category, NHibernate.Auction">
       <id name="Id" column="ID"/>
@@ -623,9 +629,11 @@ a bidirectional many-to-many association from a class back to *itself*
           <many-to-many class="NHibernate.Auction.Item, NHibernate.Auction" column="ITEM_ID"/>
       </bag>
   </class>
+
   <class name="NHibernate.Auction.Item, NHibernate.Auction">
       <id name="id" column="ID"/>
       ...
+
       <!-- inverse end -->
       <bag name="categories" table="CATEGORY_ITEM" inverse="true" lazy="true">
           <key column="ITEM_ID"/>
@@ -643,6 +651,7 @@ a many-to-many relationship in C#:
 
   category.Items.Add(item);          // The category now "knows" about the relationship
   item.Categories.Add(category);     // The item now "knows" about the relationship
+
   session.Update(item);                     // No effect, nothing will be saved!
   session.Update(category);                 // The relationship will be saved
 
@@ -655,7 +664,7 @@ You may map a bidirectional one-to-many association by mapping a one-to-many ass
 to the same table column(s) as a many-to-one association and declaring the many-valued
 end ``inverse="true"``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Eg.Parent, Eg">
       <id name="Id" column="id"/>
@@ -665,6 +674,7 @@ end ``inverse="true"``.
           <one-to-many class="Eg.Child, Eg"/>
       </set>
   </class>
+
   <class name="Eg.Child, Eg">
       <id name="Id" column="id"/>
       ....
@@ -681,7 +691,7 @@ There are two possible approaches to mapping a ternary association. One approach
 composite elements (discussed below). Another is to use an ``IDictionary`` with an
 association as its index:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <map name="Contracts" lazy="true">
       <key column="employer_id"/>
@@ -689,7 +699,7 @@ association as its index:
       <one-to-many class="Contract"/>
   </map>
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <map name="Connections" lazy="true">
       <key column="node1_id"/>
@@ -715,21 +725,26 @@ class:
 
   using System;
   using System.Collections;
+
   namespace Eg
+
       public class Parent
       {
           private long id;
           private ISet children;
+
           public long Id
           {
               get { return id; }
               set { id = value; }
           }
+
           private ISet Children
           {
               get { return children; }
               set { children = value; }
           }
+
           ....
           ....
       }
@@ -739,10 +754,11 @@ has a collection of ``Eg.Child`` instances. If each
 child has at most one parent, the most natural mapping is a one-to-many
 association:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
       assembly="Eg" namespace="Eg">
+
       <class name="Parent">
           <id name="Id">
               <generator class="sequence"/>
@@ -752,12 +768,14 @@ association:
               <one-to-many class="Child"/>
           </set>
       </class>
+
       <class name="Child">
           <id name="Id">
               <generator class="sequence"/>
           </id>
           <property name="Name"/>
       </class>
+
   </hibernate-mapping>
 
 This maps to the following table definitions:
@@ -771,10 +789,11 @@ This maps to the following table definitions:
 If the parent is *required*, use a bidirectional one-to-many
 association:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
       assembly="Eg" namespace="Eg">
+
       <class name="Parent">
           <id name="Id">
               <generator class="sequence"/>
@@ -784,6 +803,7 @@ association:
               <one-to-many class="Child"/>
           </set>
       </class>
+
       <class name="Child">
           <id name="Id">
               <generator class="sequence"/>
@@ -791,6 +811,7 @@ association:
           <property name="Name"/>
           <many-to-one name="parent" class="Parent" column="parent_id" not-null="true"/>
       </class>
+
   </hibernate-mapping>
 
 Notice the ``NOT NULL`` constraint:
@@ -807,10 +828,11 @@ Notice the ``NOT NULL`` constraint:
 On the other hand, if a child might have multiple parents, a many-to-many
 association is appropriate:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
       assembly="Eg" namespace="Eg">
+
       <class name="Parent">
           <id name="Id">
               <generator class="sequence"/>
@@ -820,12 +842,14 @@ association is appropriate:
               <many-to-many class="Child" column="child_id"/>
           </set>
       </class>
+
       <class name="eg.Child">
           <id name="Id">
               <generator class="sequence"/>
           </id>
           <property name="Name"/>
       </class>
+
   </hibernate-mapping>
 
 Table definitions:

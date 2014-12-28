@@ -206,10 +206,11 @@ entities as read-only before the query is executed.
 Then you can explicitly initialize proxies and collections
 before restoring the session default.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   ISession session = factory.OpenSession();
   ITransaction tx = session.BeginTransaction();
+
   session.DefaultReadOnly = true;
   Contract contract = session.CreateQuery("from Contract where CustomerName = 'Sherman'").UniqueResult<Contract>();
   NHibernate.Initialize(contract.Plan);
@@ -268,8 +269,10 @@ entity:
 
   // evict the read-only entity so it is detached
   session.Evict(entity);
+
   // make the detached entity (with the non-flushed changes) persistent
   session.Update(entity);
+
   // now entity is no longer read-only and its changes can be flushed
   s.Flush();
 
@@ -286,59 +289,15 @@ Affect of read-only entity on property types
 ====================================================================================================================================== =========================================================
 Property/Association Type                                                                                                              Changes flushed to DB?
 ====================================================================================================================================== =========================================================
-
-Simple
-
-(:ref:`readonly-proptypes-simple`)
-
-                                                                                        no*
-
-Unidirectional one-to-one
-
-Unidirectional many-to-one
-
-(:ref:`readonly-proptypes-singleended-unidir`)
-
-no*
-
-no*
-
-Unidirectional one-to-many
-
-Unidirectional many-to-many
-
-(:ref:`readonly-proptypes-manyended-unidir`)
-
-yes
-
-yes
-
-Bidirectional one-to-one
-
-(:ref:`readonly-proptypes-onetoone-bidir`)
-
-                                                            only if the owning entity is not read-only*
-
-Bidirectional one-to-many/many-to-one
-
-inverse collection
-
-non-inverse collection
-
-(:ref:`readonly-proptypes-onetomany-manytoone`)
-
-only added/removed entities that are not read-only*
-
-yes
-
-Bidirectional many-to-many
-
-(:ref:`readonly-proptypes-manytomany-bidir`)
-
-                                                        yes
+Simple    (:ref:`readonly-proptypes-simple`)                                                                                           no*
+Unidirectional one-to-one    Unidirectional many-to-one     (:ref:`readonly-proptypes-singleended-unidir`)                             no*   no*
+Unidirectional one-to-many   Unidirectional many-to-many    (:ref:`readonly-proptypes-manyended-unidir`)                               yes   yes
+Bidirectional one-to-one    (:ref:`readonly-proptypes-onetoone-bidir`)                                                                 only if the owning entity is not read-only*
+Bidirectional one-to-many/many-to-one   inverse collection   non-inverse collection    (:ref:`readonly-proptypes-onetomany-manytoone`) only added/removed entities that are not read-only*   yes
+Bidirectional many-to-many    (:ref:`readonly-proptypes-manytomany-bidir`)                                                             yes
 ====================================================================================================================================== =========================================================
 
-* Behavior is different when the entity having the property/association
+Behavior is different when the entity having the property/association
 is read-only, compared to when it is not read-only.
 
 .. _readonly-proptypes-simple:
@@ -353,17 +312,21 @@ NHibernate will not synchronize simple property state changes
 to the database. If you have automatic versioning, NHibernate
 will not increment the version if any simple properties change.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   ISession session = factory.OpenSession();
   ITransaction tx = session.BeginTransaction();
+
   // get a contract and make it read-only
   Contract contract = session.Get<Contract>(contractId);
   session.SetReadOnly(contract, true);
+
   // contract.CustomerName is "Sherman"
   contract.CustomerName = "Yogi";
   tx.Commit();
+
   tx = session.BeginTransaction();
+
   contract = session.Get<Contract>(contractId);
   // contract.CustomerName is still "Sherman"
   ...
@@ -414,7 +377,7 @@ The following shows that changing a read-only entity's
 many-to-one association reference to null has no effect
 on the entity's database representation.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   // get a contract with an existing plan;
   // make the contract read-only and set its plan to null
@@ -423,10 +386,13 @@ on the entity's database representation.
   session.SetReadOnly(contract, true);
   contract.Plan = null;
   tx.Commit();
+
   // get the same contract
   tx = session.BeginTransaction();
   Contract contract = session.Get<Contract>(contractId);
+
   // contract.Plan still refers to the original plan;
+
   tx.Commit();
   session.Close();
 
@@ -437,7 +403,7 @@ database representation, flush still cascades
 the save-update operation to the locally
 changed association.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   // get a contract with an existing plan;
   // make the contract read-only and change to a new plan
@@ -447,13 +413,16 @@ changed association.
   Plan newPlan = new Plan("new plan");
   contract.Plan = newPlan;
   tx.Commit();
+
   // get the same contract
   tx = session.BeginTransaction();
   contract = session.Get<Contract>(contractId);
   newPlan = session.Get<Plan>(newPlan.Id);
+
   // contract.Plan still refers to the original plan;
   // newPlan is non-null because it was persisted when
   // the previous transaction was committed;
+
   tx.Commit();
   session.Close();
 

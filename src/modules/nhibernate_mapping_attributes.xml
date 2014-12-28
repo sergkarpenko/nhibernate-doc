@@ -63,15 +63,17 @@
 				<para><classname>[RawXmlAttribute]</classname> is a new attribute allowing to insert xml as-is in the mapping. This feature can be very useful to do complex mapping (eg: components). It may also be used to quickly move the mapping from xml files to attributes. Usage: <literal>[RawXml(After=typeof(ComponentAttribute), Content="&lt;component name="..."&gt;...&lt;/component&gt;")]</literal>. <methodname>After</methodname> tells after which kind of mapping the xml should be inserted (generally, it is the type of the mapping you are inserting); it is optional (in which case the xml is inserted on the top of the mapping). Note: At the moment, all raw xmls are prefixed by a <literal>&lt;!----&gt;</literal> (in the generated stream); this is a known side-effect.</para>
 			</listitem>
 			<listitem>
-				<para><classname>[AttributeIdentifierAttribute]</classname> is a new attribute allowing to provide the value of a defined "place holder". Eg: <programlisting>
+				<para><classname>[AttributeIdentifierAttribute]</classname> is a new attribute allowing to provide the value of a defined "place holder". Eg: </para></listitem></orderedlist>
+<programlisting>
 public class Base {
     [Id(..., Column="{{Id.Column}}")]
     [AttributeIdentifier(Name="Id.Column", Value="ID")] // Default value
     public int Id { ... }
 }
 [AttributeIdentifier(Name="Id.Column", Value="SUB_ID")]
-[Class] public class MappedSubClass : Base { }</programlisting>
-				The idea is that, when you have a mapping which is shared by many subclasses but which has minor differences (like different column names), you can put the mapping in the base class with place holders on these fields and give their values in subclasses. Note that this is possible for any mapping field taking a string (column, name, type, access, etc.). And, instead of <methodname>Value</methodname>, you can use <methodname>ValueType</methodname> or <methodname>ValueObject</methodname> (if you use an enum, you can control its formatting with <methodname>ValueObject</methodname>).
+[Class] public class MappedSubClass : Base { }
+</programlisting><orderedlist><listitem>
+<para>The idea is that, when you have a mapping which is shared by many subclasses but which has minor differences (like different column names), you can put the mapping in the base class with place holders on these fields and give their values in subclasses. Note that this is possible for any mapping field taking a string (column, name, type, access, etc.). And, instead of <methodname>Value</methodname>, you can use <methodname>ValueType</methodname> or <methodname>ValueObject</methodname> (if you use an enum, you can control its formatting with <methodname>ValueObject</methodname>).
 				</para>
 				<para>The "place holder" is defined like this: <literal>{{XXX}}</literal>. If you don't want to use these double curly brackets, you can change them using the properties <methodname>StartQuote</methodname> and <methodname>EndQuote</methodname> of the class <classname>HbmWriter</classname>.</para>
 			</listitem>
@@ -109,12 +111,12 @@ public class Base {
 		</formalpara>
 		<para>The first step is to decorate your entities with attributes; you can use: <classname>[Class]</classname>, <classname>[Subclass]</classname>, <classname>[JoinedSubclass]</classname> or <classname>[Component]</classname>. Then, you decorate your members (fields/properties); they can take as many attributes as required by your mapping. Eg:</para>
 		<programlisting>
-    [NHibernate.Mapping.Attributes.Class]
-    public class Example
-    {
-        [NHibernate.Mapping.Attributes.Property]
-        public string Name;
-    }</programlisting>
+[NHibernate.Mapping.Attributes.Class]
+public class Example
+{
+    [NHibernate.Mapping.Attributes.Property]
+    public string Name;
+}</programlisting>
 		<para>After this step, you use <classname>NHibernate.Mapping.Attributes.HbmSerializer</classname>: (here, we use <methodname>Default</methodname> which is an instance you can use if you don't need/want to create it yourself).</para>
 		<programlisting>
     NHibernate.Cfg.Configuration cfg = new NHibernate.Cfg.Configuration();
@@ -162,7 +164,13 @@ public class Base {
 				<para>You can add <classname>[HibernateMapping]</classname> on your classes to specify <literal>&lt;hibernate-mapping&gt;</literal> attributes (used when serializing the class in its stream). You can also use <methodname>HbmSerializer.Hbm*</methodname> properties (used when serializing an assembly or a type that is not decorated with <classname>[HibernateMapping]</classname>).</para>
 			</listitem>
 			<listitem>
-				<para>Instead of using a string for <methodname>DiscriminatorValue</methodname> (in <classname>[Class]</classname> and <classname>[Subclass]</classname>), you can use any object you want. Example: <programlisting>[Subclass(DiscriminatorValueEnumFormat="d", DiscriminatorValueObject=DiscEnum.Val1)]</programlisting> Here, the object is an Enum, and you can set the format you want (the default value is "g"). Note that you must put it <emphasis role="strong">before</emphasis>! For others types, It simply use the <methodname>ToString()</methodname> method of the object.</para>
+				<para>Instead of using a string for <methodname>DiscriminatorValue</methodname> (in <classname>[Class]</classname> and <classname>[Subclass]</classname>), you can use any object you want. Example: 
+</para></listitem></orderedlist>
+<programlisting>
+[Subclass(DiscriminatorValueEnumFormat="d", DiscriminatorValueObject=DiscEnum.Val1)]
+</programlisting>
+<orderedlist><listitem><para>
+ Here, the object is an Enum, and you can set the format you want (the default value is "g"). Note that you must put it <emphasis role="strong">before</emphasis>! For others types, It simply use the <methodname>ToString()</methodname> method of the object.</para>
 			</listitem>
 			<listitem>
 				<para>If you are using members of the type <classname>Nullables.NullableXXX</classname> (from the library <link linkend="nullables">Nullables</link>), then they will be mapped to <classname>Nullables.NHibernate.NullableXXXType</classname> automatically; don't set <literal>Type="..."</literal> in <classname>[Property]</classname> (leave it null). This is also the case for <classname>SqlTypes</classname> (and you can add your own patterns). Thanks to <emphasis>Michael Third</emphasis> for the idea :)</para>
@@ -179,33 +187,43 @@ public class Base {
 			</listitem>
 			<listitem>
 				<para>Another way to map <classname>[Component]</classname> is to use the way this library works: If a mapped class contains a mapped component, then this component will be include in the class. <emphasis>NHibernate.Mapping.Attributes.Test</emphasis> contains the classes <classname>JoinedBaz</classname> and <classname>Stuff</classname> which both use the component <classname>Address</classname>.</para>
-				<para>Basically, it is done by adding <programlisting>[Component(Name = "MyComp")] private class SubComp : Comp {}</programlisting> in each class. One of the advantages is that you can override <methodname>Access</methodname>, <methodname>Update</methodname> or <methodname>Insert</methodname> for each member. But you have to add the component subclass in <emphasis role="strong">each</emphasis> class (and it can not be inherited). Another advantage is that you can use <classname>[AttributeIdentifier]</classname>.</para>
+				<para>Basically, it is done by adding 
+                    </para></listitem></orderedlist>
+<programlisting>
+[Component(Name = "MyComp")] 
+private class SubComp : Comp {}
+</programlisting> 
+                    <orderedlist><listitem><para>
+                    in each class. One of the advantages is that you can override <methodname>Access</methodname>, <methodname>Update</methodname> or <methodname>Insert</methodname> for each member. But you have to add the component subclass in <emphasis role="strong">each</emphasis> class (and it can not be inherited). Another advantage is that you can use <classname>[AttributeIdentifier]</classname>.</para>
 			</listitem>
 			<listitem>
 				<para>Finally, whenever you think that it is easier to write the mapping in XML (this is often the case for <classname>[Component]</classname>), you can use <classname>[RawXml]</classname>.</para>
 			</listitem>
 			<listitem>
-				<formalpara><title>About customization</title>
+				<formalpara>About customization
 					<para><classname>HbmSerializer</classname> uses <classname>HbmWriter</classname> to serialize each kind of attributes. Their methods are virtual; so you can create a subclass and override any method you want (to change its default behavior).</para>
 				</formalpara>
 				<para>Use the property <methodname>HbmSerializer.HbmWriter</methodname> to change the writer used (you may set a subclass of <classname>HbmWriter</classname>).</para>
 			</listitem>
 		</orderedlist>
-		<para>Example using some this tips: (0, 1 and 2 are position indexes)
+
+<para>Example using some this tips: (0, 1 and 2 are position indexes)</para>
+
 <programlisting>
-    [NHibernate.Mapping.Attributes.Id(0, TypeType=typeof(int))] // Don't put it after [ManyToOne] !!!
-        [NHibernate.Mapping.Attributes.Generator(1, Class="uuid.hex")]
-    [NHibernate.Mapping.Attributes.ManyToOne(2, ClassType=typeof(Foo), OuterJoin=OuterJoinStrategy.True)]
-    private Foo Entity;
+[NHibernate.Mapping.Attributes.Id(0, TypeType=typeof(int))] // Don't put it after [ManyToOne] !!!
+[NHibernate.Mapping.Attributes.Generator(1, Class="uuid.hex")]
+[NHibernate.Mapping.Attributes.ManyToOne(2, ClassType=typeof(Foo), OuterJoin=OuterJoinStrategy.True)]
+private Foo Entity;
 </programlisting>
-			Generates:
+<para>Generates:</para>
+
 <programlisting><![CDATA[
-    <id type="Int32">
-        <generator class="uuid.hex" />
-    </id>
-    <many-to-one name="Entity" class="Namespaces.Foo, SampleAssembly" outer-join="true" />
+<id type="Int32">
+    <generator class="uuid.hex" />
+</id>
+<many-to-one name="Entity" class="Namespaces.Foo, SampleAssembly" outer-join="true" />
 ]]></programlisting>
-		</para>
+
 	</section>
 
 
@@ -215,24 +233,29 @@ public class Base {
 
 		<para>A <methodname>Position</methodname> property has been added to all attributes to order them. But there is still a problem:</para>
 		<para>When a parent element "p" has a child element "x" that is also the child element of another child element "c" of "p" (preceding "x") :D
-Illustration:<programlisting><![CDATA[
-    <p>
-        <c>
-            <x />
-        </c>
+Illustration:
+
+<programlisting><![CDATA[
+<p>
+    <c>
         <x />
-    </p>
+    </c>
+    <x />
+</p>
 ]]></programlisting>
-		</para>
-		<para>In this case, when writing:
-			<programlisting>
-    [Attributes.P(0)]
-        [Attributes.C(1)]
-            [Attributes.X(2)]
-        [Attributes.X(3)]
-    public MyType MyProperty;</programlisting>
-		X(3) will always belong to C(1) ! (as X(2)).
-		</para>
+
+</para>
+<para>In this case, when writing:</para>
+
+<programlisting>
+[Attributes.P(0)]
+[Attributes.C(1)]
+[Attributes.X(2)]
+[Attributes.X(3)]
+public MyType MyProperty;
+</programlisting>
+
+<para>X(3) will always belong to C(1) ! (as X(2)).</para>
 		<para>It is the case for <literal>&lt;dynamic-component&gt;</literal> and <literal>&lt;nested-composite-element&gt;</literal>.</para>
 		<para>Another bad news is that, currently, XML elements coming after this elements can not be included in them. Eg: There is no way put a collection in <literal>&lt;dynamic-component&gt;</literal>. The reason is that the file <filename>nhibernate-mapping.xsd</filename> tells how elements are built and in which order, and NHibernate.Mapping.Attributes use this order.</para>
 		<para>Anyway, the solution would be to add a <methodname>int ParentNode</methodname> property to BaseAttribute so that you can create a real graph...</para>

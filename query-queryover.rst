@@ -23,7 +23,7 @@ So, for example:
 
 becomes:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   .Where<Person>(p => p.Name == "Smith")
 
@@ -39,7 +39,7 @@ Structure of a Query
 
 Queries are created from an ISession using the syntax:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IList<Cat> cats =
       session.QueryOver<Cat>()
@@ -48,11 +48,12 @@ Queries are created from an ISession using the syntax:
 
 Detached QueryOver (analagous to DetachedCriteria) can be created, and then used with an ISession using:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   QueryOver<Cat> query =
       QueryOver.Of<Cat>()
           .Where(c => c.Name == "Paddy");
+
   IList<Cat> cats =
       query.GetExecutableQueryOver(session)
           .List();
@@ -60,7 +61,7 @@ Detached QueryOver (analagous to DetachedCriteria) can be created, and then used
 Queries can be built up to use restrictions, projections, and ordering using
 a fluent inline syntax:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   var catNames =
       session.QueryOver<Cat>()
@@ -82,7 +83,7 @@ so instead of:
 
 You can write:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   ICriterion equalCriterion = Restrictions.Where<Cat>(c => c.Name == "Max")
 
@@ -90,7 +91,7 @@ Since the QueryOver class (and IQueryOver interface) is generic and knows the ty
 there is an inline syntax for restrictions that does not require the additional qualification
 of class name.  So you can also write:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   var cats =
       session.QueryOver<Cat>()
@@ -146,7 +147,7 @@ Some SQL operators/functions do not have a direct equivalent in C#.
 (e.g., the SQL ``where name like '%anna%'``).
 These operators have overloads for QueryOver in the Restrictions class, so you can write:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   .Where(Restrictions.On<Cat>(c => c.Name).IsLike("%anna%"))
 
@@ -167,7 +168,7 @@ restrictions.  So this ICriteria:
 
 Would have to be written as:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   .Add(Restrictions.Or(
               Restrictions.Where<Cat>(c => c.Age > 5)
@@ -198,7 +199,7 @@ An IQueryOver has two types of interest; the root type (the type of entity that 
 and the type of the 'current' entity being queried.  For example, the following query uses
 a join to create a sub-QueryOver (analagous to creating sub-criteria in the ICriteria API):
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IQueryOver<Cat,Kitten> catQuery =
       session.QueryOver<Cat>()
@@ -212,7 +213,7 @@ while calling .List() will return an IList<Cat>.  The type IQueryOver<Cat,Kitten
 Note, the overload for JoinQueryOver takes an IEnumerable<T>, and the C# compiler infers the type from that.
 If your collection type is not IEnumerable<T>, then you need to qualify the type of the sub-criteria:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IQueryOver<Cat,Kitten> catQuery =
       session.QueryOver<Cat>()
@@ -222,7 +223,7 @@ The default join is an inner-join.  Each of the additional join types can be spe
 the methods ``.Inner, .Left, .Right,`` or ``.Full``.
 For example, to left outer-join on Kittens use:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IQueryOver<Cat,Kitten> catQuery =
       session.QueryOver<Cat>()
@@ -246,10 +247,11 @@ the alias).
 Each Lambda Expression function in QueryOver has a corresponding overload to allow use of aliases,
 and a .JoinAlias function to traverse associations using aliases without creating a sub-QueryOver.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   Cat catAlias = null;
   Kitten kittenAlias = null;
+
   IQueryOver<Cat,Cat> catQuery =
       session.QueryOver<Cat>(() => catAlias)
           .JoinAlias(() => catAlias.Kittens, () => kittenAlias)
@@ -262,7 +264,7 @@ Projections
 Simple projections of the properties of the root type can be added using the ``.Select`` method
 which can take multiple Lambda Expression arguments:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IList selection =
       session.QueryOver<Cat>()
@@ -274,7 +276,7 @@ which can take multiple Lambda Expression arguments:
 Because this query no longer returns a Cat, the return type must be explicitly specified.
 If a single property is projected, the return type can be specified using:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IList<int> ages =
       session.QueryOver<Cat>()
@@ -285,7 +287,7 @@ However, if multiple properties are projected, then the returned list will conta
 object arrays, as per a projection
 in ICriteria.  This could be fed into an anonymous type using:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   var catDetails =
       session.QueryOver<Cat>()
@@ -297,6 +299,7 @@ in ICriteria.  This could be fed into an anonymous type using:
               CatName = (string)properties[0],
               CatAge = (int)properties[1],
               });
+
   Console.WriteLine(catDetails[0].CatName);
   Console.WriteLine(catDetails[0].CatAge);
 
@@ -306,7 +309,7 @@ it is not part of NHibernate.
 QueryOver allows arbitrary IProjection to be added (allowing private properties to be projected).  The Projections factory
 class also has overloads to allow Lambda Expressions to be used:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IList selection =
       session.QueryOver<Cat>()
@@ -317,7 +320,7 @@ class also has overloads to allow Lambda Expressions to be used:
 
 In addition there is an inline syntax for creating projection lists that does not require the explicit class qualification:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IList selection =
       session.QueryOver<Cat>()
@@ -339,7 +342,7 @@ If there is a CatSummary DTO class defined as:
 
 ... then aliased projections can be used with the AliasToBean<T> transformer:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   CatSummary summaryDto = null;
   IList<CatSummary> catReport =
@@ -374,11 +377,12 @@ Subqueries
 The Subqueries factory class has overloads to allow Lambda Expressions to express sub-query
 restrictions.  For example:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   QueryOver<Cat> maximumAge =
       QueryOver.Of<Cat>()
           .SelectList(p => p.SelectMax(c => c.Age));
+
   IList<Cat> oldestCats =
       session.QueryOver<Cat>()
           .Where(Subqueries.WhereProperty<Cat>(c => c.Age).Eq(maximumAge))
@@ -386,7 +390,7 @@ restrictions.  For example:
 
 The inline syntax allows you to use subqueries without requalifying the type:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IList<Cat> oldestCats =
       session.QueryOver<Cat>()
@@ -397,7 +401,7 @@ There is an extension method ``As()`` on (a detached) QueryOver that allows you 
 This is used in conjunction with the overloads ``Where(), WhereAll(),`` and ``WhereSome()``
 to allow use of the built-in C# operators for comparison, so the above query can be written as:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IList<Cat> oldestCats =
       session.QueryOver<Cat>()

@@ -171,6 +171,7 @@ property aliases in the where clause if we like.
   String sql = "SELECT ID as {c.Id}, NAME as {c.Name}, " +
            "BIRTHDATE as {c.BirthDate}, MOTHER_ID as {c.Mother}, {mother.*} " +
            "FROM CAT_LOG c, CAT_LOG m WHERE {c.Mother} = c.ID";
+
   IList loggedCats = sess.CreateSQLQuery(sql)
           .AddEntity("cat", typeof(Cat))
           .AddEntity("mother", typeof(Cat)).List();
@@ -194,8 +195,7 @@ Alias injection names
 Description                                     Syntax                                            Example
 =============================================== ================================================= ====================================================================
 A simple property                               ``{\[aliasname].[propertyname]}``                 ``A_NAME as {item.Name}``
-A composite property                            ``{\[aliasname].[componentname].[propertyname]}`` ``CURRENCY as {item.Amount.Currency}, VALUE as
-{item.Amount.Value}``
+A composite property                            ``{\[aliasname].[componentname].[propertyname]}`` ``CURRENCY as {item.Amount.Currency}, VALUE as {item.Amount.Value}``
 Discriminator of an entity                      ``{\[aliasname].class}``                          ``DISC as {item.class}``
 All properties of an entity                     ``{\[aliasname].*}``                              ``{item.*}``
 A collection key                                ``{\[aliasname].key}``                            ``ORGID as {coll.key}``
@@ -245,6 +245,7 @@ parameters:
 
   Query query = sess.CreateSQLQuery("SELECT * FROM CATS WHERE NAME like ?").AddEntity(typeof(Cat));
   IList pusList = query.SetString(0, "Pus%").List();
+
   query = sess.createSQLQuery("SELECT * FROM CATS WHERE NAME like :name").AddEntity(typeof(Cat));
   IList pusList = query.SetString("name", "Pus%").List();
 
@@ -256,7 +257,7 @@ in exactly the same way as a named HQL query. In this case, we do
 *not* need to call
 ``AddEntity()``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <sql-query name="persons">
       <return alias="person" class="eg.Person"/>
@@ -279,7 +280,7 @@ The ``<return-join>`` and
 associations and define queries which initialize collections,
 respectively.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <sql-query name="personsWith">
       <return alias="person" class="eg.Person"/>
@@ -301,7 +302,7 @@ A named SQL query may return a scalar value. You must declare the
 column alias and NHibernate type using the
 ``<return-scalar>`` element:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <sql-query name="mySqlQuery">
       <return-scalar column="name" type="String"/>
@@ -316,12 +317,13 @@ You can externalize the resultset mapping informations in a
 several named queries or through the
 ``SetResultSetMapping()`` API.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <resultset name="personAddress">
       <return alias="person" class="eg.Person"/>
       <return-join alias="address" property="person.MailingAddress"/>
   </resultset>
+
   <sql-query name="personsWith" resultset-ref="personAddress">
       SELECT person.NAME AS {person.Name},
              person.AGE AS {person.Age},
@@ -347,8 +349,7 @@ You can alternatively use the resultset mapping information in your
       .SetResultSetMapping("catAndKitten")
       .List();
 
-Using return-property to explicitly specify column/alias
-names
+Using return-property to explicitly specify column/alias names
 ==============================================================
 
 With ``<return-property>`` you can explicitly
@@ -356,7 +357,7 @@ tell NHibernate what column aliases to use, instead of using the
 ``{}``-syntax to let NHibernate inject its own
 aliases.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <sql-query name="mySqlQuery">
       <return alias="person" class="eg.Person">
@@ -375,7 +376,7 @@ multiple columns. This solves a limitation with the
 ``{}``-syntax which can not allow fine grained control of
 multi-column properties.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <sql-query name="organizationCurrentEmployments">
       <return alias="emp" class="Employment">
@@ -421,7 +422,7 @@ higher is as follows:
 To use this query in NHibernate you need to map it via a named
 query.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <sql-query name="selectAllEmployments_SP">
       <return alias="emp" class="Employment">
@@ -449,7 +450,7 @@ Rules/limitations for using stored procedures
 To use stored procedures with NHibernate the procedures/functions
 have to follow some rules. If they do not follow those rules they are
 not usable with NHibernate. If you still want to use these procedures
-you have to execute them via ``ession.Connection``.
+you have to execute them via ``session.Connection``.
 The rules are different for each database, since database vendors have
 different stored procedure semantics/syntax.
 
@@ -489,7 +490,7 @@ deletesql, updatesql etc.). The mapping tags
 ``<sql-delete>``, and
 ``<sql-update>`` override these strings:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Person">
       <id name="id">
@@ -501,7 +502,7 @@ deletesql, updatesql etc.). The mapping tags
       <sql-delete>DELETE FROM PERSON WHERE ID=?</sql-delete>
   </class>
 
-Note that the custom ``ql-insert`` will not be used
+Note that the custom ``sql-insert`` will not be used
 if you use ``identity`` to generate identifier values for
 the class.
 
@@ -511,7 +512,7 @@ your mapping if you use database specific SQL.
 
 Stored procedures are supported if the database-native syntax is used:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Person">
       <id name="id">
@@ -537,7 +538,7 @@ The stored procedures are by default required to affect the same number
 of rows as NHibernate-generated SQL would. NHibernate uses
 ``IDbCommand.ExecuteNonQuery`` to retrieve the number of rows
 affected. This check can be disabled by using ``check="none"``
-attribute in ``ql-insert`` element.
+attribute in ``sql-insert`` element.
 
 Custom SQL for loading
 ######################
@@ -545,7 +546,7 @@ Custom SQL for loading
 You may also declare your own SQL (or HQL) queries for entity
 loading:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <sql-query name="person">
       <return alias="pers" class="Person" lock-mode="upgrade"/>
@@ -558,7 +559,7 @@ loading:
 This is just a named query declaration, as discussed earlier. You
 may reference this named query in a class mapping:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Person">
       <id name="Id">
@@ -572,7 +573,7 @@ This even works with stored procedures.
 
 You may even define a query for collection loading:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Employments" inverse="true">
       <key/>
@@ -580,7 +581,7 @@ You may even define a query for collection loading:
       <loader query-ref="employments"/>
   </set>
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <sql-query name="employments">
       <load-collection alias="emp" role="Person.Employments"/>
@@ -593,7 +594,7 @@ You may even define a query for collection loading:
 You could even define an entity loader that loads a collection by
 join fetching:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <sql-query name="person">
       <return alias="pers" class="Person"/>

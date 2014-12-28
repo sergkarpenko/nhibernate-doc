@@ -21,16 +21,19 @@ The term "component" refers to the object-oriented notion of composition
       private DateTime birthday;
       private Name name;
       private string key;
+
       public string Key
       {
           get { return key; }
           set { key = value; }
       }
+
       public DateTime Birthday
       {
           get { return birthday; }
           set { birthday = value; }
       }
+
       public Name Name
       {
           get { return name; }
@@ -47,16 +50,19 @@ The term "component" refers to the object-oriented notion of composition
       char initial;
       string first;
       string last;
+
       public string First
       {
           get { return first; }
           set { first = value; }
       }
+
       public string Last
       {
           get { return last; }
           set { last = value; }
       }
+
       public char Initial
       {
           get { return initial; }
@@ -71,7 +77,7 @@ any interfaces or identifier properties.
 
 Our NHibernate mapping would look like:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Eg.Person, Eg" table="person">
       <id name="Key" column="pid" type="string">
@@ -105,7 +111,7 @@ The ``<component>`` element allows a ``<parent>``
 subelement that maps a property of the component class as a reference back to the
 containing entity.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Eg.Person, Eg" table="person">
       <id name="Key" column="pid" type="string">
@@ -128,7 +134,7 @@ Collections of components are supported (eg. an array of type
 replacing the ``<element>`` tag with a
 ``<composite-element>`` tag.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="SomeNames" table="some_names" lazy="true">
       <key column="id"/>
@@ -170,7 +176,7 @@ from ``Order`` to ``Item`` where
 ``PurchaseDate``, ``Price`` and
 ``Quantity`` are properties of the association:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Order" .... >
       ....
@@ -187,7 +193,7 @@ from ``Order`` to ``Item`` where
 
 Even ternary (or quaternary, etc) associations are possible:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Order" .... >
       ....
@@ -244,7 +250,7 @@ elements as ``<component>``) in place of
 ``<id>`` for the declaration of a composite identifier
 class:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Foo" table="FOOS">
       <composite-id name="CompId" class="FooCompositeID">
@@ -260,7 +266,7 @@ Now, any foreign keys into the table ``FOOS`` are also composite.
 You must declare this in your mappings for other classes. An association to
 ``Foo`` would be declared like this:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <many-to-one name="Foo" class="Foo">
   <!-- the "class" attribute is optional, as usual -->
@@ -273,7 +279,7 @@ This new ``<column>`` tag is also used by multi-column custom types.
 Actually it is an alternative to the ``column`` attribute everywhere. A
 collection with elements of type ``Foo`` would use:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set name="Foos">
       <key column="owner_id"/>
@@ -289,7 +295,7 @@ On the other hand, ``<one-to-many>``, as usual, declares no columns.
 If ``Foo`` itself contains collections, they will also need a
 composite foreign key.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="Foo">
       ....
@@ -309,7 +315,7 @@ Dynamic components
 
 You may even map a property of type ``IDictionary``:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <dynamic-component name="UserAttributes">
       <property name="Foo" column="FOO"/>

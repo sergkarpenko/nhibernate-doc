@@ -5,7 +5,6 @@ NHibernate - Relational Persistence for Idiomatic .NET
 ======================================================
 
 .. toctree::
-   :maxdepth:3
    :hidden:
 
    preface

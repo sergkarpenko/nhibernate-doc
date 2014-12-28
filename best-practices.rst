@@ -5,8 +5,8 @@ Best Practices
 ==============
 
 Write fine-grained classes and map them using ``<component>``.
-    Use an ``Address`` class to encapsulate ``treet``,
-    ``uburb``, ``tate``, ``postcode``.
+    Use an ``Address`` class to encapsulate ``street``,
+    ``suburb``, ``state``, ``postcode``.
     This encourages code reuse and simplifies refactoring.
 
 Declare identifier properties on persistent classes.

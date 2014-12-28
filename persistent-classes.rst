@@ -21,16 +21,19 @@ Most .NET applications require a persistent class representing felines.
 
   using System;
   using Iesi.Collections;
+
   namespace Eg
   {
       public class Cat
       {
           long id; // identifier
+
           public virtual long Id
           {
               get { return id; }
               protected set { id = value; }
           }
+
           public virtual string Name { get; set; }
           public virtual Cat Mate { get; set; }
           public virtual DateTime Birthdate { get; set; }
@@ -38,6 +41,7 @@ Most .NET applications require a persistent class representing felines.
           public virtual Color Color { get; set; }
           public virtual ISet Kittens { get; set; }
           public virtual char Sex { get; set; }
+
           // AddKitten not needed by NHibernate
           public virtual void AddKitten(Cat kitten)
           {
@@ -75,7 +79,7 @@ Provide an identifier property (optional)
 
 ``Cat`` has a property called ``Id``. This property
 holds the primary key column of a database table. The property might have been called
-anything, and its type might have been any primitive type, ``tring``
+anything, and its type might have been any primitive type, ``string``
 or ``System.DateTime``. (If your legacy database table has composite
 keys, you can even use a user-defined class with properties of these types - see the
 section on composite identifiers below.)
@@ -102,7 +106,7 @@ persistent class being non-sealed and all its public methods, properties and
 events declared as virtual. Another possibility is for the class to implement
 an interface that declares all public members.
 
-You can persist ``ealed`` classes that do not implement an interface
+You can persist ``sealed`` classes that do not implement an interface
 and don't have virtual members with NHibernate, but you won't be able to use proxies
 - which will limit your options for performance tuning.
 
@@ -155,16 +159,21 @@ identify our instance in the real world (a *natural* candidate key):
 
   public class Cat
   {
+
       ...
       public override bool Equals(object other)
       {
           if (this == other) return true;
+
           Cat cat = other as Cat;
           if (cat == null) return false; // null or not a cat
+
           if (Name != cat.Name) return false;
           if (!Birthday.Equals(cat.Birthday)) return false;
+
           return true;
       }
+
       public override int GetHashCode()
       {
           unchecked
@@ -175,6 +184,7 @@ identify our instance in the real world (a *natural* candidate key):
               return result;
           }
       }
+
   }
 
 Keep in mind that our candidate key (in this case a composite of name and birthday)
@@ -202,24 +212,30 @@ The following examples demonstrates the representation using ``Map`` (Dictionary
 First, in the mapping file, an ``entity-name`` has to be declared
 instead of (or in addition to) a class name:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping>
+
       <class entity-name="Customer">
+
           <id name="id"
               type="long"
               column="ID">
               <generator class="sequence"/>
           </id>
+
           <property name="name"
               column="NAME"
               type="string"/>
+
           <property name="address"
               column="ADDRESS"
               type="string"/>
+
           <many-to-one name="organization"
               column="ORGANIZATION_ID"
               class="Organization"/>
+
           <bag name="orders"
               inverse="true"
               lazy="false"
@@ -227,7 +243,9 @@ instead of (or in addition to) a class name:
               <key column="CUSTOMER_ID"/>
               <one-to-many class="Order"/>
           </bag>
+
       </class>
+
   </hibernate-mapping>
 
 Note that even though associations are declared using target class names,
@@ -238,7 +256,7 @@ After setting the default entity mode to ``dynamic-map``
 for the ``ISessionFactory``, we can at runtime work with
 ``Dictionaries`` of ``Dictionaries``:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   using(ISession s = OpenSession())
   using(ITransaction tx = s.BeginTransaction())
@@ -246,14 +264,18 @@ for the ``ISessionFactory``, we can at runtime work with
       // Create a customer
       var frank = new Dictionary<string, object>();
       frank["name"] = "Frank";
+
       // Create an organization
       var foobar = new Dictionary<string, object>();
       foobar["name"] = "Foobar Inc.";
+
       // Link both
       frank["organization"] =  foobar;
+
       // Save both
       s.Save("Customer", frank);
       s.Save("Organization", foobar);
+
       tx.Commit();
   }
 
@@ -266,7 +288,7 @@ allowing to add a proper domain model implementation on top later on.
 Entity representation modes can also be set on a per ``ISession``
 basis:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   using (ISession dynamicSession = pocoSession.GetSession(EntityMode.Map))
   {
@@ -309,7 +331,7 @@ than the one used by default.  Both would be achieved by defining a custom tupli
 implementation.  Tuplizers definitions are attached to the entity or component mapping they
 are meant to manage.  Going back to the example of our customer entity:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-mapping>
       <class entity-name="Customer">
@@ -319,13 +341,16 @@ are meant to manage.  Going back to the example of our customer entity:
           -->
           <tuplizer entity-mode="dynamic-map"
                   class="CustomMapTuplizerImpl"/>
+
           <id name="id" type="long" column="ID">
               <generator class="sequence"/>
           </id>
+
           <!-- other properties -->
           ...
       </class>
   </hibernate-mapping>
+
   public class CustomMapTuplizerImpl : NHibernate.Tuple.Entity.DynamicMapEntityTuplizer
   {
       // override the BuildInstantiator() method to plug in our custom map...
@@ -333,6 +358,7 @@ are meant to manage.  Going back to the example of our customer entity:
       {
           return new CustomMapInstantiator(mappingInfo);
       }
+
       private sealed class CustomMapInstantiator : NHibernate.Tuple.DynamicMapInstantiator
       {
           // override the generateMap() method to return our custom map...

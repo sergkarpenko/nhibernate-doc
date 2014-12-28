@@ -281,6 +281,7 @@ of a session, and then later execute it using some arbitrary ``ISession``.
 
   DetachedCriteria query = DetachedCriteria.For(typeof(Cat))
       .Add( Expression.Eq("sex", 'F') );
+
   ISession session = ....;
   ITransaction txn = session.BeginTransaction();
   IList results = query.GetExecutableCriteria(session).SetMaxResults(100).List();

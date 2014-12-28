@@ -23,7 +23,7 @@ In order to use filters, they must first be defined and then attached to the app
 mapping elements. To define a filter, use the ``<filter-def/>`` element
 within a ``<hibernate-mapping/>`` element:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <filter-def name="myFilter">
       <filter-param name="myFilterParam" type="String"/>
@@ -31,7 +31,7 @@ within a ``<hibernate-mapping/>`` element:
 
 Then, this filter can be attached to a class:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <class name="MyClass" ...>
       ...
@@ -40,7 +40,7 @@ Then, this filter can be attached to a class:
 
 or, to a collection:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <set ...>
       <filter name="myFilter" condition=":myFilterParam = MY_FILTERED_COLUMN"/>
@@ -64,11 +64,12 @@ common to much of NHibernate.
 
 A full example, using temporal data with an effective record date pattern:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <filter-def name="effectiveDate">
       <filter-param name="asOfDate" type="date"/>
   </filter-def>
+
   <class name="Employee" ...>
   ...
       <many-to-one name="Department" column="dept_id" class="Department"/>
@@ -82,6 +83,7 @@ A full example, using temporal data with an effective record date pattern:
       <filter name="effectiveDate"
               condition=":asOfDate BETWEEN eff_start_dt and eff_end_dt"/>
   </class>
+
   <class name="Department" ...>
   ...
       <set name="Employees" lazy="true">
@@ -117,7 +119,7 @@ Default all filter definitions are applied to ``<many-to-one/>`` and
 using ``use-many-to-one`` attribute on ``<filter-def/>``
 element.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <filter-def name="effectiveDate" use-many-to-one="false"/>
 

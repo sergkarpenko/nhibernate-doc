@@ -64,36 +64,40 @@ columns in the mapping file.
 
 Examples:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <property name="Foo" type="String" length="64" not-null="true"/>
+
   <many-to-one name="Bar" foreign-key="fk_foo_bar" not-null="true"/>
+
   <element column="serial_number" type="Int64" not-null="true" unique="true"/>
 
 Alternatively, these elements also accept a child ``<column>`` element. This is
 particularly useful for multi-column types:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <property name="Foo" type="String">
       <column name="foo" length="64" not-null="true" sql-type="text"/>
   </property>
+
   <property name="Bar" type="My.CustomTypes.MultiColumnType, My.CustomTypes"/>
       <column name="fee" not-null="true" index="bar_idx"/>
       <column name="fi" not-null="true" index="bar_idx"/>
       <column name="fo" not-null="true" index="bar_idx"/>
   </property>
 
-The ``ql-type`` attribute allows the user to override the default mapping
+The ``sql-type`` attribute allows the user to override the default mapping
 of NHibernate type to SQL datatype.
 
 The ``check`` attribute allows you to specify a check constraint.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <property name="Foo" type="Int32">
       <column name="foo" check="foo > 10"/>
   </property>
+
   <class name="Foo" table="foos" check="bar < 100.0">
       ...
       <property name="Bar" type="Single"/>
@@ -109,20 +113,9 @@ Attribute       Values               Interpretation
 ``unique``      ``true|false``       specifies that the column should have a unique constraint
 ``index``       ``index_name``       specifies the name of a (multi-column) index
 ``unique-key``  ``unique_key_name``  specifies the name of a multi-column unique constraint
-``foreign-key`` ``foreign_key_name``
-specifies the name of the foreign key constraint generated
-for an association, use it on <one-to-one>, <many-to-one>,
-<key>, and <many-to-many> mapping elements. Note that
-``inverse="true"`` sides will not be considered
-by ``SchemaExport``.
-
-``ql-type``    ``column_type``
-overrides the default column type (attribute of
-``<column>`` element only)
-
-``check``       SQL expression
-create an SQL check constraint on either column or table
-
+``foreign-key`` ``foreign_key_name`` specifies the name of the foreign key constraint generated for an association, use it on <one-to-one>, <many-to-one>, <key>, and <many-to-many> mapping elements. Note that ``inverse="true"`` sides will not be considered by ``SchemaExport``.
+``sql-type``    ``column_type``      overrides the default column type (attribute of  ``<column>`` element only)
+``check``       SQL expression       create an SQL check constraint on either column or table
 =============== ==================== ================================================================================================================================================================================================================================================
 
 Running the tool
@@ -143,7 +136,7 @@ Properties
 
 Database properties may be specified
 
-- as system properties with ``-D``*<property>*
+- as system properties with ``-D`` *<property>*
 
 - in ``hibernate.properties``
 
@@ -168,12 +161,13 @@ Using Ant
 
 You can call ``SchemaExport`` from your Ant build script:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <target name="schemaexport">
       <taskdef name="schemaexport"
           classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask"
           classpathref="class.path"/>
+
       <schemaexport
           properties="hibernate.properties"
           quiet="no"
@@ -209,12 +203,12 @@ mapping_files*
 
 Code Generator Command Line Options
 
-========================= =====================================
-Option                    Description
-========================= =====================================
-``-output:``*output_dir*  root directory for generated code
-``-config:``*config_file* optional file for configuring hbm2net
-========================= =====================================
+========================== =====================================
+Option                     Description
+========================== =====================================
+``-output:`` *output_dir*  root directory for generated code
+``-config:`` *config_file* optional file for configuring hbm2net
+========================== =====================================
 
 A more detailed guide of ``hbm2net`` is available in
 http://nhforge.org/blogs/nhibernate/archive/2009/12/12/t4-hbm2net-alpha-2.aspx

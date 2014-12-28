@@ -7,7 +7,7 @@ Batch processing
 A naive approach to inserting 100 000 rows in the database using NHibernate might
 look like this:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   ISession session = sessionFactory.OpenSession();
   ITransaction tx = session.BeginTransaction();
@@ -51,10 +51,11 @@ When making new objects persistent, you must ``Flush()`` and
 then ``Clear()`` the session regularly, to control the size of
 the first-level cache.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   ISession session = sessionFactory.openSession();
   ITransaction tx = session.BeginTransaction();
+
   for ( int i=0; i<100000; i++ ) {
       Customer customer = new Customer(.....);
       session.Save(customer);
@@ -64,6 +65,7 @@ the first-level cache.
           session.Clear();
       }
   }
+
   tx.Commit();
   session.Close();
 
@@ -83,10 +85,11 @@ bypass NHibernate's event model and interceptors. Stateless sessions are vulnera
 to data aliasing effects, due to the lack of a first-level cache. A stateless
 session is a lower-level abstraction, much closer to the underlying ADO.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   IStatelessSession session = sessionFactory.OpenStatelessSession();
   ITransaction tx = session.BeginTransaction();
+
   var customers = session.GetNamedQuery("GetCustomers")
       .Enumerable<Customer>();
   while ( customers.MoveNext() ) {
@@ -94,6 +97,7 @@ session is a lower-level abstraction, much closer to the underlying ADO.
       customer.updateStuff(...);
       session.Update(customer);
   }
+
   tx.Commit();
   session.Close();
 
@@ -144,6 +148,7 @@ As an example, to execute an HQL ``UPDATE``, use the
 
   ISession session = sessionFactory.OpenSession();
   ITransaction tx = session.BeginTransaction();
+
   string hqlUpdate = "update Customer c set c.name = :newName where c.name = :oldName";
   // or string hqlUpdate = "update Customer set name = :newName where name = :oldName";
   int updatedEntities = s.CreateQuery( hqlUpdate )
@@ -184,6 +189,7 @@ method:
 
   ISession session = sessionFactory.OpenSession();
   ITransaction tx = session.BeginTransaction();
+
   String hqlDelete = "delete Customer c where c.name = :oldName";
   // or String hqlDelete = "delete Customer where name = :oldName";
   int deletedEntities = s.CreateQuery( hqlDelete )
@@ -216,7 +222,7 @@ points to note:
 - select_statement can be any valid HQL select query, with the caveat that the return types
   must match the types expected by the insert.  Currently, this is checked during query
   compilation rather than allowing the check to relegate to the database.  Note however
-  that this might cause problems between NHibernate ``Type`` which are
+  that this might cause problems between NHibernate ``Type``s which are
   *equivalent* as opposed to *equal*.  This might cause
   issues with mismatches between a property defined as a ``NHibernate.Type.DateType``
   and a property defined as a ``NHibernate.Type.TimestampType``, even though the
@@ -237,7 +243,7 @@ points to note:
 - For properties mapped as either ``version`` or ``timestamp``,
   the insert statement gives you two options.  You can either specify the property in the
   properties_list (in which case its value is taken from the corresponding select expressions)
-  or omit it from the properties_list (in which case the ``eed value`` defined
+  or omit it from the properties_list (in which case the ``seed value`` defined
   by the ``NHibernate.Type.IVersionType`` is used).
 
 An example HQL ``INSERT`` statement execution:
@@ -246,6 +252,7 @@ An example HQL ``INSERT`` statement execution:
 
   ISession session = sessionFactory.OpenSession();
   ITransaction tx = session.BeginTransaction();
+
   var hqlInsert = "insert into DelinquentAccount (id, name) select c.id, c.name from Customer c where ...";
   int createdEntities = s.CreateQuery( hqlInsert )
           .ExecuteUpdate();

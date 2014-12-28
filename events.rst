@@ -23,15 +23,19 @@ updated.
 You may either implement ``IInterceptor`` directly or (better) extend
 ``EmptyInterceptor``.
 
-.. code-block:: csharp
+.. code-block:: xml
 
   using System;
+
   using NHibernate;
   using NHibernate.Type;
+
   public class AuditInterceptor : EmptyInterceptor {
+
       private int updates;
       private int creates;
       private int loads;
+
       public override void OnDelete(object entity,
                                     object id,
                                     object[] state,
@@ -40,6 +44,7 @@ You may either implement ``IInterceptor`` directly or (better) extend
       {
           // do nothing
       }
+
       public override bool OnFlushDirty(object entity,
                                         object id,
   				      object[] currentState,
@@ -58,6 +63,7 @@ You may either implement ``IInterceptor`` directly or (better) extend
           }
           return false;
       }
+
       public override bool OnLoad(object entity,
                                   object id,
   				object[] state,
@@ -69,6 +75,7 @@ You may either implement ``IInterceptor`` directly or (better) extend
           }
           return false;
       }
+
       public override bool OnSave(object entity,
                                   object id,
   				object[] state,
@@ -86,6 +93,7 @@ You may either implement ``IInterceptor`` directly or (better) extend
           }
           return false;
       }
+
       public override void AfterTransactionCompletion(ITransaction tx)
       {
           if ( tx.WasCommitted ) {
@@ -95,6 +103,7 @@ You may either implement ``IInterceptor`` directly or (better) extend
           creates=0;
           loads=0;
       }
+
   }
 
 Interceptors come in two flavors: ``ISession``-scoped and
@@ -165,7 +174,7 @@ XML. Here's an example of a custom load event listener:
 You also need a configuration entry telling NHibernate to use the listener in addition
 to the default listener:
 
-.. code-block:: csharp
+.. code-block:: xml
 
   <hibernate-configuration>
       <session-factory>
